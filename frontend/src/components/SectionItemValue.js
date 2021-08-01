@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { ReactSortable } from 'react-sortablejs';
 import { UPLOAD_FORM_URL } from '../services/config';
 
