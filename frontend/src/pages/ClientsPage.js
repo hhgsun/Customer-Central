@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import ClientService from '../services/clientService';
-import FormService from '../services/formService';
 import { setAllClients, setClientPagination } from '../store/clientSlice';
 
 export default function ClientsPage() {
@@ -59,25 +58,21 @@ export default function ClientsPage() {
           <table className="table table-hover">
             <thead>
               <tr>
-                <th scope="col" onClick={(e) => goPage(currentPage, "id", direction === "DESC" ? "ASC" : "DESC")}>
+                <th scope="col" onClick={(e) => goPage(currentPage, "id", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
                   id
                   {sortBy === "id" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
                 </th>
-                <th scope="col" onClick={(e) => goPage(currentPage, "title", direction === "DESC" ? "ASC" : "DESC")}>
+                <th scope="col" onClick={(e) => goPage(currentPage, "title", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
                   title
                   {sortBy === "title" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
                 </th>
-                <th scope="col" onClick={(e) => goPage(currentPage, "createdDate", direction === "DESC" ? "ASC" : "DESC")}>
+                <th scope="col" onClick={(e) => goPage(currentPage, "createdDate", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
                   createdDate
                   {sortBy === "createdDate" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
                 </th>
-                <th scope="col" onClick={(e) => goPage(currentPage, "updateDate", direction === "DESC" ? "ASC" : "DESC")}>
+                <th scope="col" onClick={(e) => goPage(currentPage, "updateDate", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
                   updateDate
                   {sortBy === "updateDate" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
-                </th>
-                <th scope="col" onClick={(e) => goPage(currentPage, "status", direction === "DESC" ? "ASC" : "DESC")}>
-                  status
-                  {sortBy === "status" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
                 </th>
                 <th scope="col"></th>
               </tr>
@@ -89,7 +84,6 @@ export default function ClientsPage() {
                   <td>{client.title}</td>
                   <td>{client.createdDate}</td>
                   <td>{client.updateDate}</td>
-                  <td>{client.status === "1" ? "Answered" : "Not Answered"}</td>
                   <td className="d-flex justify-content-end">
                     <NavLink className="btn btn-secondary btn-sm" to={`client-edit/${client.id}`}>
                       Edit
@@ -102,9 +96,9 @@ export default function ClientsPage() {
               ))}
             </tbody>
           </table>
-
-          {pagination ? <nav>
-            <ul className="pagination mt-5">
+          {pagination ? <nav className="">
+            <span className="badge bg-secondary ms-auto">Toplam: {pagination.total}</span>
+            <ul className="pagination my-5">
               <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
                 <span className="page-link cursor" onClick={(e) => goPage(currentPage - 1)}>Previous</span>
               </li>

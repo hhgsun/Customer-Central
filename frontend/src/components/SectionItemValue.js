@@ -208,7 +208,7 @@ export default function SectionItemValue({ sectionIndex, sectionValues, inputtyp
         {values.map((v, i) =>
           <div key={i} className="multiple-item">
             {v.file
-              ? <img src={v.file && v.file.size ? v.newAddedUrl : UPLOAD_FORM_URL + v.fileName} className="mw-100" />
+              ? <img src={v.newAddedUrl != null ? v.newAddedUrl : UPLOAD_FORM_URL + v.fileName} className="mw-100" />
               : <></>
             }
             {

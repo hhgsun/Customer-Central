@@ -1,6 +1,8 @@
 import { nanoid } from '@reduxjs/toolkit';
 import React, { useState } from 'react'
 import MaterialModel from '../models/MaterialModel';
+import { UPLOAD_CLIENT_URL } from '../services/config';
+import IconFile from './IconFile';
 
 export default function MaterialList({ clientData, setClientData }) {
 
@@ -9,13 +11,7 @@ export default function MaterialList({ clientData, setClientData }) {
       ...clientData,
       layouts: [
         ...clientData.layouts,
-        {
-          id: nanoid(6),
-          title: "",
-          bgColor: "#088bcb",
-          textColor: "#ffffff",
-          blocks: [],
-        }
+        { id: nanoid(6), title: "", bgColor: "#088bcb", textColor: "#ffffff", blocks: [] }
       ]
     }));
   }
@@ -27,7 +23,7 @@ export default function MaterialList({ clientData, setClientData }) {
         ...clientData.layouts[layoutIndex],
         blocks: [
           ...clientData.layouts[layoutIndex].blocks,
-          { id: nanoid(6), title: "", groups: [], type: blockType }
+          { id: nanoid(6), title: "", type: blockType, groups: [] }
         ]
       },
       ...clientData.layouts.slice(layoutIndex + 1)
@@ -64,6 +60,30 @@ export default function MaterialList({ clientData, setClientData }) {
     }));
   }
 
+  const deleteLayout = (e, layoutId) => {
+    var c = window.confirm("Alanı silmek üzeresiniz.")
+    if (!c) return;
+    const layouts = clientData.layouts.filter(l => l.id !== layoutId);
+    let filtered = [];
+    let deletedIds = [];
+    clientData.materials.forEach(m => {
+      var d = (m.layout_id === layoutId);
+      if (d) {
+        if (m.id != null) {
+          deletedIds.push(m.id);
+        }
+      } else {
+        filtered.push(m);
+      }
+    });
+    setClientData(prevState => ({
+      ...clientData,
+      layouts: layouts,
+      materials: filtered,
+      deletedMaterialIds: [...clientData.deletedMaterialIds, ...deletedIds]
+    }))
+  }
+
   const deleteBlock = (e, layoutId, blockId) => {
     var c = window.confirm("Bloğu silmek üzeresiniz.")
     if (!c) return;
@@ -76,19 +96,23 @@ export default function MaterialList({ clientData, setClientData }) {
         ]
       },
     ]
+    let filtered = [];
+    let deletedIds = [];
+    clientData.materials.forEach(m => {
+      var d = (m.layout_id === layoutId && m.block_id === blockId);
+      if (d) {
+        if (m.id != null) {
+          deletedIds.push(m.id);
+        }
+      } else {
+        filtered.push(m);
+      }
+    });
     setClientData(prevState => ({
       ...clientData,
-      layouts: layouts
-    }))
-  }
-
-  const deleteLayout = (e, layoutId) => {
-    var c = window.confirm("Alanı silmek üzeresiniz.")
-    if (!c) return;
-    const layouts = clientData.layouts.filter(l => l.id !== layoutId)
-    setClientData(prevState => ({
-      ...clientData,
-      layouts: layouts
+      layouts: layouts,
+      materials: filtered,
+      deletedMaterialIds: [...clientData.deletedMaterialIds, ...deletedIds]
     }))
   }
 
@@ -110,20 +134,6 @@ export default function MaterialList({ clientData, setClientData }) {
         ]
       },
     ]
-    const { deletedMaterialIds, materials } = deleteGroupMaterials(layoutId, blockId, groupId);
-
-    setClientData(prevState => {
-      return {
-        ...clientData,
-        layouts: layouts,
-        materials: materials,
-        deletedMaterialIds: deletedMaterialIds
-      }
-    });
-  }
-
-  const deleteGroupMaterials = (layoutId, blockId, groupId) => {
-    console.log(clientData.materials);
     let filtered = [];
     let deletedIds = [];
     clientData.materials.forEach(m => {
@@ -136,10 +146,14 @@ export default function MaterialList({ clientData, setClientData }) {
         filtered.push(m);
       }
     });
-    return {
-      materials: filtered,
-      deletedMaterialIds: [...clientData.deletedMaterialIds, ...deletedIds]
-    }
+    setClientData(prevState => {
+      return {
+        ...clientData,
+        layouts: layouts,
+        materials: filtered,
+        deletedMaterialIds: [...clientData.deletedMaterialIds, ...deletedIds]
+      }
+    });
   }
 
   /* */
@@ -155,28 +169,38 @@ export default function MaterialList({ clientData, setClientData }) {
     }))
   }
 
-  const handleGroupProp = (e, layoutId, blockId, groupId) => {
-    const groups = [
-      ...clientData.layouts.filter(l => l.id === layoutId)[0].blocks.filter(b => b.id === blockId)[0].groups
-    ].map((g, i) => {
-      if (g.id === groupId) {
-        g.title = e.target.value;
+  const handleBlockProp = (e, layoutId, blockId) => {
+    const layouts = [...clientData.layouts];
+    layouts.map(l => {
+      if (l.id === layoutId) {
+        l.blocks.map(b => {
+          if (b.id === blockId) {
+            b.title = e.target.value
+          }
+        })
       }
-      return g;
     })
-    const layouts = [
-      ...clientData.layouts.filter(l => l.id !== layoutId),
-      {
-        ...clientData.layouts.filter(l => l.id === layoutId)[0],
-        blocks: [
-          ...clientData.layouts.filter(l => l.id === layoutId)[0].blocks.filter(b => b.id !== blockId),
-          {
-            ...clientData.layouts.filter(l => l.id === layoutId)[0].blocks.filter(b => b.id === blockId)[0],
-            groups: groups
-          },
-        ]
-      },
-    ]
+    setClientData(prevState => ({
+      ...clientData,
+      layouts: layouts
+    }))
+  }
+
+  const handleGroupProp = (e, layoutId, blockId, groupId) => {
+    const layouts = [...clientData.layouts];
+    layouts.map(l => {
+      if (l.id === layoutId) {
+        l.blocks.map(b => {
+          if (b.id === blockId) {
+            b.groups.map(g => {
+              if (g.id === groupId) {
+                g.title = e.target.value;
+              }
+            })
+          }
+        })
+      }
+    })
     setClientData(prevState => ({
       ...clientData,
       layouts: layouts
@@ -227,16 +251,35 @@ export default function MaterialList({ clientData, setClientData }) {
     }))
   }
 
-  const handleMaterialImage = (event, material, materialIndex) => {
+  const handleMaterialLabel = (e, materialIndex) => {
+    let materials = [...clientData.materials];
+    materials[materialIndex] = {
+      ...materials[materialIndex],
+      label: e.target.value
+    }
+    setClientData(prevState => ({
+      ...clientData,
+      materials: materials
+    }))
+  }
+
+  const handleMaterialFile = (event, material, materialIndex) => {
     const materials = [...clientData.materials];
-    [...event.target.files].forEach((file) => {
+    [...event.target.files].forEach((file, fileIndex) => {
       if (file) {
         const saveObj = {
           file: file,
           fileName: Date.now().toString() + "__" + file.name,
+          nativeName: file.name,
           newAddedUrl: URL.createObjectURL(file),
         };
-        if (event.target.files.length > 1) {
+        if (fileIndex === 0) {
+          materials[materialIndex] = {
+            ...materials[materialIndex],
+            file_val: saveObj,
+            label: material.label === "" ? file.name.split('.').slice(0, -1).join('.') : material.label
+          }
+        } else {
           materials.push(
             Object.assign({}, new MaterialModel({
               file_val: saveObj,
@@ -246,12 +289,6 @@ export default function MaterialList({ clientData, setClientData }) {
               label: material.label === "" ? file.name : material.label
             }))
           );
-        } else {
-          materials[materialIndex] = {
-            ...materials[materialIndex],
-            file_val: saveObj,
-            label: material.label === "" ? file.name : material.label
-          }
         }
       }
     });
@@ -263,7 +300,6 @@ export default function MaterialList({ clientData, setClientData }) {
 
   return (
     <div>
-      {JSON.stringify(clientData)}
       {
         clientData.layouts.map((layout, layoutIndex) =>
           <section key={layoutIndex} className="client-layout card py-5 my-5 border-bottom" style={{ backgroundColor: layout.bgColor, color: layout.textColor }}>
@@ -274,7 +310,7 @@ export default function MaterialList({ clientData, setClientData }) {
                 <i className={`delete-icon bi bi-trash cursor ms-auto ${layout.blocks.length > 0 ? "invisible" : ""}`} onClick={(e) => deleteLayout(e, layout.id)} title="Delete Layout"></i>
                 <div className="d-flex flex-column">
                   <h2 className="h4" dangerouslySetInnerHTML={{ __html: layout.title }}></h2>
-                  <input name="title" className="form-control" value={layout.title} onChange={(e) => handleLayoutProp(e, layoutIndex)} placeholder="Layout Title" />
+                  <input name="title" className="form-control form-control-sm" value={layout.title} onChange={(e) => handleLayoutProp(e, layoutIndex)} placeholder="Layout Title" />
                   <div className="d-flex ms-auto mt-2">
                     <div className="d-flex align-items-center">
                       <i className="bi bi-paint-bucket"></i>
@@ -291,23 +327,40 @@ export default function MaterialList({ clientData, setClientData }) {
               {layout.blocks.map((block, blockIndex) => <div key={blockIndex} className="client-block card border px-2 my-5 bg-transparent align-items-start">
                 <span className="section-name-fixed position-absolute card bg-transparent text-uppercase">BLOCK {block.type}</span>
 
-                <div className="client-block-control d-flex w-100 mb-3">
-                  <i className={`delete-icon bi bi-trash cursor ms-auto ${block.groups.length > 0 ? "invisible" : ""}`} onClick={(e) => deleteBlock(e, layout.id, block.id)} title="Delete Block"></i>
+                <div className="client-block-control input-group input-group-sm d-flex w-100 my-3 pt-2">
+                  {
+                    block.type === "colors" ?
+                      <input className="form-control fw-bold" style={{ color: layout.bgColor }} placeholder="Block Name" value={block.title} onChange={(e) => handleBlockProp(e, layout.id, block.id)} />
+                      : <></>
+                  }
+                  <i className={`input-group-text delete-icon bi bi-trash cursor ms-auto ${block.groups.length > 0 ? "invisible" : ""}`} onClick={(e) => deleteBlock(e, layout.id, block.id)} title="Delete Block"></i>
                 </div>
 
                 {block.groups.map((group, groupIndex) => <div key={groupIndex} className="client-group card bg-transparent align-items-start p-2 mb-2 w-100" style={{ minHeight: "100px" }}>
-                  <div className="client-group-control d-flex w-100">
-                    <input className="form-control form-control-sm" placeholder="Group Name" value={group.title} onChange={(e) => handleGroupProp(e, layout.id, block.id, group.id)} />
-                    <i className="delete-icon bi bi-trash ms-2 invisible cursor" onClick={(e) => deleteGroup(e, layout.id, block.id, group.id)} title="Delete Group"></i>
+                  <div className="client-group-control input-group input-group-sm d-flex w-100">
+                    <input className="form-control fw-bold" style={{ color: layout.bgColor }} placeholder="Group Name" value={group.title} onChange={(e) => handleGroupProp(e, layout.id, block.id, group.id)} />
+                    <i className="input-group-text delete-icon bi bi-trash invisible cursor" onClick={(e) => deleteGroup(e, layout.id, block.id, group.id)} title="Delete Group"></i>
                   </div>
 
+                  {/* GROUP MATERIALS */}
                   {clientData.materials.map((material, materialIndex) => <div key={materialIndex} className="w-100">
                     {(material.layout_id == layout.id && material.block_id == block.id && material.group_id == group.id)
                       ?
-                      <div className="material-item border-bottom border-secondary py-2 position-relative">
-                        {material.label}
-                        <input type="file" onChange={(e) => handleMaterialImage(e, material, materialIndex)} multiple={true} />
-                        <i className="delete-icon bi bi-trash invisible cursor position-absolute" onClick={(e) => deleteMaterial(e, materialIndex)}></i>
+                      <div className="material-item d-flex align-items-center border-bottom border-secondary py-3 position-relative">
+                        <IconFile name={material.file_val.nativeName} />
+                        <input className="form-control w-auto bg-transparent me-2" value={material.label} onChange={(e) => handleMaterialLabel(e, materialIndex)} placeholder="Label" />
+                        <label className="btn btn-light overflow-auto" style={{ maxWidth: "330px" }}>
+                          {material.file_val.nativeName
+                            ? <span className="d-flex text-start" style={{ whiteSpace: "nowrap" }}><i className="bi bi-file-earmark-check me-2"></i>{material.file_val.nativeName}</span>
+                            : <i className="bi bi-file-earmark-plus"></i>
+                          }
+                          <input type="file" onChange={(e) => handleMaterialFile(e, material, materialIndex)} multiple={true} hidden />
+                        </label>
+                        {material.file_val.newAddedUrl === null
+                          ? <a className="btn btn-sm ms-2" href={UPLOAD_CLIENT_URL + material.file_val.fileName} target="_blank" rel="noreferrer" style={{ color: layout.textColor }}><i className="bi bi-box-arrow-up-right"></i></a>
+                          : <></>
+                        }
+                        <i className="delete-icon bi bi-trash invisible cursor position-absolute" onClick={(e) => deleteMaterial(e, materialIndex)} title="Delete Material"></i>
                       </div>
                       : <></>}
                   </div>)}
@@ -321,25 +374,42 @@ export default function MaterialList({ clientData, setClientData }) {
                   ?
                   <div className="d-flex my-3">
                     <button className="btn btn-sm btn-secondary" onClick={(e) => addGroup(e, layoutIndex, blockIndex)}>New Group</button>
-                    <button className="btn btn-sm ms-2" onClick={(e) => addMaterial(e, layout.id, block.id, null)}>Add Block Button</button>
+                    <button className="btn btn-sm btn-outline-secondary ms-2" style={{ color: layout.textColor }} onClick={(e) => addMaterial(e, layout.id, block.id, null)}>Add Button</button>
                   </div>
                   : <></>
                 }
+
+                {/* BLOCK BUTTONS */}
                 {block.type === "files"
                   ?
-                  clientData.materials.map((material, materialIndex) => <div key={materialIndex} className="w-100">
-                    {(material.layout_id == layout.id && material.block_id == block.id && material.group_id == null)
-                      ? <div className="material-item border-bottom border-secondary py-2 position-relative">
-                        {JSON.stringify(material.layout_id)}
-                        {JSON.stringify(material.block_id)}
-                        {JSON.stringify(material.group_id)}
-                        <i className="delete-icon bi bi-trash invisible cursor position-absolute" onClick={(e) => deleteMaterial(e, materialIndex)}></i>
-                      </div>
-                      : <></>}
-                  </div>)
+                  <div className="border-top w-100">
+                    {
+                      clientData.materials.map((material, materialIndex) => <div key={materialIndex} className="w-100">
+                        {(material.layout_id == layout.id && material.block_id == block.id && material.group_id == null)
+                          ?
+                          <div className="material-item d-flex align-items-center justify-content-center border-top border-secondary py-3 position-relative">
+                            <input className="form-control w-auto bg-transparent me-2" value={material.label} onChange={(e) => handleMaterialLabel(e, materialIndex)} placeholder="Button Label" />
+                            <label className="btn btn-light overflow-auto" style={{ maxWidth: "330px" }}>
+                              {material.file_val.nativeName
+                                ? <span className="d-flex text-start" style={{ whiteSpace: "nowrap" }}><i className="bi bi-file-earmark-check me-2"></i>{material.file_val.nativeName}</span>
+                                : <i className="bi bi-file-earmark-plus"></i>
+                              }
+                              <input type="file" onChange={(e) => handleMaterialFile(e, material, materialIndex)} multiple={true} hidden />
+                            </label>
+                            {material.file_val.newAddedUrl === null
+                              ? <a className="btn btn-sm ms-2" href={UPLOAD_CLIENT_URL + material.file_val.fileName} target="_blank" rel="noreferrer"><i className="bi bi-box-arrow-up-right"></i></a>
+                              : <></>
+                            }
+                            <i className="delete-icon bi bi-trash invisible cursor position-absolute" onClick={(e) => deleteMaterial(e, materialIndex)}></i>
+                          </div>
+                          : <></>}
+                      </div>)
+                    }
+                  </div>
                   : <></>
                 }
 
+                {/* BLOCK COLORS */}
                 {block.type === "colors"
                   ?
                   <div className="w-100">
@@ -349,17 +419,19 @@ export default function MaterialList({ clientData, setClientData }) {
                         <div className="material-item py-2 position-relative">
                           <div className="input-group input-group-sm">
                             <span className="input-group-text">CMYK:</span>
-                            <input name="cmyk" className="form-control" value={material.color.cmyk} onChange={(e) => handleMaterialColor(e, materialIndex)} />
+                            <input name="cmyk" className="form-control bg-transparent" value={material.color.cmyk} onChange={(e) => handleMaterialColor(e, materialIndex)} />
                             <span className="input-group-text">RGB:</span>
-                            <input name="rgb" className="form-control" value={material.color.rgb} onChange={(e) => handleMaterialColor(e, materialIndex)} />
+                            <input name="rgb" className="form-control bg-transparent" value={material.color.rgb} onChange={(e) => handleMaterialColor(e, materialIndex)} />
                             <span className="input-group-text">HEX:</span>
-                            <input name="hex" className="form-control" value={material.color.hex} onChange={(e) => handleMaterialColor(e, materialIndex)} />
-                            <i className="delete-icon bi bi-trash invisible cursor ms-2" onClick={(e) => deleteMaterial(e, materialIndex)}></i>
+                            <input name="hex" className="form-control bg-transparent" value={material.color.hex} onChange={(e) => handleMaterialColor(e, materialIndex)} />
+                            <i className="input-group-text delete-icon bi bi-trash invisible cursor" onClick={(e) => deleteMaterial(e, materialIndex)}></i>
                           </div>
                         </div>
                         : <></>}
                     </div>)}
-                    <button className="btn btn-sm mx-auto my-2" onClick={(e) => addMaterial(e, layout.id, block.id, null)}>Add Color</button>
+                    <button className="btn btn-sm btn-outline-secondary mx-auto my-2" onClick={(e) => addMaterial(e, layout.id, block.id, null)} style={{ color: layout.textColor }}>
+                      Add Color
+                    </button>
                   </div>
                   : <></>
                 }

@@ -129,13 +129,16 @@ export default function SectionList({ formData, setFormData, isAdmin = false, fi
                     <div className="section-label">{section.label} <small className="ms-1">{section.description}</small></div>
                   </>
               }
+
               <SectionItemValue
                 sectionIndex={sectionIndex}
                 sectionValues={section.value}
                 inputtype={section.input_type}
                 isEdit={(isAdmin || section.permission_edit) == true}
                 isAdmin={isAdmin}
-                handle={updateVal} />
+                handle={updateVal}
+              />
+
             </section>
             : <span key={sectionIndex}></span>
         ))

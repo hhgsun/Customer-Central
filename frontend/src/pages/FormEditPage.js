@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory, useParams } from 'react-router-dom'
+import { NavLink, useHistory, useParams } from 'react-router-dom'
 import SectionList from '../components/SectionList'
 import FormModel from '../models/FormModel'
 import FormService from '../services/formService'
@@ -119,7 +119,9 @@ export default function FormEditPage() {
               <div className="ms-auto">
                 {isUpdateForm
                   ? <>
-                    <a href={`/form/${formId}`} className="btn btn-sm btn-outline-dark" target="_blank" rel="noreferrer"><i className="bi bi-eye"></i> VİEW</a>
+                    <NavLink className="btn btn-sm btn-outline-dark" to={`/form/${formId}`} target={'_blank'} rel="noreferrer">
+                      <i className="bi bi-eye"></i> VİEW
+                    </NavLink>
                     <button className="btn btn-dark btn-sm ms-2" onClick={sendUpdateForm}>UPDATE FORM</button>
                   </>
                   : <button className="btn btn-dark btn-sm ms-2" onClick={sendForm}>SEND FORM</button>}

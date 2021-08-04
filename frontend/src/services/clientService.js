@@ -30,6 +30,9 @@ export default class ClientService {
   }
 
   async addClient(client) {
+    client.materials.map(m => {
+      m.file_val.newAddedUrl = null; return m;
+    });
     const res = await fetch(`${this.API_URL}/clients/add`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -37,12 +40,15 @@ export default class ClientService {
     });
     const added = await res.json();
     if (added) {
-      //this.imageUpload(client.materials);
+      this.fileUpload(client.materials);
     }
     return added;
   }
 
   async updateClient(client) {
+    client.materials.map(m => {
+      m.file_val.newAddedUrl = null; return m;
+    });
     const res = await fetch(`${this.API_URL}/clients/${client.id}/update`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -50,7 +56,7 @@ export default class ClientService {
     });
     const updated = await res.json();
     if (updated) {
-      //this.imageUpload(client.materials)
+      this.fileUpload(client.materials)
     }
     return updated;
   }
@@ -58,14 +64,10 @@ export default class ClientService {
   async fileUpload(materials) {
     const formData = new FormData();
     materials.forEach(material => {
-      if (material.value.length > 0) {
-        material.value.forEach(fileObj => {
-          if (fileObj && fileObj.file != null) {
-            if (fileObj.file.size !== undefined) {
-              formData.append('images[]', fileObj.file, fileObj.fileName);
-            }
-          }
-        });
+      if (material.file_val && material.file_val.file) {
+        if (material.file_val.file.size !== undefined) {
+          formData.append('images[]', material.file_val.file, material.file_val.fileName);
+        }
       }
     });
     const res = await fetch(`${this.API_URL}/clients/image-upload`, {

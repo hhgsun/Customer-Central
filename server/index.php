@@ -3,8 +3,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
-$_ENV['SLIM_MODE'] = 'development';
-// $_ENV['SLIM_MODE'] = 'production';
+// $_ENV['SLIM_MODE'] = 'development';
+$_ENV['SLIM_MODE'] = 'production';
 
 
 require __DIR__ . '/vendor/autoload.php';
@@ -44,13 +44,11 @@ $app->get('/', function (Request $request, Response $response, $args) {
     return $response;
 });
 
-
-
-
 // ROUTES
 require './src/routes/auth.php';
 require './src/routes/forms.php';
 require './src/routes/clients.php';
+require './src/routes/presentations.php';
 require './src/routes/admin.php';
 
 $app->run();

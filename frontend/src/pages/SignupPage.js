@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import AuthService from '../services/authService'
+import LogoTBR from "../images/logo-tbr.png";
 
 export default function SignupPage() {
 
@@ -34,7 +35,7 @@ export default function SignupPage() {
   return (
     <div className="signup-page d-flex justify-content-center align-items-center bg-light">
       <form className="form-signin" onSubmit={(e) => submitForm(e)}>
-        <img className="mb-4" src="http://thebluered.co.uk/wp-content/uploads/2021/05/cropped-logo-1-e1621355087557.png" alt="thebluered" />
+        <img className="mb-4" src={LogoTBR} alt="thebluered" width="200" />
         <h1 className="h3 mb-3 fw-normal mt-3">Please sign up</h1>
 
         <div className="form-floating mb-1">

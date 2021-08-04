@@ -2,3 +2,4 @@ composer.phar
 /vendor/
 /uploads/client/*
 /uploads/form/*
+/uploads/presentation/*

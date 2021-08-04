@@ -115,23 +115,9 @@ $app->post('/clients/add', function (Request $request, Response $response) {
 
     if( $isAdded && $clientId ) {
       
-      if( $materials ) {
-        foreach ($materials as $key => $material) {
-          $sth = 'INSERT INTO materials (clientId, label, file_val, type, layout_id, block_id, group_id, color, order_number)
-                  VALUES (:clientId, :label, :file_val, :type, :layout_id, :block_id, :group_id, :color, :order_number)';
-          $prepare = $db->prepare($sth);
-          $prepare->execute([
-                      'clientId' => $clientId,
-                      'label' => $material['label'],
-                      'file_val' => json_encode($material['file_val']),
-                      'type' => $material['type'],
-                      'layout_id' => $material['layout_id'],
-                      'block_id' => $material['block_id'],
-                      'group_id' => $material['group_id'],
-                      'color' => json_encode($material['color']),
-                      'order_number' => $material['order_number'],
-                    ]);
-        }
+      // add materials
+      foreach ($materials as $key => $material) {
+        addMaterialsToClient($db, $material, $clientId);
       }
 
       $response->getBody()->write(json_encode($clientId));
@@ -156,6 +142,26 @@ $app->post('/clients/add', function (Request $request, Response $response) {
   }
 
 });
+
+// MATHOD: Add Materials
+function addMaterialsToClient($db, $material, $clientId){
+  $material['file_val'] = json_encode($material['file_val']);
+  $material['color'] = json_encode($material['color']);
+  $sth = 'INSERT INTO materials (clientId, label, file_val, type, layout_id, block_id, group_id, color, order_number)
+              VALUES (:clientId, :label, :file_val, :type, :layout_id, :block_id, :group_id, :color, :order_number)';
+  $prepare = $db->prepare($sth);
+  $prepare->execute([
+              'clientId' => $clientId,
+              'label' => isset($material['label']) ? $material['label'] : "",
+              'file_val' => $material['file_val'],
+              'type' => $material['type'],
+              'layout_id' => $material['layout_id'],
+              'block_id' => $material['block_id'],
+              'group_id' => $material['group_id'],
+              'color' => $material['color'],
+              'order_number' => $material['order_number'],
+            ]);
+}
 
 
 // Client Güncelleme
@@ -184,8 +190,6 @@ $app->post('/clients/{clientId}/update', function (Request $request, Response $r
 
     if( $materials && $isUpdateClient ) {
       foreach ($materials as $key => $material) {
-        $material['file_val'] = json_encode($material['file_val']);
-        $material['color'] = json_encode($material['color']);
         // update material
         if( isset($material['id']) ) {
           $sth = 'UPDATE materials 
@@ -194,33 +198,18 @@ $app->post('/clients/{clientId}/update', function (Request $request, Response $r
                   WHERE id = :id';
           $prepare = $db->prepare($sth);
           $prepare->execute([
-            'id' => $material['id'],
-            'label' => $material['label'],
-            'file_val' => $material['file_val'],
-            'type' => $material['type'],
-            'layout_id' => $material['layout_id'],
-            'block_id' => $material['block_id'],
-            'group_id' => $material['group_id'],
-            'color' => $material['color'],
-            'order_number' => $material['order_number'],
-          ]);
-        }
-        // add material
-        else {
-          $sth = 'INSERT INTO materials (clientId, label, file_val, type, layout_id, block_id, group_id, color, order_number)
-                  VALUES (:clientId, :label, :file_val, :type, :layout_id, :block_id, :group_id, :color, :order_number)';
-            $prepare = $db->prepare($sth);
-            $prepare->execute([
-              'clientId' => $clientId,
-              'label' => $material['label'],
-              'file_val' => $material['file_val'],
-              'type' => $material['type'],
-              'layout_id' => $material['layout_id'],
-              'block_id' => $material['block_id'],
-              'group_id' => $material['group_id'],
-              'color' => $material['color'],
-              'order_number' => $material['order_number'],
-            ]);
+                      'id' => $material['id'],
+                      'label' => $material['label'],
+                      'file_val' => json_encode($material['file_val']),
+                      'type' => $material['type'],
+                      'layout_id' => $material['layout_id'],
+                      'block_id' => $material['block_id'],
+                      'group_id' => $material['group_id'],
+                      'color' => json_encode($material['color']),
+                      'order_number' => $material['order_number'],
+                    ]);
+        } else {
+          addMaterialsToClient($db, $material, $clientId); // add material
         }
       }
     }
@@ -285,46 +274,13 @@ $app->post('/clients/{id}/delete', function (Request $request, Response $respons
 });
 
 
-// Forma ait tüm cevaplar
-$app->get('/clients/{formId}/answers', function (Request $request, Response $response) {
-
-  $formId = $request->getAttribute('formId');
-
-  $db = new Db();
-
-  try {
-    $db = $db->connect();
-    
-    $sth = $db->prepare('SELECT * FROM answers WHERE formId = :formId AND isDelete = 0');
-    $sth->bindParam('formId', $formId, PDO::PARAM_INT);
-    $sth->execute();
-    $answers = $sth->fetchAll(PDO::FETCH_OBJ);
-
-    $response->getBody()->write(json_encode($answers));
-    return $response
-              ->withHeader('Content-Type', 'application/json');
-
-  } catch (PDOException $e) {
-    $payload = json_encode(array(
-      'message' => $e->getMessage(),
-      'code' => $e->getCode(),
-    ));
-    $response->getBody()->write($payload);
-    return $response
-              ->withHeader('Content-Type', 'application/json')
-              ->withStatus(500);
-  }
-
-});
-
-
 /**
  * 
  */
 
 // IMAGE UPLOAD
 $app->post('/clients/image-upload', function (Request $request, Response $response) {
-  $directory = __DIR__ . '/../../uploads';
+  $directory = __DIR__ . '/../../uploads/client';
   $uploadedFiles = $request->getUploadedFiles();
 
   try {
@@ -333,7 +289,7 @@ $app->post('/clients/image-upload', function (Request $request, Response $respon
     if( isset($uploadedFiles['images']) ) {
       foreach ($uploadedFiles['images'] as $uploadedFile) {
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-          $filename = moveUploadedFile2($directory, $uploadedFile);
+          $filename = moveUploadedFileClient($directory, $uploadedFile);
           $uploaded[] = $filename;
         }
       }
@@ -355,10 +311,12 @@ $app->post('/clients/image-upload', function (Request $request, Response $respon
 
 });
 
-function moveUploadedFile2(string $directory, UploadedFileInterface $uploadedFile) {
-    $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-    $name = pathinfo($uploadedFile->getClientFilename(), PATHINFO_FILENAME);
-    $filename = sprintf('%s.%0.8s', $name, $extension);
-    $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
-    return $filename;
+
+// HELPER: FILE UPLOAD
+function moveUploadedFileClient(string $directory, UploadedFileInterface $uploadedFile) {
+  $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+  $name = pathinfo($uploadedFile->getClientFilename(), PATHINFO_FILENAME);
+  $filename = sprintf('%s.%0.8s', $name, $extension);
+  $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+  return $filename;
 }

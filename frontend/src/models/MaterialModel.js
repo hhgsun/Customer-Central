@@ -5,7 +5,7 @@ export default class MaterialModel {
     this.clientId = args["clientId"] ?? null;
     this.label = args["label"] ?? '';
     this.file_val = args["file_val"] ?? {};
-    this.color = args["color"] ?? '';
+    this.color = args["color"] ?? { hex: "", cmyk: "", rgb: "" };
     this.type = args["type"] ?? '';
     this.layout_id = args["layout_id"] ?? null;
     this.block_id = args["block_id"] ?? null;

@@ -4,9 +4,9 @@ class Db
 {
   // Database info
   private $dbhost = 'localhost';
-  private $dbuser = 'u8683260_tbr';
-  private $dbpass = 'KVth07U9ARil34O';
-  private $dbname = 'u8683260_tbr';
+  private $dbuser = 'gazi_hhgsun58';
+  private $dbpass = 'hhgsun58/*';
+  private $dbname = 'gazi_briefcent';
 
   // init create table
   public function __construct() {

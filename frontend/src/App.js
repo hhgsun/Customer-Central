@@ -2,19 +2,17 @@ import './App.css';
 import React, { useState } from "react";
 
 import AboutPage from './pages/AboutPage';
-
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   NavLink,
-  Redirect,
-  useHistory
+  useHistory,
+  HashRouter
 } from "react-router-dom";
 import FormsPage from './pages/FormsPage';
 import FormEditPage from './pages/FormEditPage';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllForms, setFormsPagination } from './store/formSlice';
 import FormViewPage from './pages/FormViewPage';
 import FormService from './services/formService';
 import { useEffect } from 'react';
@@ -23,6 +21,10 @@ import SignupPage from './pages/SignupPage';
 import { authLogin } from './store/authSlice';
 import ClientsPage from './pages/ClientsPage';
 import ClientEditPage from './pages/ClientEditPage';
+import ClientViewPage from './pages/ClientViewPage';
+import PresentationsPage from './pages/PresentationsPage';
+import PresentationEditPage from './pages/PresentationEditPage';
+import PresentationViewPage from './pages/PresentationViewPage';
 
 
 function App() {
@@ -47,25 +49,27 @@ function App() {
       {
         auth.isAuth ?
           isLoad ?
-            <Router>
+            <HashRouter>
               <Switch>
                 <Route path="/" component={Dashboard} exact={true} />
                 <Route path="/form/:formId" component={FormViewPage} />
+                <Route path="/client/:clientId" component={ClientViewPage} />
+                <Route path="/presentation/:presentId" component={PresentationViewPage} />
                 <Route path="/dashboard" component={Dashboard} />
-                <Route path="*" component={Dashboard} />
+                <Route path="/*" component={Dashboard} />
               </Switch>
-            </Router>
+            </HashRouter>
             :
             <div>Bekleyiniz...</div>
           :
-          <Router>
+          <HashRouter>
             <Switch>
               <Route path="/" component={LoginPage} exact={true} />
               <Route path="/login" component={LoginPage} />
               <Route path="/signup" component={SignupPage} />
-              <Route path="*" component={LoginPage} />
+              <Route path="/*" component={LoginPage} />
             </Switch>
-          </Router>
+          </HashRouter>
 
       }
     </>
@@ -100,13 +104,16 @@ function Dashboard({ match }) {
                 <NavLink activeClassName="active" className="nav-link" to="/dashboard/forms"><i className="bi bi-terminal"></i>Forms</NavLink>
               </li>
               <li className="nav-item">
+                <NavLink activeClassName="active" className="nav-link" to="/dashboard/clients"><i className="bi bi-terminal"></i>Clients</NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink activeClassName="active" className="nav-link" to="/dashboard/presentations"><i className="bi bi-terminal"></i>Presentations</NavLink>
+              </li>
+              <li className="nav-item">
                 <NavLink activeClassName="active" className="nav-link" to="/dashboard/about"><i className="bi bi-terminal"></i>About</NavLink>
               </li>
               <li className="nav-item">
                 <NavLink activeClassName="active" className="nav-link" to="/dashboard/users"><i className="bi bi-terminal"></i>Users</NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink activeClassName="active" className="nav-link" to="/dashboard/clients"><i className="bi bi-terminal"></i>Clients</NavLink>
               </li>
               <li>
                 <a href="#" className="nav-link" onClick={(e) => logout(e)}><i className="bi bi-box-arrow-left"></i>Çıkış Yap</a>
@@ -142,6 +149,15 @@ function Dashboard({ match }) {
             </Route>
             <Route path={`${match.url}/client-edit/:clientId`}>
               <ClientEditPage />
+            </Route>
+            <Route path={`${match.url}/presentations`}>
+              <PresentationsPage />
+            </Route>
+            <Route path={`${match.url}/presentation-add`}>
+              <PresentationEditPage />
+            </Route>
+            <Route path={`${match.url}/presentation-edit/:presentId`}>
+              <PresentationEditPage />
             </Route>
           </Switch>
         </main>

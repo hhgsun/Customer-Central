@@ -1,3 +1,6 @@
+# HHGsun
+- (DÜZENLE) client düzenlemede (MaterialList.js) bir block silindiğinde block'a ait materialler, silinecek material id listesine atılmalı. group silindiğinde alt materiallere bu işlemi yapıyor fakat block silindiğinde yapmıyor.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

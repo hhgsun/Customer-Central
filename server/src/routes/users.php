@@ -5,7 +5,7 @@ use Psr\Http\Message\UploadedFileInterface;
 use Slim\Factory\AppFactory;
 
 // Tüm Formlar
-$app->get('/forms', function (Request $request, Response $response) {
+$app->get('/users', function (Request $request, Response $response) {
 
   $page = isset($_GET['page']) ? $_GET['page'] : 1;
   $direction = isset($_GET['direction']) ? $_GET['direction'] : 'DESC';
@@ -19,7 +19,7 @@ $app->get('/forms', function (Request $request, Response $response) {
   try {
     $db = $db->connect();
 
-    $total = $db->query('SELECT COUNT(*) FROM forms WHERE isDelete = 0')->fetchColumn();
+    $total = $db->query('SELECT COUNT(*) FROM users WHERE isDelete = 0')->fetchColumn();
 
     $sth = $db->prepare("SELECT * FROM forms WHERE isDelete = 0 ORDER BY ". $sort_by ." ". $direction ." LIMIT :limit OFFSET :offset");
     $sth->bindParam('limit', $limit, PDO::PARAM_INT);

@@ -30,26 +30,36 @@ export default class FormService {
   }
 
   async addForm(form) {
+    form.sections.map(s => {
+      s.value.map(v => {
+        if (v.newAddedUrl) v.newAddedUrl = null;
+      })
+    });
     const res = await fetch(`${this.API_URL}/forms/add`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form)
     });
     const added = await res.json();
-    if( added ) {
+    if (added) {
       this.imageUpload(form.sections)
     }
     return added;
   }
 
   async updateForm(form) {
+    form.sections.map(s => {
+      s.value.map(v => {
+        if (v.newAddedUrl) v.newAddedUrl = null;
+      })
+    });
     const res = await fetch(`${this.API_URL}/forms/${form.id}/update`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form)
     });
     const updated = await res.json();
-    if( updated ) {
+    if (updated) {
       this.imageUpload(form.sections)
     }
     return updated;

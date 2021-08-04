@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import PresentationService from '../services/presentationService';
+import { setAllPresentations, setPresentationsPagination } from '../store/presentationSlice';
 
-import { NavLink } from "react-router-dom";
-import FormService from '../services/formService';
-import { setAllForms, setFormsPagination } from '../store/formSlice';
+export default function PresentationsPage() {
 
-export default function FormsPage() {
-  const forms = useSelector((state) => state.forms.all);
-  const pagination = useSelector((state) => state.forms.pagination);
+  const presetations = useSelector((state) => state.presentations.all);
+  const pagination = useSelector((state) => state.presentations.pagination);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState(localStorage.getItem('sort_by_form') || "id");
-  const [direction, setDirection] = useState(localStorage.getItem('direction_form') || "DESC");
+  const [sortBy, setSortBy] = useState(localStorage.getItem('sort_by_present') || "id");
+  const [direction, setDirection] = useState(localStorage.getItem('direction_present') || "DESC");
   const [isLoad, setIsLoad] = useState(false)
 
   const dispatch = useDispatch();
 
-  const formService = new FormService();
+  const presentService = new PresentationService();
 
   useEffect(() => {
-    if (forms === undefined || forms === null || forms.length === 0) {
-      formService.getAllForms().then(res => {
-        dispatch(setAllForms(res.forms));
-        dispatch(setFormsPagination({
+    if (presetations === undefined || presetations === null || presetations.length === 0) {
+      presentService.getAllPresentations().then(res => {
+        dispatch(setAllPresentations(res.presentations));
+        dispatch(setPresentationsPagination({
           page: res.page,
           total: res.total,
           limit: res.limit,
-        }));
+        }))
         setIsLoad(true);
       });
     } else {
@@ -36,10 +36,9 @@ export default function FormsPage() {
 
   const goPage = (page = 1, sort_by = "id", direction = "DESC") => {
     setIsLoad(false);
-    formService.getAllForms({ page: page, sort_by: sort_by, direction: direction }).then(res => {
-      dispatch(setAllForms(res.forms));
-      setIsLoad(true);
-    });
+    presentService.getAllPresentations({ page: page, sort_by: sort_by, direction: direction }).then(res => {
+      dispatch(setAllPresentations(res.presentations));
+    })
     setCurrentPage(page);
     setDirection(direction);
     setSortBy(sort_by);
@@ -47,10 +46,10 @@ export default function FormsPage() {
   }
 
   return (
-    <div className="form-page">
+    <div className="presentations-page">
       <div className="d-flex align-items-center">
-        <h2>Form List</h2>
-        <NavLink className="btn btn-sm btn-dark ms-auto" to={"/dashboard/form-add"}>Yeni Ekle</NavLink>
+        <h2>Presentation List</h2>
+        <NavLink className="btn btn-sm btn-dark ms-auto" to={"/dashboard/presentation-add"}>Yeni Ekle</NavLink>
       </div>
 
       {isLoad
@@ -75,26 +74,21 @@ export default function FormsPage() {
                   updateDate
                   {sortBy === "updateDate" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
                 </th>
-                <th scope="col" onClick={(e) => goPage(currentPage, "status", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
-                  status
-                  {sortBy === "status" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
-                </th>
                 <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
-              {forms.map((form, index) => (
+              {presetations.map((presetation, index) => (
                 <tr key={index}>
-                  <th scope="row">{form.id}</th>
-                  <td>{form.title}</td>
-                  <td>{form.createdDate}</td>
-                  <td>{form.updateDate}</td>
-                  <td>{form.status === "1" ? "Answered" : "Not Answered"}</td>
+                  <th scope="row">{presetation.id}</th>
+                  <td>{presetation.title}</td>
+                  <td>{presetation.createdDate}</td>
+                  <td>{presetation.updateDate}</td>
                   <td className="d-flex justify-content-end">
-                    <NavLink className="btn btn-secondary btn-sm" to={`form-edit/${form.id}`}>
+                    <NavLink className="btn btn-secondary btn-sm" to={`presentation-edit/${presetation.id}`}>
                       Edit
                     </NavLink>
-                    <NavLink className="btn btn-light btn-sm ms-2" to={`/form/${form.id}`} target={'_blank'}>
+                    <NavLink className="btn btn-light btn-sm ms-2" to={`/presentation/${presetation.id}`} target={'_blank'}>
                       View
                     </NavLink>
                   </td>

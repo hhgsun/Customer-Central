@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import CustomerFooter from '../components/CustomerFooter';
 import SectionList from '../components/SectionList';
 import FormModel from '../models/FormModel';
 import FormService from '../services/formService';
 import { updateForm } from '../store/formSlice';
+import LogoTBR from "../images/logo-tbr.png";
 
 export default function FormViewPage() {
   const { formId } = useParams()
@@ -64,7 +66,7 @@ export default function FormViewPage() {
           {isAnswered ? <span className="ms-3">Teşekkürler! Vermiş olduğunuz bilgiler ekibimize iletilmiştir.</span> : <></>}
         </div>
       </div>
-      <FormFooter />
+      <CustomerFooter />
     </div>
   )
 }
@@ -98,8 +100,8 @@ function FormHeader({ isLoad, formData, setSelectedCatName }) {
     <header className="form-header py-4">
       <div className="container-brief d-flex py-2 align-items-center">
         <div className="header-head">
-          <a href="http://thebluered.co.uk/" className="custom-logo-link logo-innerpage" rel="home" aria-current="page" title="The Blue Red">
-            <img width="200" height="37" src="http://thebluered.co.uk/wp-content/uploads/2021/05/cropped-logo-1-e1621355087557.png" className="header-logo" alt="The Blue Red" />
+          <a href="http://thebluered.co.uk/" title="The Blue Red">
+            <img width="200" height="37" src={LogoTBR} className="header-logo" alt="The Blue Red" />
           </a>
           <div className="header-head-subtitle">Brief central</div>
         </div>
@@ -116,23 +118,5 @@ function FormHeader({ isLoad, formData, setSelectedCatName }) {
         }
       </div>
     </header>
-  )
-}
-
-function FormFooter() {
-  return (
-    <div className="brief-footer no-print">
-      <div className="container-brief">
-        <div className="site-info text-center py-4">
-          <a href="http://thebluered.co.uk/" title="TheBlueRed" className="text-decoration-none small">
-            Proudly powered by theBlueRed
-          </a>
-          <span style={{ display: "none" }}>
-            dev by
-            <a href="https://hhgsun.wordpress.com">HHGsun</a>.
-          </span>
-        </div>
-      </div>
-    </div>
   )
 }

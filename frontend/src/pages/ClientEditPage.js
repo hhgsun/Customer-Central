@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import { NavLink, useHistory, useParams } from 'react-router-dom';
 import MaterialList from '../components/MaterialList';
 import ClientModel from '../models/ClientModel';
 import ClientService from '../services/clientService';
@@ -32,14 +32,26 @@ export default function ClientEditPage() {
   }, [])
 
   const sendClient = () => {
+    if (!clientData.title) {
+      alert("Lütfen Form Başlığı Belirtin.");
+      return;
+    }
     clientService.addClient(clientData).then((id) => {
       dispacth(addClient({ ...clientData, id: id }));
+      history.push(`/dashboard/client-edit/${id}`);
+      alert("Form Eklendi");
+      window.location.reload();
     });
   }
 
   const sendUpdateClient = () => {
+    if (!clientData.title) {
+      alert("Lütfen Form Başlığı Belirtin.");
+      return;
+    }
     clientService.updateClient(clientData).then(r => {
       dispacth(updateClient(clientData));
+      alert("Güncelleme Başarılı");
     })
   }
 
@@ -85,7 +97,9 @@ export default function ClientEditPage() {
               <div className="ms-auto">
                 {clientData.id !== null
                   ? <>
-                    <a href={`/client/${clientId}`} className="btn btn-sm btn-outline-dark" target="_blank" rel="noreferrer"><i className="bi bi-eye"></i> VİEW</a>
+                    <NavLink className="btn btn-sm btn-outline-dark" to={`/client/${clientId}`} target={'_blank'} rel="noreferrer">
+                      <i className="bi bi-eye"></i> VİEW
+                    </NavLink>
                     <button className="btn btn-dark btn-sm ms-2" onClick={sendUpdateClient}>UPDATE CLIENT</button>
                   </>
                   : <button className="btn btn-dark btn-sm ms-2" onClick={sendClient}>SEND CLIENT</button>}
