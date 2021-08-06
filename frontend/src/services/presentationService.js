@@ -1,6 +1,6 @@
 import PresentationModel from "../models/PresentationModel";
 
-import { API_URL, UPLOAD_PRESENTATION_URL } from "./config";
+import { API_URL, UPLOAD_PRESENTATION_URL } from "../config";
 
 export default class PresentationService {
 

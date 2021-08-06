@@ -1,6 +1,6 @@
 import FormModel from "../models/FormModel";
 
-import { API_URL, UPLOAD_FORM_URL } from "./config";
+import { API_URL, UPLOAD_FORM_URL } from "../config";
 
 export default class FormService {
 

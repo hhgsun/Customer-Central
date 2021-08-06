@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { NavLink, useHistory, useParams } from 'react-router-dom';
 import { ReactSortable } from 'react-sortablejs';
 import PresentationModel from '../models/PresentationModel';
-import { UPLOAD_PRESENTATION_URL } from '../services/config';
+import { UPLOAD_PRESENTATION_URL } from '../config';
 import PresentationService from '../services/presentationService';
 import { addPresentation, deletePresentation, updatePresentation } from '../store/presentationSlice';
 

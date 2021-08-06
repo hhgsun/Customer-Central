@@ -6,9 +6,8 @@ use Slim\Factory\AppFactory;
 // $_ENV['SLIM_MODE'] = 'development';
 $_ENV['SLIM_MODE'] = 'production';
 
-
 require __DIR__ . '/vendor/autoload.php';
-require './src/config/db.php';
+require './src/db.php';
 
 $app = AppFactory::create();
 

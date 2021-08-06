@@ -1,6 +1,6 @@
 import ClientModel from "../models/ClientModel";
 
-import { API_URL, UPLOAD_CLIENT_URL } from "./config";
+import { API_URL, UPLOAD_CLIENT_URL } from "../config";
 
 export default class ClientService {
 

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import ClientModel from '../models/ClientModel';
 import ClientService from '../services/clientService';
 import LogoTBR from "../images/logo-tbr.png";
 import CustomerFooter from '../components/CustomerFooter';
 import IconFile from '../components/IconFile';
-import { UPLOAD_CLIENT_URL } from '../services/config';
+import { UPLOAD_CLIENT_URL } from '../config';
 
 export default function ClientViewPage() {
   const { clientId } = useParams()

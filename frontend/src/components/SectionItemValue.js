@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { ReactSortable } from 'react-sortablejs';
-import { UPLOAD_FORM_URL } from '../services/config';
+import { UPLOAD_FORM_URL } from '../config';
 
 export default function SectionItemValue({ sectionIndex, sectionValues, inputtype, isEdit = false, isAdmin = false, handle }) {
 

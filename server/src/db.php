@@ -1,17 +1,41 @@
 <?php
 
-class Db
-{
-  // Database info
+class Db {
+
+  // Database info - development (publish: settings.php)
   private $dbhost = 'localhost';
-  private $dbuser = 'gazi_hhgsun58';
-  private $dbpass = 'hhgsun58/*';
-  private $dbname = 'gazi_briefcent';
+  private $dbuser = 'root';
+  private $dbpass = '';
+  private $dbname = 'brief_central';
 
   // init create table
   public function __construct() {
-    $db = $this->connect();
     try {
+
+      // publish database
+      if( $_ENV['SLIM_MODE'] == 'production' ) {
+        /* create file; settings.php: */
+        /*
+        $dbhost = 'localhost';
+        $dbuser = '';
+        $dbpass = '';
+        $dbname = '';
+        */
+        // require __DIR__ . './settings.php';
+
+        $dbhost = 'localhost';
+        $dbuser = 'gazi_hhgsun58';
+        $dbpass = 'hhgsun58/*';
+        $dbname = 'gazi_briefcent';
+
+        $this->dbhost = $dbhost;
+        $this->dbuser = $dbuser;
+        $this->dbpass = $dbpass;
+        $this->dbname = $dbname;
+      }
+
+      $db = $this->connect();
+
       $sth = "CREATE TABLE IF NOT EXISTS `answers` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `formId` int(11) NOT NULL,
@@ -113,13 +137,6 @@ class Db
 
   // connect db
   public function connect() {
-    // develepment database
-    if( $_ENV['SLIM_MODE'] == 'development' ) {
-      $this->dbhost = 'localhost';
-      $this->dbuser = 'root';
-      $this->dbpass = '';
-      $this->dbname = 'brief_central';
-    }
     $mysql_connection = "mysql:host=$this->dbhost;dbname=$this->dbname;charset=utf8";
     $connection = new PDO($mysql_connection, $this->dbuser, $this->dbpass);
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

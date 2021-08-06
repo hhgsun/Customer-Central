@@ -1,7 +1,7 @@
 import { nanoid } from '@reduxjs/toolkit';
-import React, { useState } from 'react'
+import React from 'react'
 import MaterialModel from '../models/MaterialModel';
-import { UPLOAD_CLIENT_URL } from '../services/config';
+import { UPLOAD_CLIENT_URL } from '../config';
 import IconFile from './IconFile';
 
 export default function MaterialList({ clientData, setClientData }) {

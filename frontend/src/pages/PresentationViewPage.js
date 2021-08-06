@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import PresentationModel from '../models/PresentationModel';
-import { UPLOAD_PRESENTATION_URL } from '../services/config';
+import { UPLOAD_PRESENTATION_URL } from '../config';
 import PresentationService from '../services/presentationService';
 
 export default function PresentationViewPage() {
