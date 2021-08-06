@@ -14,7 +14,6 @@ import FormsPage from './pages/FormsPage';
 import FormEditPage from './pages/FormEditPage';
 import { useDispatch, useSelector } from 'react-redux';
 import FormViewPage from './pages/FormViewPage';
-import FormService from './services/formService';
 import { useEffect } from 'react';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -33,9 +32,9 @@ function App() {
 
   const [isLoad, setIsLoad] = useState(false)
 
-  const [token, setToken] = useState(null)
+  /* const [token, setToken] = useState(null)
 
-  const formService = new FormService();
+  const formService = new FormService(); */
 
   useEffect(() => {
     if (localStorage.getItem("jwt") !== null) {
@@ -87,7 +86,7 @@ function Dashboard({ match }) {
   }
   return <>
     <header className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap px-3 shadow">
-      <NavLink className="navbar-brand col-md-3 col-lg-2 me-0" to="/">Customer Central</NavLink>
+      <NavLink className="navbar-brand col-md-3 col-lg-2 me-0" to="/">Client Central</NavLink>
       <button className="navbar-toggler d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon"></span>
       </button>
@@ -101,17 +100,17 @@ function Dashboard({ match }) {
                 <NavLink exact activeClassName="active" className="nav-link" to="/dashboard"><i className="bi bi-terminal"></i>Home</NavLink>
               </li>
               <li className="nav-item">
-                <NavLink activeClassName="active" className="nav-link" to="/dashboard/forms"><i className="bi bi-terminal"></i>Forms</NavLink>
+                <NavLink activeClassName="active" className="nav-link" to="/dashboard/forms"><i className="bi bi-terminal"></i>Brief Central</NavLink>
               </li>
               <li className="nav-item">
-                <NavLink activeClassName="active" className="nav-link" to="/dashboard/clients"><i className="bi bi-terminal"></i>Clients</NavLink>
+                <NavLink activeClassName="active" className="nav-link" to="/dashboard/presentations"><i className="bi bi-terminal"></i>Presentation Central</NavLink>
               </li>
               <li className="nav-item">
-                <NavLink activeClassName="active" className="nav-link" to="/dashboard/presentations"><i className="bi bi-terminal"></i>Presentations</NavLink>
+                <NavLink activeClassName="active" className="nav-link" to="/dashboard/clients"><i className="bi bi-terminal"></i>Storage Central</NavLink>
               </li>
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <NavLink activeClassName="active" className="nav-link" to="/dashboard/about"><i className="bi bi-terminal"></i>About</NavLink>
-              </li>
+              </li> */}
               <li className="nav-item">
                 <NavLink activeClassName="active" className="nav-link" to="/dashboard/users"><i className="bi bi-terminal"></i>Users</NavLink>
               </li>

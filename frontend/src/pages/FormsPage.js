@@ -49,7 +49,7 @@ export default function FormsPage() {
   return (
     <div className="form-page">
       <div className="d-flex align-items-center">
-        <h2>Form List</h2>
+        <h2>Brief List</h2>
         <NavLink className="btn btn-sm btn-dark ms-auto" to={"/dashboard/form-add"}>Yeni Ekle</NavLink>
       </div>
 

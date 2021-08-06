@@ -31,8 +31,8 @@ export default function LoginPage() {
   return (
     <div className="login-page d-flex justify-content-center align-items-center bg-light">
       <form className="form-signin" onSubmit={(e) => submitForm(e)}>
-        <img className="mb-4" src={LogoTBR} alt="thebluered" width="200" />
-        <h1 className="h3 mb-3 fw-normal mt-3">Please sign in</h1>
+        <img className="mb-5" src={LogoTBR} alt="thebluered" width="200" />
+        {/* <h1 className="h3 mb-3 fw-normal mt-3">Please sign in</h1> */}
 
         <div className="form-floating">
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="name@example.com" required />

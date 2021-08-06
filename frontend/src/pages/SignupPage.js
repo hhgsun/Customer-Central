@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import AuthService from '../services/authService'
 import LogoTBR from "../images/logo-tbr.png";
 
 export default function SignupPage() {
+  let history = useHistory();
 
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
@@ -13,7 +14,7 @@ export default function SignupPage() {
 
   const submitForm = (e) => {
     e.preventDefault();
-    if( password !== passwordRes ) {
+    if (password !== passwordRes) {
       alert("Şifre ve tekrarının aynı olduğuna emin olun.")
       return;
     }
@@ -24,10 +25,13 @@ export default function SignupPage() {
       "firstname": firstName,
       "lastname": lastName
     }).then(res => {
-      if( res.message ) {
+      if (res.message) {
         alert(res.message);
       } else {
         console.log(res);
+        history.push("/");
+        alert("Kayıt işlemi başarılı, giriş yapabilirsiniz.");
+        window.location.reload();
       }
     });
   }
@@ -35,8 +39,8 @@ export default function SignupPage() {
   return (
     <div className="signup-page d-flex justify-content-center align-items-center bg-light">
       <form className="form-signin" onSubmit={(e) => submitForm(e)}>
-        <img className="mb-4" src={LogoTBR} alt="thebluered" width="200" />
-        <h1 className="h3 mb-3 fw-normal mt-3">Please sign up</h1>
+        <img className="mb-5" src={LogoTBR} alt="thebluered" width="200" />
+        {/* <h1 className="h3 mb-3 fw-normal mt-3">Please sign up</h1> */}
 
         <div className="form-floating mb-1">
           <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="form-control" placeholder="" required />

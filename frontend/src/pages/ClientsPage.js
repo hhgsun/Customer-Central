@@ -48,7 +48,7 @@ export default function ClientsPage() {
   return (
     <div className="clients-page">
       <div className="d-flex align-items-center">
-        <h2>Client List</h2>
+        <h2>Storage List</h2>
         <NavLink className="btn btn-sm btn-dark ms-auto" to={"/dashboard/client-add"}>Yeni Ekle</NavLink>
       </div>
 
