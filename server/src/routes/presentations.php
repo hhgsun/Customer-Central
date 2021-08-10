@@ -96,12 +96,13 @@ $app->post('/presentations/add', function (Request $request, Response $response)
   try {
     $db = $db->connect();
 
-    $sth = 'INSERT INTO presentations (title, images, createdDate) VALUES (:title, :images, :createdDate)';
+    $sth = 'INSERT INTO presentations (title, images, createdDate, userId) VALUES (:title, :images, :createdDate, :userId)';
     $prepare = $db->prepare($sth);
     $isAdded = $prepare->execute([
                             'title' => $params['title'],
                             'images' => json_encode($params['images']),
-                            'createdDate' => $params['createdDate']
+                            'createdDate' => $params['createdDate'],
+                            'userId' => $params['userId'] ? $params['userId'] : 0,
                           ]);
     $presentId = $db->lastInsertId();
 
@@ -143,7 +144,7 @@ $app->post('/presentations/{presentationId}/update', function (Request $request,
   try {
     $db = $db->connect();
     $sth = 'UPDATE presentations 
-            SET title=:title, images=:images, updateDate=:updateDate
+            SET title=:title, images=:images, updateDate=:updateDate, userId=:userId
             WHERE id = :presentationId';
     $prepare = $db->prepare($sth);
     $isUpdate = $prepare->execute([
@@ -151,6 +152,7 @@ $app->post('/presentations/{presentationId}/update', function (Request $request,
                             'images' => json_encode($params['images']),
                             'updateDate' => $params['updateDate'],
                             'presentationId' => $presentationsId,
+                            'userId' => $params['userId'] ? $params['userId'] : 0,
                           ]);
 
     $response->getBody()->write(json_encode($isUpdate));

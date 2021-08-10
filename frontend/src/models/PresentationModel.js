@@ -6,5 +6,6 @@ export default class PresentationModel {
     this.createdDate = args["createdDate"] ?? '';
     this.updateDate = args["updateDate"] ?? '';
     this.images = args["images"] ?? [];
+    this.userId = args["userId"] ?? 0;
   }
 }

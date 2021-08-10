@@ -68,10 +68,10 @@ $app->get('/forms/{id}', function (Request $request, Response $response) {
     $form = $sth->fetch(PDO::FETCH_OBJ);
 
     if( $form ) {
-      $sth = $db->prepare("SELECT * FROM answers WHERE formId = :id AND isDelete = 0");
+      $sth = $db->prepare("SELECT * FROM form_answers WHERE formId = :id AND isDelete = 0");
       $sth->bindParam('id', $id, PDO::PARAM_INT);
       $sth->execute();
-      $form->sections = $sth->fetchAll(PDO::FETCH_OBJ);
+      $form->answers = $sth->fetchAll(PDO::FETCH_OBJ);
     }
     
     $response->getBody()->write(json_encode($form));
@@ -97,28 +97,28 @@ $app->post('/forms/add', function (Request $request, Response $response) {
 
   $params = $request->getParsedBody();
   $params['createdDate'] = date("Y-m-d");
-  $sections = $params['sections'];
+  $answers = $params['answers'];
 
   $db = new Db();
 
   try {
     $db = $db->connect();
 
-    $sth = 'INSERT INTO forms (title, status, createdDate, form_pass) VALUES (:title, :status, :createdDate, :form_pass)';
+    $sth = 'INSERT INTO forms (title, isAnswered, createdDate, userId) VALUES (:title, :isAnswered, :createdDate, :userId)';
     $prepare = $db->prepare($sth);
     $isAddedForm = $prepare->execute([
                             'title' => $params['title'],
-                            'status' => isset($params['status']) ? $params['status'] : 0,
+                            'isAnswered' => isset($params['isAnswered']) ? $params['isAnswered'] : 0,
                             'createdDate' => $params['createdDate'],
-                            'form_pass' => $params['form_pass'],
+                            'userId' => $params['userId'] ? $params['userId'] : 0,
                           ]);
     $formId = $db->lastInsertId();
 
     if( $isAddedForm && $formId ) {
       
-      if( $sections ) {
-        foreach ($sections as $key => $section) {
-          addAnswersToForm($db, $section, $formId);
+      if( $answers ) {
+        foreach ($answers as $key => $answer) {
+          addAnswersToForm($db, $answer, $formId);
         }
       }
 
@@ -146,21 +146,21 @@ $app->post('/forms/add', function (Request $request, Response $response) {
 });
 
 
-// MATHOD: Add Sections
-function addAnswersToForm($db, $section, $formId){
-  $section['value'] = json_encode($section['value']);
-  $sth = 'INSERT INTO answers (formId, category, value, input_type, description, label, order_number, permission_edit)
+// MATHOD: Add Answer
+function addAnswersToForm($db, $answer, $formId){
+  $answer['value'] = json_encode($answer['value']);
+  $sth = 'INSERT INTO form_answers (formId, category, value, input_type, description, label, order_number, permission_edit)
           VALUES (:formId, :category, :value, :input_type, :description, :label, :order_number, :permission_edit)';
   $prepare = $db->prepare($sth);
   $prepare->execute([
               'formId' => $formId,
-              'category' => $section['category'],
-              'value' => $section['value'],
-              'input_type' => $section['input_type'],
-              'description' => $section['description'],
-              'label' => $section['label'],
-              'order_number' => $section['order_number'],
-              'permission_edit' => $section['permission_edit'],
+              'category' => $answer['category'],
+              'value' => $answer['value'],
+              'input_type' => $answer['input_type'],
+              'description' => $answer['description'],
+              'label' => $answer['label'],
+              'order_number' => $answer['order_number'],
+              'permission_edit' => $answer['permission_edit'],
             ]);
 }
 
@@ -171,55 +171,55 @@ $app->post('/forms/{formId}/update', function (Request $request, Response $respo
 
   $params = $request->getParsedBody();
   $params['updateDate'] = date("Y-m-d");
-  $sections = $params['sections'];
+  $answers = $params['answers'];
 
   $db = new Db();
 
   try {
     $db = $db->connect();
     $sth = 'UPDATE forms 
-            SET title=:title, status=:status, updateDate=:updateDate, form_pass=:form_pass
+            SET title=:title, isAnswered=:isAnswered, updateDate=:updateDate, userId=:userId
             WHERE id = :formId';
     $prepare = $db->prepare($sth);
     $isUpdateForm = $prepare->execute([
                             'title' => $params['title'],
-                            'status' => isset($params['status']) ? $params['status'] : 0,
+                            'isAnswered' => isset($params['isAnswered']) ? $params['isAnswered'] : 0,
                             'updateDate' => $params['updateDate'],
-                            'form_pass' => $params['form_pass'],
+                            'userId' => $params['userId'] ? $params['userId'] : 0,
                             'formId' => $formId,
                           ]);
 
-    if( $sections && $isUpdateForm ) {
-      foreach ($sections as $key => $section) {
-        // section update
-        if( isset($section['id']) ) {
-          $sth = 'UPDATE answers 
+    if( $answers && $isUpdateForm ) {
+      foreach ($answers as $key => $answer) {
+        // answer update
+        if( isset($answer['id']) ) {
+          $sth = 'UPDATE form_answers 
                   SET input_type = :input_type, category = :category, value = :value, description = :description, label = :label, order_number = :order_number, permission_edit = :permission_edit 
                   WHERE id = :id';
           $prepare = $db->prepare($sth);
           $prepare->execute([
-                      'id' => $section['id'],
-                      'category' => $section['category'],
-                      'value' => json_encode($section['value']),
-                      'input_type' => $section['input_type'],
-                      'description' => $section['description'],
-                      'label' => $section['label'],
-                      'order_number' => $section['order_number'],
-                      'permission_edit' => $section['permission_edit']
+                      'id' => $answer['id'],
+                      'category' => $answer['category'],
+                      'value' => json_encode($answer['value']),
+                      'input_type' => $answer['input_type'],
+                      'description' => $answer['description'],
+                      'label' => $answer['label'],
+                      'order_number' => $answer['order_number'],
+                      'permission_edit' => $answer['permission_edit']
                     ]);
         } else {
-          addAnswersToForm($db, $section, $formId); // add section
+          addAnswersToForm($db, $answer, $formId); // add answer
         }
       }
     }
 
-    if( isset($params['deletedSectionIds']) && $params['deletedSectionIds'] != null ) {
-      foreach ($params['deletedSectionIds'] as $sectionId) {
-        $sth = 'UPDATE answers 
+    if( isset($params['deletedAnswerIds']) && $params['deletedAnswerIds'] != null ) {
+      foreach ($params['deletedAnswerIds'] as $answerId) {
+        $sth = 'UPDATE form_answers 
                 SET isDelete=1
-                WHERE id = :sectionId';
+                WHERE id = :answerId';
         $prepare = $db->prepare($sth);
-        $isUpdateForm = $prepare->execute(['sectionId' => $sectionId]);
+        $isUpdateForm = $prepare->execute(['answerId' => $answerId]);
       }
     }
 
@@ -283,7 +283,7 @@ $app->get('/forms/{formId}/answers', function (Request $request, Response $respo
   try {
     $db = $db->connect();
     
-    $sth = $db->prepare('SELECT * FROM answers WHERE formId = :formId AND isDelete = 0');
+    $sth = $db->prepare('SELECT * FROM form_answers WHERE formId = :formId AND isDelete = 0');
     $sth->bindParam('formId', $formId, PDO::PARAM_INT);
     $sth->execute();
     $answers = $sth->fetchAll(PDO::FETCH_OBJ);

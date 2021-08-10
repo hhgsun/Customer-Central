@@ -3,11 +3,12 @@ export default class FormModel {
     args = args ?? {};
     this.id = args["id"] ?? null;
     this.title = args["title"] ?? '';
-    this.status = args["status"] ?? 0;
+    this.isAnswered = args["isAnswered"] ?? 0;
     this.createdDate = args["createdDate"] ?? '';
     this.updateDate = args["updateDate"] ?? '';
-    this.sections = args["sections"] ?? [];
+    this.answers = args["answers"] ?? [];
     this.form_pass = args["form_pass"] ?? "0000";
-    this.deletedSectionIds = [];
+    this.deletedAnswerIds = [];
+    this.userId = args["userId"] ?? 0;
   }
 }

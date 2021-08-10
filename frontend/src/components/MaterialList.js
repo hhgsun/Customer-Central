@@ -1,16 +1,16 @@
 import { nanoid } from '@reduxjs/toolkit';
 import React from 'react'
 import MaterialModel from '../models/MaterialModel';
-import { UPLOAD_CLIENT_URL } from '../config';
+import { UPLOAD_STORAGE_URL } from '../config';
 import IconFile from './IconFile';
 
-export default function MaterialList({ clientData, setClientData }) {
+export default function MaterialList({ storageData, setStorageData }) {
 
   const addLayout = () => {
-    setClientData(prevState => ({
-      ...clientData,
+    setStorageData(prevState => ({
+      ...storageData,
       layouts: [
-        ...clientData.layouts,
+        ...storageData.layouts,
         { id: nanoid(6), title: "", bgColor: "#088bcb", textColor: "#ffffff", blocks: [] }
       ]
     }));
@@ -18,44 +18,44 @@ export default function MaterialList({ clientData, setClientData }) {
 
   const addBlock = (e, layoutIndex, blockType = "files") => {
     const layouts = [
-      ...clientData.layouts.slice(0, layoutIndex),
+      ...storageData.layouts.slice(0, layoutIndex),
       {
-        ...clientData.layouts[layoutIndex],
+        ...storageData.layouts[layoutIndex],
         blocks: [
-          ...clientData.layouts[layoutIndex].blocks,
+          ...storageData.layouts[layoutIndex].blocks,
           { id: nanoid(6), title: "", type: blockType, groups: [] }
         ]
       },
-      ...clientData.layouts.slice(layoutIndex + 1)
+      ...storageData.layouts.slice(layoutIndex + 1)
     ]
-    setClientData(prevState => ({
-      ...clientData,
+    setStorageData(prevState => ({
+      ...storageData,
       layouts: layouts
     }));
   }
 
   const addGroup = (e, layoutIndex, blockIndex) => {
     const blocks = [
-      ...clientData.layouts[layoutIndex].blocks.slice(0, blockIndex),
+      ...storageData.layouts[layoutIndex].blocks.slice(0, blockIndex),
       {
-        ...clientData.layouts[layoutIndex].blocks[blockIndex],
+        ...storageData.layouts[layoutIndex].blocks[blockIndex],
         groups: [
-          ...clientData.layouts[layoutIndex].blocks[blockIndex].groups,
+          ...storageData.layouts[layoutIndex].blocks[blockIndex].groups,
           { id: nanoid(6), title: "" }
         ]
       },
-      ...clientData.layouts[layoutIndex].blocks.slice(blockIndex + 1),
+      ...storageData.layouts[layoutIndex].blocks.slice(blockIndex + 1),
     ];
     const layouts = [
-      ...clientData.layouts.slice(0, layoutIndex),
+      ...storageData.layouts.slice(0, layoutIndex),
       {
-        ...clientData.layouts[layoutIndex],
+        ...storageData.layouts[layoutIndex],
         blocks: blocks
       },
-      ...clientData.layouts.slice(layoutIndex + 1)
+      ...storageData.layouts.slice(layoutIndex + 1)
     ]
-    setClientData(prevState => ({
-      ...clientData,
+    setStorageData(prevState => ({
+      ...storageData,
       layouts: layouts
     }));
   }
@@ -63,10 +63,10 @@ export default function MaterialList({ clientData, setClientData }) {
   const deleteLayout = (e, layoutId) => {
     var c = window.confirm("Alanı silmek üzeresiniz.")
     if (!c) return;
-    const layouts = clientData.layouts.filter(l => l.id !== layoutId);
+    const layouts = storageData.layouts.filter(l => l.id !== layoutId);
     let filtered = [];
     let deletedIds = [];
-    clientData.materials.forEach(m => {
+    storageData.materials.forEach(m => {
       var d = (m.layout_id === layoutId);
       if (d) {
         if (m.id != null) {
@@ -76,11 +76,11 @@ export default function MaterialList({ clientData, setClientData }) {
         filtered.push(m);
       }
     });
-    setClientData(prevState => ({
-      ...clientData,
+    setStorageData(prevState => ({
+      ...storageData,
       layouts: layouts,
       materials: filtered,
-      deletedMaterialIds: [...clientData.deletedMaterialIds, ...deletedIds]
+      deletedMaterialIds: [...storageData.deletedMaterialIds, ...deletedIds]
     }))
   }
 
@@ -88,17 +88,17 @@ export default function MaterialList({ clientData, setClientData }) {
     var c = window.confirm("Bloğu silmek üzeresiniz.")
     if (!c) return;
     const layouts = [
-      ...clientData.layouts.filter(l => l.id !== layoutId),
+      ...storageData.layouts.filter(l => l.id !== layoutId),
       {
-        ...clientData.layouts.filter(l => l.id === layoutId)[0],
+        ...storageData.layouts.filter(l => l.id === layoutId)[0],
         blocks: [
-          ...clientData.layouts.filter(l => l.id === layoutId)[0].blocks.filter(b => b.id !== blockId),
+          ...storageData.layouts.filter(l => l.id === layoutId)[0].blocks.filter(b => b.id !== blockId),
         ]
       },
     ]
     let filtered = [];
     let deletedIds = [];
-    clientData.materials.forEach(m => {
+    storageData.materials.forEach(m => {
       var d = (m.layout_id === layoutId && m.block_id === blockId);
       if (d) {
         if (m.id != null) {
@@ -108,11 +108,11 @@ export default function MaterialList({ clientData, setClientData }) {
         filtered.push(m);
       }
     });
-    setClientData(prevState => ({
-      ...clientData,
+    setStorageData(prevState => ({
+      ...storageData,
       layouts: layouts,
       materials: filtered,
-      deletedMaterialIds: [...clientData.deletedMaterialIds, ...deletedIds]
+      deletedMaterialIds: [...storageData.deletedMaterialIds, ...deletedIds]
     }))
   }
 
@@ -120,15 +120,15 @@ export default function MaterialList({ clientData, setClientData }) {
     var c = window.confirm("Grubu silmeniz durumunda gruba ait materyaller de silinecektir.")
     if (!c) return;
     const layouts = [
-      ...clientData.layouts.filter(l => l.id !== layoutId),
+      ...storageData.layouts.filter(l => l.id !== layoutId),
       {
-        ...clientData.layouts.filter(l => l.id === layoutId)[0],
+        ...storageData.layouts.filter(l => l.id === layoutId)[0],
         blocks: [
-          ...clientData.layouts.filter(l => l.id === layoutId)[0].blocks.filter(b => b.id !== blockId),
+          ...storageData.layouts.filter(l => l.id === layoutId)[0].blocks.filter(b => b.id !== blockId),
           {
-            ...clientData.layouts.filter(l => l.id === layoutId)[0].blocks.filter(b => b.id === blockId)[0],
+            ...storageData.layouts.filter(l => l.id === layoutId)[0].blocks.filter(b => b.id === blockId)[0],
             groups: [
-              ...clientData.layouts.filter(l => l.id === layoutId)[0].blocks.filter(b => b.id === blockId)[0].groups.filter(g => g.id !== groupId),
+              ...storageData.layouts.filter(l => l.id === layoutId)[0].blocks.filter(b => b.id === blockId)[0].groups.filter(g => g.id !== groupId),
             ]
           },
         ]
@@ -136,7 +136,7 @@ export default function MaterialList({ clientData, setClientData }) {
     ]
     let filtered = [];
     let deletedIds = [];
-    clientData.materials.forEach(m => {
+    storageData.materials.forEach(m => {
       var d = (m.layout_id === layoutId && m.block_id === blockId && m.group_id === groupId);
       if (d) {
         if (m.id != null) {
@@ -146,31 +146,31 @@ export default function MaterialList({ clientData, setClientData }) {
         filtered.push(m);
       }
     });
-    setClientData(prevState => {
+    setStorageData(prevState => {
       return {
-        ...clientData,
+        ...storageData,
         layouts: layouts,
         materials: filtered,
-        deletedMaterialIds: [...clientData.deletedMaterialIds, ...deletedIds]
+        deletedMaterialIds: [...storageData.deletedMaterialIds, ...deletedIds]
       }
     });
   }
 
   /* */
   const handleLayoutProp = (e, layoutIndex) => {
-    let layoutData = [...clientData.layouts];
+    let layoutData = [...storageData.layouts];
     layoutData[layoutIndex] = {
       ...layoutData[layoutIndex],
       [e.target.name]: e.target.value
     }
-    setClientData(prevState => ({
-      ...clientData,
+    setStorageData(prevState => ({
+      ...storageData,
       layouts: layoutData
     }))
   }
 
   const handleBlockProp = (e, layoutId, blockId) => {
-    const layouts = [...clientData.layouts];
+    const layouts = [...storageData.layouts];
     layouts.map(l => {
       if (l.id === layoutId) {
         l.blocks.map(b => {
@@ -180,14 +180,14 @@ export default function MaterialList({ clientData, setClientData }) {
         })
       }
     })
-    setClientData(prevState => ({
-      ...clientData,
+    setStorageData(prevState => ({
+      ...storageData,
       layouts: layouts
     }))
   }
 
   const handleGroupProp = (e, layoutId, blockId, groupId) => {
-    const layouts = [...clientData.layouts];
+    const layouts = [...storageData.layouts];
     layouts.map(l => {
       if (l.id === layoutId) {
         l.blocks.map(b => {
@@ -201,8 +201,8 @@ export default function MaterialList({ clientData, setClientData }) {
         })
       }
     })
-    setClientData(prevState => ({
-      ...clientData,
+    setStorageData(prevState => ({
+      ...storageData,
       layouts: layouts
     }))
   }
@@ -210,10 +210,10 @@ export default function MaterialList({ clientData, setClientData }) {
   /* */
 
   const addMaterial = (e, layoutId, blockId, groupId) => {
-    setClientData(prevState => ({
-      ...clientData,
+    setStorageData(prevState => ({
+      ...storageData,
       materials: [
-        ...clientData.materials,
+        ...storageData.materials,
         Object.assign({}, new MaterialModel({ layout_id: layoutId, block_id: blockId, group_id: groupId }))
       ]
     }));
@@ -222,22 +222,22 @@ export default function MaterialList({ clientData, setClientData }) {
   const deleteMaterial = (e, index) => {
     var c = window.confirm("Silmek istediğinize emin misiniz?")
     if (!c) return;
-    if (clientData.materials[index]) {
-      let filtered = clientData.materials.filter((s, i) => i !== index);
+    if (storageData.materials[index]) {
+      let filtered = storageData.materials.filter((s, i) => i !== index);
       let deletedIds = [];
-      if (clientData.materials[index].id !== null) {
-        deletedIds.push(clientData.materials[index].id)
+      if (storageData.materials[index].id !== null) {
+        deletedIds.push(storageData.materials[index].id)
       }
-      setClientData(prevState => ({
-        ...clientData,
+      setStorageData(prevState => ({
+        ...storageData,
         materials: filtered,
-        deletedMaterialIds: [...clientData.deletedMaterialIds, ...deletedIds]
+        deletedMaterialIds: [...storageData.deletedMaterialIds, ...deletedIds]
       }));
     }
   }
 
   const handleMaterialColor = (e, materialIndex) => {
-    let materials = [...clientData.materials];
+    let materials = [...storageData.materials];
     materials[materialIndex] = {
       ...materials[materialIndex],
       color: {
@@ -245,26 +245,26 @@ export default function MaterialList({ clientData, setClientData }) {
         [e.target.name]: e.target.value
       }
     }
-    setClientData(prevState => ({
-      ...clientData,
+    setStorageData(prevState => ({
+      ...storageData,
       materials: materials
     }))
   }
 
   const handleMaterialLabel = (e, materialIndex) => {
-    let materials = [...clientData.materials];
+    let materials = [...storageData.materials];
     materials[materialIndex] = {
       ...materials[materialIndex],
       label: e.target.value
     }
-    setClientData(prevState => ({
-      ...clientData,
+    setStorageData(prevState => ({
+      ...storageData,
       materials: materials
     }))
   }
 
   const handleMaterialFile = (event, material, materialIndex) => {
-    const materials = [...clientData.materials];
+    const materials = [...storageData.materials];
     [...event.target.files].forEach((file, fileIndex) => {
       if (file) {
         const saveObj = {
@@ -292,8 +292,8 @@ export default function MaterialList({ clientData, setClientData }) {
         }
       }
     });
-    setClientData(prevState => ({
-      ...clientData,
+    setStorageData(prevState => ({
+      ...storageData,
       materials: materials
     }))
   }
@@ -301,12 +301,12 @@ export default function MaterialList({ clientData, setClientData }) {
   return (
     <div>
       {
-        clientData.layouts.map((layout, layoutIndex) =>
-          <section key={layoutIndex} className="client-layout card py-5 my-5 border-bottom" style={{ backgroundColor: layout.bgColor, color: layout.textColor }}>
+        storageData.layouts.map((layout, layoutIndex) =>
+          <section key={layoutIndex} className="storage-layout card py-5 my-5 border-bottom" style={{ backgroundColor: layout.bgColor, color: layout.textColor }}>
             <span className="section-name-fixed position-absolute card bg-transparent">LAYOUT</span>
 
-            <div className="container-client w-100 m-auto">
-              <div className="client-layout-control d-flex flex-column mb-2">
+            <div className="container-storage w-100 m-auto">
+              <div className="storage-layout-control d-flex flex-column mb-2">
                 <i className={`delete-icon bi bi-trash cursor ms-auto ${layout.blocks.length > 0 ? "invisible" : ""}`} onClick={(e) => deleteLayout(e, layout.id)} title="Delete Layout"></i>
                 <div className="d-flex flex-column">
                   <h2 className="h4" dangerouslySetInnerHTML={{ __html: layout.title }}></h2>
@@ -324,10 +324,10 @@ export default function MaterialList({ clientData, setClientData }) {
                 </div>
               </div>
 
-              {layout.blocks.map((block, blockIndex) => <div key={blockIndex} className="client-block card border px-2 my-5 bg-transparent align-items-start">
+              {layout.blocks.map((block, blockIndex) => <div key={blockIndex} className="storage-block card border px-2 my-5 bg-transparent align-items-start">
                 <span className="section-name-fixed position-absolute card bg-transparent text-uppercase">BLOCK {block.type}</span>
 
-                <div className="client-block-control input-group input-group-sm d-flex w-100 my-3 pt-2">
+                <div className="storage-block-control input-group input-group-sm d-flex w-100 my-3 pt-2">
                   {
                     block.type === "colors" ?
                       <input className="form-control fw-bold" style={{ color: layout.bgColor }} placeholder="Block Name" value={block.title} onChange={(e) => handleBlockProp(e, layout.id, block.id)} />
@@ -336,14 +336,14 @@ export default function MaterialList({ clientData, setClientData }) {
                   <i className={`input-group-text delete-icon bi bi-trash cursor ms-auto ${block.groups.length > 0 ? "invisible" : ""}`} onClick={(e) => deleteBlock(e, layout.id, block.id)} title="Delete Block"></i>
                 </div>
 
-                {block.groups.map((group, groupIndex) => <div key={groupIndex} className="client-group card bg-transparent align-items-start p-2 mb-2 w-100" style={{ minHeight: "100px" }}>
-                  <div className="client-group-control input-group input-group-sm d-flex w-100">
+                {block.groups.map((group, groupIndex) => <div key={groupIndex} className="storage-group card bg-transparent align-items-start p-2 mb-2 w-100" style={{ minHeight: "100px" }}>
+                  <div className="storage-group-control input-group input-group-sm d-flex w-100">
                     <input className="form-control fw-bold" style={{ color: layout.bgColor }} placeholder="Group Name" value={group.title} onChange={(e) => handleGroupProp(e, layout.id, block.id, group.id)} />
                     <i className="input-group-text delete-icon bi bi-trash invisible cursor" onClick={(e) => deleteGroup(e, layout.id, block.id, group.id)} title="Delete Group"></i>
                   </div>
 
                   {/* GROUP MATERIALS */}
-                  {clientData.materials.map((material, materialIndex) => <div key={materialIndex} className="w-100">
+                  {storageData.materials.map((material, materialIndex) => <div key={materialIndex} className="w-100">
                     {(material.layout_id == layout.id && material.block_id == block.id && material.group_id == group.id)
                       ?
                       <div className="material-item d-flex align-items-center border-bottom border-secondary py-3 position-relative">
@@ -357,7 +357,7 @@ export default function MaterialList({ clientData, setClientData }) {
                           <input type="file" onChange={(e) => handleMaterialFile(e, material, materialIndex)} multiple={true} hidden />
                         </label>
                         {material.file_val.newAddedUrl === null
-                          ? <a className="btn btn-sm ms-2" href={UPLOAD_CLIENT_URL + material.file_val.fileName} target="_blank" rel="noreferrer" style={{ color: layout.textColor }}><i className="bi bi-box-arrow-up-right"></i></a>
+                          ? <a className="btn btn-sm ms-2" href={UPLOAD_STORAGE_URL + material.file_val.fileName} target="_blank" rel="noreferrer" style={{ color: layout.textColor }}><i className="bi bi-box-arrow-up-right"></i></a>
                           : <></>
                         }
                         <i className="delete-icon bi bi-trash invisible cursor position-absolute" onClick={(e) => deleteMaterial(e, materialIndex)} title="Delete Material"></i>
@@ -384,7 +384,7 @@ export default function MaterialList({ clientData, setClientData }) {
                   ?
                   <div className="border-top w-100">
                     {
-                      clientData.materials.map((material, materialIndex) => <div key={materialIndex} className="w-100">
+                      storageData.materials.map((material, materialIndex) => <div key={materialIndex} className="w-100">
                         {(material.layout_id == layout.id && material.block_id == block.id && material.group_id == null)
                           ?
                           <div className="material-item d-flex align-items-center justify-content-center border-top border-secondary py-3 position-relative">
@@ -397,7 +397,7 @@ export default function MaterialList({ clientData, setClientData }) {
                               <input type="file" onChange={(e) => handleMaterialFile(e, material, materialIndex)} multiple={true} hidden />
                             </label>
                             {material.file_val.newAddedUrl === null
-                              ? <a className="btn btn-sm ms-2" href={UPLOAD_CLIENT_URL + material.file_val.fileName} target="_blank" rel="noreferrer"><i className="bi bi-box-arrow-up-right"></i></a>
+                              ? <a className="btn btn-sm ms-2" href={UPLOAD_STORAGE_URL + material.file_val.fileName} target="_blank" rel="noreferrer"><i className="bi bi-box-arrow-up-right"></i></a>
                               : <></>
                             }
                             <i className="delete-icon bi bi-trash invisible cursor position-absolute" onClick={(e) => deleteMaterial(e, materialIndex)}></i>
@@ -413,7 +413,7 @@ export default function MaterialList({ clientData, setClientData }) {
                 {block.type === "colors"
                   ?
                   <div className="w-100">
-                    {clientData.materials.map((material, materialIndex) => <div key={materialIndex} className="w-100">
+                    {storageData.materials.map((material, materialIndex) => <div key={materialIndex} className="w-100">
                       {(material.layout_id == layout.id && material.block_id == block.id && material.group_id == null)
                         ?
                         <div className="material-item py-2 position-relative">

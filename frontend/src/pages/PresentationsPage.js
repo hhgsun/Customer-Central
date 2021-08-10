@@ -5,7 +5,7 @@ import PresentationService from '../services/presentationService';
 import { setAllPresentations, setPresentationsPagination } from '../store/presentationSlice';
 
 export default function PresentationsPage() {
-
+  const users = useSelector((state) => state.users.all);
   const presetations = useSelector((state) => state.presentations.all);
   const pagination = useSelector((state) => state.presentations.pagination);
 
@@ -56,7 +56,7 @@ export default function PresentationsPage() {
         ?
         <>
           <table className="table table-hover">
-            <thead>
+            <thead className="sticky-top bg-light" style={{ top: "54px", zIndex: "0" }}>
               <tr>
                 <th scope="col" onClick={(e) => goPage(currentPage, "id", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
                   id
@@ -74,6 +74,9 @@ export default function PresentationsPage() {
                   updateDate
                   {sortBy === "updateDate" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
                 </th>
+                <th scope="col">
+                  User
+                </th>
                 <th scope="col"></th>
               </tr>
             </thead>
@@ -84,6 +87,12 @@ export default function PresentationsPage() {
                   <td>{presetation.title}</td>
                   <td>{presetation.createdDate}</td>
                   <td>{presetation.updateDate}</td>
+                  <td>{presetation.userId === "0"
+                    ? ""
+                    : users.filter(u => u.id === presetation.userId).length > 0
+                      ? users.filter(u => u.id === presetation.userId)[0].email
+                      : ""}
+                  </td>
                   <td className="d-flex justify-content-end">
                     <NavLink className="btn btn-secondary btn-sm" to={`presentation-edit/${presetation.id}`}>
                       Edit

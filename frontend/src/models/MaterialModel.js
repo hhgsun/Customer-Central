@@ -2,7 +2,7 @@ export default class MaterialModel {
   constructor(args) {
     args = args ?? {};
     this.id = args["id"] ?? null;
-    this.clientId = args["clientId"] ?? null;
+    this.storageId = args["storageId"] ?? null;
     this.label = args["label"] ?? '';
     this.file_val = args["file_val"] ?? {};
     this.color = args["color"] ?? { hex: "", cmyk: "", rgb: "" };

@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import ClientModel from '../models/ClientModel';
-import ClientService from '../services/clientService';
 import LogoTBR from "../images/logo-tbr.png";
 import CustomerFooter from '../components/CustomerFooter';
 import IconFile from '../components/IconFile';
-import { UPLOAD_CLIENT_URL } from '../config';
+import { UPLOAD_STORAGE_URL } from '../config';
+import StorageService from '../services/storageService';
+import StorageModel from '../models/StorageModel';
 
-export default function ClientViewPage() {
-  const { clientId } = useParams()
+export default function StorageViewPage() {
+  const { storageId } = useParams()
 
-  const [clientData, setClientData] = useState(new ClientModel());
+  const [storageData, setStorageData] = useState(new StorageModel());
   const [isLoad, setIsLoad] = useState(false);
 
-  const clientService = new ClientService();
+  const storageService = new StorageService();
 
   useEffect(() => {
-    if (clientId === null) {
+    if (storageId === null) {
       setIsLoad(true);
       return;
     }
-    clientService.getClientDetail(clientId).then(res => {
+    storageService.getStorageDetail(storageId).then(res => {
       if (res.materials && res.layouts) {
         res.layouts.forEach(layout => {
           // layout.materials = res.materials.filter(m => m.layout_id === layout.id && m.block_id === null && m.group_id === null);
@@ -32,24 +32,24 @@ export default function ClientViewPage() {
           })
         });
       }
-      setClientData(res);
+      setStorageData(res);
       setIsLoad(true);
     })
   }, []);
 
   return (
-    <div className="client-view">
+    <div className="storage-view">
       {isLoad
         ?
         <>
-          <ClientHeader />
+          <StorageHeader />
 
-          <div className="client-main">
+          <div className="storage-main">
 
             {
-              clientData.layouts.map((layout, layoutIndex) =>
-                <section className="client-layout w-100" style={{ backgroundColor: layout.bgColor, color: layout.textColor }} key={layoutIndex}>
-                  <div className="container-client">
+              storageData.layouts.map((layout, layoutIndex) =>
+                <section className="storage-layout w-100" style={{ backgroundColor: layout.bgColor, color: layout.textColor }} key={layoutIndex}>
+                  <div className="container-storage">
 
                     <div className="layout-head mb-5">
                       <h2 dangerouslySetInnerHTML={{ __html: layout.title }}></h2>
@@ -57,7 +57,7 @@ export default function ClientViewPage() {
 
                     {
                       layout.blocks.map((block, blockIndex) =>
-                        <div key={blockIndex} className="client-block border-radius my-5" style={{ border: `1px solid ${layout.textColor}` }}>
+                        <div key={blockIndex} className="storage-block border-radius my-5" style={{ border: `1px solid ${layout.textColor}` }}>
 
                           {
                             block.type == "files"
@@ -86,7 +86,7 @@ export default function ClientViewPage() {
                                           <div key={material.id} className="material-item d-flex align-items-center py-2 position-relative">
                                             <IconFile name={material.file_val.nativeName} />
                                             {material.label}
-                                            <a className="btn-download ms-auto" href={UPLOAD_CLIENT_URL + material.file_val.fileName} target="_blank" rel="noreferrer" download
+                                            <a className="btn-download ms-auto" href={UPLOAD_STORAGE_URL + material.file_val.fileName} target="_blank" rel="noreferrer" download
                                               style={{ color: layout.bgColor, backgroundColor: layout.textColor }}>DOWNLOAD</a>
                                           </div>
                                         )}
@@ -97,7 +97,7 @@ export default function ClientViewPage() {
                                 </div>
                                 <div className="block-bottom-btns d-flex justify-content-center">
                                   {block.materials.map((material) =>
-                                    <a key={material.id} className="btn-download mx-1" href={UPLOAD_CLIENT_URL + material.file_val.fileName} target="_blank" rel="noreferrer" download
+                                    <a key={material.id} className="btn-download mx-1" href={UPLOAD_STORAGE_URL + material.file_val.fileName} target="_blank" rel="noreferrer" download
                                       style={{ color: layout.bgColor, backgroundColor: layout.textColor }}>{material.label}</a>
                                   )}
                                 </div>
@@ -166,12 +166,12 @@ export default function ClientViewPage() {
   )
 }
 
-function ClientHeader() {
+function StorageHeader() {
   return (
-    <div className="client-header" style={{ color: "var(--primary-bg)" }}>
-      <div className="container-client d-flex flex-column align-items-center py-5">
+    <div className="storage-header" style={{ color: "var(--primary-bg)" }}>
+      <div className="container-storage d-flex flex-column align-items-center py-5">
         <img width="200" height="37" src={LogoTBR} />
-        <i>Client Central</i>
+        <i>Storage Central</i>
       </div>
     </div>
   )

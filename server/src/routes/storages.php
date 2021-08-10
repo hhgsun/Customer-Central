@@ -4,8 +4,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UploadedFileInterface;
 use Slim\Factory\AppFactory;
 
-// Tüm Clientler
-$app->get('/clients', function (Request $request, Response $response) {
+// Tüm Storages
+$app->get('/storages', function (Request $request, Response $response) {
 
   $page = isset($_GET['page']) ? $_GET['page'] : 1;
   $direction = isset($_GET['direction']) ? $_GET['direction'] : 'DESC';
@@ -19,18 +19,18 @@ $app->get('/clients', function (Request $request, Response $response) {
   try {
     $db = $db->connect();
 
-    $total = $db->query('SELECT COUNT(*) FROM clients WHERE isDelete = 0')->fetchColumn();
+    $total = $db->query('SELECT COUNT(*) FROM storages WHERE isDelete = 0')->fetchColumn();
 
-    $sth = $db->prepare("SELECT * FROM clients WHERE isDelete = 0 ORDER BY ". $sort_by ." ". $direction ." LIMIT :limit OFFSET :offset");
+    $sth = $db->prepare("SELECT * FROM storages WHERE isDelete = 0 ORDER BY ". $sort_by ." ". $direction ." LIMIT :limit OFFSET :offset");
     $sth->bindParam('limit', $limit, PDO::PARAM_INT);
     $sth->bindParam('offset', $offset, PDO::PARAM_INT);
     $sth->execute();
-    $clients = $sth->fetchAll(PDO::FETCH_OBJ);
+    $storages = $sth->fetchAll(PDO::FETCH_OBJ);
 
     $response->getBody()->write(json_encode(array(
       'total' => $total,
       'page' => $page,
-      'clients' => $clients,
+      'storages' => $storages,
       'limit' => $limit,
       'direction' => $direction,
       'sort_by' => $sort_by,
@@ -52,8 +52,8 @@ $app->get('/clients', function (Request $request, Response $response) {
 });
 
 
-// Tekil Client
-$app->get('/clients/{id}', function (Request $request, Response $response) {
+// Tekil storage
+$app->get('/storage/{id}', function (Request $request, Response $response) {
 
   $id = $request->getAttribute('id');
 
@@ -62,19 +62,19 @@ $app->get('/clients/{id}', function (Request $request, Response $response) {
   try {
     $db = $db->connect();
 
-    $sth = $db->prepare("SELECT * FROM clients WHERE id = :id AND isDelete = 0");
+    $sth = $db->prepare("SELECT * FROM storages WHERE id = :id AND isDelete = 0");
     $sth->bindParam('id', $id, PDO::PARAM_INT);
     $sth->execute();
-    $client = $sth->fetch(PDO::FETCH_OBJ);
+    $storage = $sth->fetch(PDO::FETCH_OBJ);
 
-    if( $client ) {
-      $sth = $db->prepare("SELECT * FROM materials WHERE clientId = :id AND isDelete = 0");
+    if( $storage ) {
+      $sth = $db->prepare("SELECT * FROM storage_materials WHERE storageId = :id AND isDelete = 0");
       $sth->bindParam('id', $id, PDO::PARAM_INT);
       $sth->execute();
-      $client->materials = $sth->fetchAll(PDO::FETCH_OBJ);
+      $storage->materials = $sth->fetchAll(PDO::FETCH_OBJ);
     }
     
-    $response->getBody()->write(json_encode($client));
+    $response->getBody()->write(json_encode($storage));
     return $response
               ->withHeader('Content-Type', 'application/json');
 
@@ -92,8 +92,8 @@ $app->get('/clients/{id}', function (Request $request, Response $response) {
 });
 
 
-// Client Ekle
-$app->post('/clients/add', function (Request $request, Response $response) {
+// Storage Ekle
+$app->post('/storages/add', function (Request $request, Response $response) {
 
   $params = $request->getParsedBody();
   $params['createdDate'] = date("Y-m-d");
@@ -104,23 +104,24 @@ $app->post('/clients/add', function (Request $request, Response $response) {
   try {
     $db = $db->connect();
 
-    $sth = 'INSERT INTO clients (title, layouts, createdDate) VALUES (:title, :layouts, :createdDate)';
+    $sth = 'INSERT INTO storages (title, layouts, createdDate, userId) VALUES (:title, :layouts, :createdDate, :userId)';
     $prepare = $db->prepare($sth);
     $isAdded = $prepare->execute([
                             'title' => $params['title'],
                             'layouts' => json_encode($params['layouts']),
-                            'createdDate' => $params['createdDate']
+                            'createdDate' => $params['createdDate'],
+                            'userId' => $params['userId'] ? $params['userId'] : 0,
                           ]);
-    $clientId = $db->lastInsertId();
+    $storageId = $db->lastInsertId();
 
-    if( $isAdded && $clientId ) {
+    if( $isAdded && $storageId ) {
       
       // add materials
       foreach ($materials as $key => $material) {
-        addMaterialsToClient($db, $material, $clientId);
+        addMaterialsToStorage($db, $material, $storageId);
       }
 
-      $response->getBody()->write(json_encode($clientId));
+      $response->getBody()->write(json_encode($storageId));
     } else {
       $response->getBody()->write(json_encode(array(
         'message' => 'Form Eklenemedi'
@@ -144,14 +145,14 @@ $app->post('/clients/add', function (Request $request, Response $response) {
 });
 
 // MATHOD: Add Materials
-function addMaterialsToClient($db, $material, $clientId){
+function addMaterialsToStorage($db, $material, $storageId){
   $material['file_val'] = json_encode($material['file_val']);
   $material['color'] = json_encode($material['color']);
-  $sth = 'INSERT INTO materials (clientId, label, file_val, type, layout_id, block_id, group_id, color, order_number)
-              VALUES (:clientId, :label, :file_val, :type, :layout_id, :block_id, :group_id, :color, :order_number)';
+  $sth = 'INSERT INTO storage_materials (storageId, label, file_val, type, layout_id, block_id, group_id, color, order_number)
+              VALUES (:storageId, :label, :file_val, :type, :layout_id, :block_id, :group_id, :color, :order_number)';
   $prepare = $db->prepare($sth);
   $prepare->execute([
-              'clientId' => $clientId,
+              'storageId' => $storageId,
               'label' => isset($material['label']) ? $material['label'] : "",
               'file_val' => $material['file_val'],
               'type' => $material['type'],
@@ -164,10 +165,10 @@ function addMaterialsToClient($db, $material, $clientId){
 }
 
 
-// Client Güncelleme
-$app->post('/clients/{clientId}/update', function (Request $request, Response $response) {
-  $clientId = $request->getAttribute('clientId');
-  if(!$clientId) { return; };
+// Storage Güncelleme
+$app->post('/storages/{storageId}/update', function (Request $request, Response $response) {
+  $storageId = $request->getAttribute('storageId');
+  if(!$storageId) { return; };
 
   $params = $request->getParsedBody();
   $params['updateDate'] = date("Y-m-d");
@@ -177,22 +178,23 @@ $app->post('/clients/{clientId}/update', function (Request $request, Response $r
 
   try {
     $db = $db->connect();
-    $sth = 'UPDATE clients 
-            SET title=:title, layouts=:layouts, updateDate=:updateDate 
-            WHERE id = :clientId';
+    $sth = 'UPDATE storages 
+            SET title=:title, layouts=:layouts, updateDate=:updateDate, userId=:userId 
+            WHERE id = :storageId';
     $prepare = $db->prepare($sth);
-    $isUpdateClient = $prepare->execute([
+    $isUpdateStorage = $prepare->execute([
                             'title' => $params['title'],
                             'layouts' => json_encode($params['layouts']),
                             'updateDate' => $params['updateDate'],
-                            'clientId' => $clientId
+                            'storageId' => $storageId,
+                            'userId' => $params['userId'] ? $params['userId'] : 0,
                           ]);
 
-    if( $materials && $isUpdateClient ) {
+    if( $materials && $isUpdateStorage ) {
       foreach ($materials as $key => $material) {
         // update material
         if( isset($material['id']) ) {
-          $sth = 'UPDATE materials 
+          $sth = 'UPDATE storage_materials 
                   SET label = :label, file_val = :file_val, type = :type, layout_id = :layout_id, block_id = :block_id, 
                   group_id = :group_id, color = :color, order_number = :order_number 
                   WHERE id = :id';
@@ -209,22 +211,22 @@ $app->post('/clients/{clientId}/update', function (Request $request, Response $r
                       'order_number' => $material['order_number'],
                     ]);
         } else {
-          addMaterialsToClient($db, $material, $clientId); // add material
+          addMaterialsToStorage($db, $material, $storageId); // add material
         }
       }
     }
 
     if( isset($params['deletedMaterialIds']) && $params['deletedMaterialIds'] != null ) {
       foreach ($params['deletedMaterialIds'] as $matId) {
-        $sth = 'UPDATE materials 
+        $sth = 'UPDATE storage_materials 
                 SET isDelete=1
                 WHERE id = :matId';
         $prepare = $db->prepare($sth);
-        $isUpdateClient = $prepare->execute(['matId' => $matId]);
+        $isUpdateStorage = $prepare->execute(['matId' => $matId]);
       }
     }
 
-    $response->getBody()->write(json_encode($isUpdateClient));
+    $response->getBody()->write(json_encode($isUpdateStorage));
 
     return $response
               ->withHeader('Content-Type', 'application/json');
@@ -243,8 +245,8 @@ $app->post('/clients/{clientId}/update', function (Request $request, Response $r
 });
 
 
-// Form Sil
-$app->post('/clients/{id}/delete', function (Request $request, Response $response) {
+// Storage Sil
+$app->post('/storages/{id}/delete', function (Request $request, Response $response) {
 
   $id = $request->getAttribute('id');
 
@@ -252,11 +254,11 @@ $app->post('/clients/{id}/delete', function (Request $request, Response $respons
 
   try {
     $db = $db->connect();
-    $sth = 'UPDATE forms 
+    $sth = 'UPDATE storages 
             SET isDelete=:isDelete
-            WHERE id = :formId';
+            WHERE id = :storageId';
     $prepare = $db->prepare($sth);
-    $isUpdateForm = $prepare->execute(['isDelete' => 1, 'formId' => $id]);
+    $isUpdateForm = $prepare->execute(['isDelete' => 1, 'storageId' => $id]);
     $response->getBody()->write(json_encode($isUpdateForm));
     return $response
               ->withHeader('Content-Type', 'application/json');
@@ -279,8 +281,8 @@ $app->post('/clients/{id}/delete', function (Request $request, Response $respons
  */
 
 // IMAGE UPLOAD
-$app->post('/clients/image-upload', function (Request $request, Response $response) {
-  $directory = __DIR__ . '/../../uploads/client';
+$app->post('/storages/image-upload', function (Request $request, Response $response) {
+  $directory = __DIR__ . '/../../uploads/storage';
   $uploadedFiles = $request->getUploadedFiles();
 
   try {
@@ -289,7 +291,7 @@ $app->post('/clients/image-upload', function (Request $request, Response $respon
     if( isset($uploadedFiles['images']) ) {
       foreach ($uploadedFiles['images'] as $uploadedFile) {
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-          $filename = moveUploadedFileClient($directory, $uploadedFile);
+          $filename = moveUploadedFileStorage($directory, $uploadedFile);
           $uploaded[] = $filename;
         }
       }
@@ -313,7 +315,7 @@ $app->post('/clients/image-upload', function (Request $request, Response $respon
 
 
 // HELPER: FILE UPLOAD
-function moveUploadedFileClient(string $directory, UploadedFileInterface $uploadedFile) {
+function moveUploadedFileStorage(string $directory, UploadedFileInterface $uploadedFile) {
   $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
   $name = pathinfo($uploadedFile->getClientFilename(), PATHINFO_FILENAME);
   $filename = sprintf('%s.%0.8s', $name, $extension);

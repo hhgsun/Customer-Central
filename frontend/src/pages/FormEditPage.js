@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { NavLink, useHistory, useParams } from 'react-router-dom'
-import SectionList from '../components/SectionList'
+import AnswerList from '../components/AnswerList'
+import SearchUser from '../components/SearchUser'
 import FormModel from '../models/FormModel'
 import FormService from '../services/formService'
 import { addForm, deleteForm, updateForm } from '../store/formSlice'
@@ -70,7 +71,7 @@ export default function FormEditPage() {
     setFormData({
       ...formData,
       id: null,
-      status: 0,
+      isAnswered: 0,
       updateDate: '',
     });
     setIsUpdateForm(null);
@@ -95,9 +96,11 @@ export default function FormEditPage() {
   return (
     <div className="form-edit-page">
       <div className="d-flex">
-        <h2 className="h5">{isUpdateForm ? 'Update Form' : 'Add New Form'}</h2>
+        <h2 className="h5 me-3">{isUpdateForm ? 'Update Form' : 'Add New Form'}</h2>
+        <SearchUser data={formData} setData={setFormData} />
         {isUpdateForm && isLoad
-          ? <div className="ms-auto">
+          ?
+          <div className="ms-auto">
             <button className="btn btn-sm btn-outline-secondary me-2" onClick={(e) => duplicateForm(e)}>Duplicate</button>
             <button className="btn btn-sm btn-outline-danger" onClick={(e) => removeForm(e)}>Delete Form</button>
           </div>
@@ -111,9 +114,9 @@ export default function FormEditPage() {
             <input name="title" value={formData.title} onChange={handleInput} className="form-control mt-3" placeholder="Form Title" />
 
             <h4 className="h5 mb-2 pb-3 d-flex align-items-end sticky-top bg-white border-bottom mt-1 pt-3" style={{ zIndex: '2', top: '55px' }}>
-              Sections
+              Answers
               <div className="form-check ps-3 mb-0" style={{ fontSize: "0.9em" }}>
-                <input type="checkbox" name="status" checked={formData.status === "1"} onChange={handleCheckbox} className="form-check-input mx-1" />
+                <input type="checkbox" name="isAnswered" checked={formData.isAnswered === "1"} onChange={handleCheckbox} className="form-check-input mx-1" />
                 <small style={{ fontSize: "0.7em" }}>Answered</small>
               </div>
               <div className="ms-auto">
@@ -129,7 +132,7 @@ export default function FormEditPage() {
             </h4>
 
             <div style={{ minHeight: "25vh" }} className="container-brief pb-5">
-              <SectionList formData={formData} setFormData={setFormData} isAdmin={true} />
+              <AnswerList formData={formData} setFormData={setFormData} isAdmin={true} />
             </div>
           </>
           :

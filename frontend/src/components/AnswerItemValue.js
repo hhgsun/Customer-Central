@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { ReactSortable } from 'react-sortablejs';
 import { UPLOAD_FORM_URL } from '../config';
 
-export default function SectionItemValue({ sectionIndex, sectionValues, inputtype, isEdit = false, isAdmin = false, handle }) {
+export default function AnswerItemValue({ answerIndex, answerValues, inputtype, isEdit = false, isAdmin = false, handle }) {
 
-  const [values, setValues] = useState(sectionValues)
+  const [values, setValues] = useState(answerValues)
 
   const [selectBoxIndex, setSelectBoxIndex] = useState(0)
 
   useEffect(() => {
-    handle(sectionIndex, values);
+    handle(answerIndex, values);
   }, [values])
 
 
@@ -119,7 +119,7 @@ export default function SectionItemValue({ sectionIndex, sectionValues, inputtyp
     // Checkboxes
     input = isEdit ?
       <>
-        <ReactSortable list={values} setList={setValues} className="d-inline-flex flex-wrap align-items-start">
+        <ReactSortable list={values} setList={setValues} className="d-inline-flex flex-wrap w-100 align-items-start">
           {values.map((v, i) =>
             <div key={i} className="multiple-item">
               <input className="form-control" value={v.val} onChange={(e) => updateVal(e, i)} />
@@ -133,7 +133,7 @@ export default function SectionItemValue({ sectionIndex, sectionValues, inputtyp
       (
         inputtype === "multi-checkbox" ?
           <div className="d-flex row gx-2 mx-0">
-            <ul className="col list-group position-relative section-checkbox-list">
+            <ul className="col list-group position-relative answer-checkbox-list">
               {values.map((v, i) =>
                 !v.select ? <li key={i} className="d-flex list-group-item list-group-item-action bg-transparent">
                   {v.val}
@@ -141,7 +141,7 @@ export default function SectionItemValue({ sectionIndex, sectionValues, inputtyp
                 </li> : null
               )}
             </ul>
-            <ul className="col list-group position-relative section-checkbox-list">
+            <ul className="col list-group position-relative answer-checkbox-list">
               {values.map((v, i) =>
                 v.select === true ? <li key={i} className="d-flex list-group-item list-group-item-action bg-transparent">
                   {v.val}

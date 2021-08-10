@@ -1,4 +1,4 @@
-export default class ClientModel {
+export default class StorageModel {
   constructor(args) {
     args = args ?? {};
     this.id = args["id"] ?? null;
@@ -8,5 +8,6 @@ export default class ClientModel {
     this.updateDate = args["updateDate"] ?? '';
     this.materials = args["materials"] ?? [];
     this.deletedMaterialIds = [];
+    this.userId = args["userId"] ?? 0;
   }
 }

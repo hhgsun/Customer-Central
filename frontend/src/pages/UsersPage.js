@@ -3,27 +3,31 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { NavLink } from "react-router-dom";
 import FormService from '../services/formService';
+import UserService from '../services/userService';
 import { setAllForms, setFormsPagination } from '../store/formSlice';
+import { setAllUsers, setUserPagination } from '../store/userSlice';
 
-export default function FormsPage() {
+export default function UsersPage() {
   const users = useSelector((state) => state.users.all);
-  const forms = useSelector((state) => state.forms.all);
-  const pagination = useSelector((state) => state.forms.pagination);
+  const pagination = useSelector((state) => state.users.pagination);
 
   const [currentPage, setCurrentPage] = useState(1);
+
   const [sortBy, setSortBy] = useState(localStorage.getItem('sort_by_form') || "id");
+
   const [direction, setDirection] = useState(localStorage.getItem('direction_form') || "DESC");
+
   const [isLoad, setIsLoad] = useState(false)
 
   const dispatch = useDispatch();
 
-  const formService = new FormService();
+  const userService = new UserService();
 
   useEffect(() => {
-    if (forms === undefined || forms === null || forms.length === 0) {
-      formService.getAllForms().then(res => {
-        dispatch(setAllForms(res.forms));
-        dispatch(setFormsPagination({
+    if (users === undefined || users === null || users.length === 0) {
+      userService.getAllUsers().then(res => {
+        dispatch(setAllUsers(res.users));
+        dispatch(setUserPagination({
           page: res.page,
           total: res.total,
           limit: res.limit,
@@ -37,8 +41,8 @@ export default function FormsPage() {
 
   const goPage = (page = 1, sort_by = "id", direction = "DESC") => {
     setIsLoad(false);
-    formService.getAllForms({ page: page, sort_by: sort_by, direction: direction }).then(res => {
-      dispatch(setAllForms(res.forms));
+    userService.getAllUsers().then(res => {
+      dispatch(setAllUsers(res.forms));
       setIsLoad(true);
     });
     setCurrentPage(page);
@@ -50,8 +54,7 @@ export default function FormsPage() {
   return (
     <div className="form-page">
       <div className="d-flex align-items-center">
-        <h2>Brief List</h2>
-        <NavLink className="btn btn-sm btn-dark ms-auto" to={"/dashboard/form-add"}>Yeni Ekle</NavLink>
+        <h2>User List</h2>
       </div>
 
       {isLoad
@@ -64,47 +67,38 @@ export default function FormsPage() {
                   id
                   {sortBy === "id" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
                 </th>
-                <th scope="col" onClick={(e) => goPage(currentPage, "title", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
-                  title
-                  {sortBy === "title" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
+                <th scope="col" onClick={(e) => goPage(currentPage, "email", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
+                  email
+                  {sortBy === "email" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
                 </th>
-                <th scope="col" onClick={(e) => goPage(currentPage, "createdDate", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
-                  createdDate
-                  {sortBy === "createdDate" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
+                <th scope="col" onClick={(e) => goPage(currentPage, "firstname", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
+                  firstname
+                  {sortBy === "firstname" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
                 </th>
-                <th scope="col" onClick={(e) => goPage(currentPage, "updateDate", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
-                  updateDate
-                  {sortBy === "updateDate" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
+                <th scope="col" onClick={(e) => goPage(currentPage, "lastname", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
+                  lastname
+                  {sortBy === "lastname" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
                 </th>
-                <th scope="col" onClick={(e) => goPage(currentPage, "isAnswered", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
-                  isAnswered
-                  {sortBy === "isAnswered" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
-                </th>
-                <th scope="col">
-                  User
+                <th scope="col" onClick={(e) => goPage(currentPage, "lastLoginDate", direction === "DESC" ? "ASC" : "DESC")} className="cursor">
+                  lastLoginDate
+                  {sortBy === "lastLoginDate" ? (direction === "DESC" ? <span>&uarr;</span> : <span>&darr;</span>) : ""}
                 </th>
                 <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
-              {forms.map((form, index) => (
+              {users.map((user, index) => (
                 <tr key={index}>
-                  <th scope="row">{form.id}</th>
-                  <td>{form.title}</td>
-                  <td>{form.createdDate}</td>
-                  <td>{form.updateDate}</td>
-                  <td>{form.isAnswered === "1" ? "Answered" : "Not Answered"}</td>
-                  <td>{form.userId === "0"
-                    ? ""
-                    : users.filter(u => u.id === form.userId).length > 0
-                      ? users.filter(u => u.id === form.userId)[0].email
-                      : ""}
-                  </td>
+                  <th scope="row">{user.id}</th>
+                  <td>{user.email}</td>
+                  <td>{user.firstname}</td>
+                  <td>{user.lastname}</td>
+                  <td>{user.lastLoginDate}</td>
                   <td className="d-flex justify-content-end">
-                    <NavLink className="btn btn-secondary btn-sm" to={`form-edit/${form.id}`}>
+                    <NavLink className="btn btn-secondary btn-sm" to={`user-edit/${user.id}`}>
                       Edit
                     </NavLink>
-                    <NavLink className="btn btn-light btn-sm ms-2" to={`/form/${form.id}`} target={'_blank'}>
+                    <NavLink className="btn btn-light btn-sm ms-2" to={`/user/${user.id}`} target={'_blank'}>
                       View
                     </NavLink>
                   </td>

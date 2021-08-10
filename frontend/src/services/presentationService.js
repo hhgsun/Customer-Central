@@ -46,7 +46,6 @@ export default class PresentationService {
   }
 
   async updatePresentation(present) {
-    console.log(present);
     present.images.map(p => {
       p.newAddedUrl = null; return p;
     });
@@ -76,7 +75,6 @@ export default class PresentationService {
       body: formData,
     });
     const uploaded = await res.json();
-    console.log(uploaded);
     return uploaded;
   }
 

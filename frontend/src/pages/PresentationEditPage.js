@@ -6,6 +6,7 @@ import PresentationModel from '../models/PresentationModel';
 import { UPLOAD_PRESENTATION_URL } from '../config';
 import PresentationService from '../services/presentationService';
 import { addPresentation, deletePresentation, updatePresentation } from '../store/presentationSlice';
+import SearchUser from '../components/SearchUser';
 
 export default function PresentationEditPage() {
   const { presentId } = useParams()
@@ -125,7 +126,8 @@ export default function PresentationEditPage() {
     <div className="presentation-edit-page">
 
       <div className="d-flex">
-        <h2 className="h5">{presentId ? 'Update Presentation' : 'Add New Presentation'}</h2>
+        <h2 className="h5 me-3">{presentId ? 'Update Presentation' : 'Add New Presentation'}</h2>
+        <SearchUser data={presentationData} setData={setPresentationData} />
         {isLoad && presentId
           ? <div className="ms-auto">
             <button className="btn btn-sm btn-outline-danger" onClick={(e) => removePresentation(e)}>Delete Presentation</button>

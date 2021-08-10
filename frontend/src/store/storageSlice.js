@@ -1,25 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-export const clientSlice = createSlice({
-  name: 'clients',
+export const storageSlice = createSlice({
+  name: 'storages',
   initialState: {
     all: [],
     pagination: {}
   },
   reducers: {
-    setAllClients: (state, action) => {
+    setAllStorages: (state, action) => {
       state.all = action.payload;
     },
-    setClientPagination: (state, action) => {
+    setStoragePagination: (state, action) => {
       state.pagination = action.payload;
     },
-    addClient: (state, action) => {
+    addStorage: (state, action) => {
       state.all = [action.payload].concat(state.all);
     },
-    deleteClient: (state, {payload}) => {
+    deleteStorage: (state, {payload}) => {
       state.all.splice(payload, 1);
     },
-    updateClient: (state, {payload}) => {
+    updateStorage: (state, {payload}) => {
       const index = state.all.findIndex(f => f.id === payload.id);
       state.all[index] = payload;
     }
@@ -27,6 +27,6 @@ export const clientSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setAllClients, setClientPagination, addClient, deleteClient, updateClient } = clientSlice.actions
+export const { setAllStorages, setStoragePagination, addStorage, deleteStorage, updateStorage } = storageSlice.actions
 
-export default clientSlice.reducer
+export default storageSlice.reducer

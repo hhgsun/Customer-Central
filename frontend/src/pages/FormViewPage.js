@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import CustomerFooter from '../components/CustomerFooter';
-import SectionList from '../components/SectionList';
+import AnswerList from '../components/AnswerList';
 import FormModel from '../models/FormModel';
 import FormService from '../services/formService';
 import { updateForm } from '../store/formSlice';
@@ -38,7 +38,7 @@ export default function FormViewPage() {
     setIsWait(true);
     const newData = {
       ...formData,
-      status: 1
+      isAnswered: 1
     }
     setFormData(newData);
     formService.updateForm(newData).then(r => {
@@ -55,14 +55,14 @@ export default function FormViewPage() {
         <div className="container-brief">
           {
             isLoad
-              ? <SectionList formData={formData} setFormData={setFormData} filterCatName={selectedCatName} />
+              ? <AnswerList formData={formData} setFormData={setFormData} filterCatName={selectedCatName} />
               : <div>Bekleyiniz...</div>
           }
         </div>
       </main>
       <div className="form-actions">
         <div className="container-brief pb-5">
-          <button className="btn btn-dark py-3 px-4" onClick={(e) => sendUpdateForm()} disabled={isWait}>{formData.status == 1 ? "FORMU KAYDET" : "FORMU GÖNDER"}</button>
+          <button className="btn btn-dark py-3 px-4" onClick={(e) => sendUpdateForm()} disabled={isWait}>{formData.isAnswered == 1 ? "FORMU KAYDET" : "FORMU GÖNDER"}</button>
           {isAnswered ? <span className="ms-3">Teşekkürler! Vermiş olduğunuz bilgiler ekibimize iletilmiştir.</span> : <></>}
         </div>
       </div>
@@ -77,7 +77,7 @@ function FormHeader({ isLoad, formData, setSelectedCatName }) {
   useEffect(() => {
     if (isLoad) {
       let filterCategoryNames = [];
-      formData.sections.forEach((s) => {
+      formData.answers.forEach((s) => {
         let catList = s.category.split(",");
         catList.forEach((cat) => {
           if (cat != null && cat != "" && !filterCategoryNames.includes(cat)) {

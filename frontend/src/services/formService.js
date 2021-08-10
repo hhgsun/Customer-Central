@@ -30,7 +30,7 @@ export default class FormService {
   }
 
   async addForm(form) {
-    form.sections.map(s => {
+    form.answers.map(s => {
       s.value.map(v => {
         if (v.newAddedUrl) v.newAddedUrl = null;
       })
@@ -42,13 +42,13 @@ export default class FormService {
     });
     const added = await res.json();
     if (added) {
-      this.imageUpload(form.sections)
+      this.imageUpload(form.answers)
     }
     return added;
   }
 
   async updateForm(form) {
-    form.sections.map(s => {
+    form.answers.map(s => {
       s.value.map(v => {
         if (v.newAddedUrl) v.newAddedUrl = null;
       })
@@ -60,16 +60,16 @@ export default class FormService {
     });
     const updated = await res.json();
     if (updated) {
-      this.imageUpload(form.sections)
+      this.imageUpload(form.answers)
     }
     return updated;
   }
 
-  async imageUpload(sections) {
+  async imageUpload(answers) {
     const formData = new FormData();
-    sections.forEach(section => {
-      if (section.value.length > 0) {
-        section.value.forEach(fileObj => {
+    answers.forEach(answer => {
+      if (answer.value.length > 0) {
+        answer.value.forEach(fileObj => {
           if (fileObj && fileObj.file != null) {
             if (fileObj.file.size !== undefined) {
               formData.append('images[]', fileObj.file, fileObj.fileName);
@@ -107,9 +107,9 @@ export default class FormService {
   async getFormDetail(formId) {
     const res = await fetch(`${this.API_URL}/forms/${formId}`);
     const form = await res.json();
-    form.sections.map(section => section.value = JSON.parse(section.value));
-    form.sections.sort(function (a, b) { return a.order_number - b.order_number });
-    form.deletedSectionIds = [];
+    form.answers.map(answer => answer.value = JSON.parse(answer.value));
+    form.answers.sort(function (a, b) { return a.order_number - b.order_number });
+    form.deletedAnswerIds = [];
     return form;
   }
 

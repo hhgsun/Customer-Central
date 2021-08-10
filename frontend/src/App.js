@@ -3,7 +3,6 @@ import React, { useState } from "react";
 
 import AboutPage from './pages/AboutPage';
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   NavLink,
@@ -18,12 +17,16 @@ import { useEffect } from 'react';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import { authLogin } from './store/authSlice';
-import ClientsPage from './pages/ClientsPage';
-import ClientEditPage from './pages/ClientEditPage';
-import ClientViewPage from './pages/ClientViewPage';
 import PresentationsPage from './pages/PresentationsPage';
 import PresentationEditPage from './pages/PresentationEditPage';
 import PresentationViewPage from './pages/PresentationViewPage';
+import StoragesPage from './pages/StoragesPage';
+import StorageEditPage from './pages/StorageEditPage';
+import StorageViewPage from './pages/StorageViewPage';
+import UsersPage from './pages/UsersPage';
+import UserService from './services/userService';
+import { setAllUsers, setUserPagination } from './store/userSlice';
+import UserEditPage from './pages/UserEditPage';
 
 
 function App() {
@@ -36,40 +39,54 @@ function App() {
 
   const formService = new FormService(); */
 
+  const userService = new UserService();
+
   useEffect(() => {
     if (localStorage.getItem("jwt") !== null) {
-      dispatch(authLogin());
+      userService.getAllUsers().then(res => {
+        dispatch(setAllUsers(res.users));
+        dispatch(setUserPagination({
+          page: res.page,
+          total: res.total,
+          limit: res.limit,
+        }));
+        dispatch(authLogin());
+        setIsLoad(true);
+      });
+    } else {
+      setIsLoad(true);
     }
-    setIsLoad(true);
   }, [auth]);
 
   return (
     <>
       {
-        auth.isAuth ?
-          isLoad ?
+        isLoad ?
+          auth.isAuth ?
+            isLoad ?
+              <HashRouter>
+                <Switch>
+                  <Route path="/" component={Dashboard} exact={true} />
+                  <Route path="/form/:formId" component={FormViewPage} />
+                  <Route path="/storage/:storageId" component={StorageViewPage} />
+                  <Route path="/presentation/:presentId" component={PresentationViewPage} />
+                  <Route path="/dashboard" component={Dashboard} />
+                  <Route path="/*" component={Dashboard} />
+                </Switch>
+              </HashRouter>
+              :
+              <LoadingStart />
+            :
             <HashRouter>
               <Switch>
-                <Route path="/" component={Dashboard} exact={true} />
-                <Route path="/form/:formId" component={FormViewPage} />
-                <Route path="/client/:clientId" component={ClientViewPage} />
-                <Route path="/presentation/:presentId" component={PresentationViewPage} />
-                <Route path="/dashboard" component={Dashboard} />
-                <Route path="/*" component={Dashboard} />
+                <Route path="/" component={LoginPage} exact={true} />
+                <Route path="/login" component={LoginPage} />
+                <Route path="/signup" component={SignupPage} />
+                <Route path="/*" component={LoginPage} />
               </Switch>
             </HashRouter>
-            :
-            <div>Bekleyiniz...</div>
           :
-          <HashRouter>
-            <Switch>
-              <Route path="/" component={LoginPage} exact={true} />
-              <Route path="/login" component={LoginPage} />
-              <Route path="/signup" component={SignupPage} />
-              <Route path="/*" component={LoginPage} />
-            </Switch>
-          </HashRouter>
-
+          <LoadingStart />
       }
     </>
   );
@@ -106,7 +123,7 @@ function Dashboard({ match }) {
                 <NavLink activeClassName="active" className="nav-link" to="/dashboard/presentations"><i className="bi bi-terminal"></i>Presentation Central</NavLink>
               </li>
               <li className="nav-item">
-                <NavLink activeClassName="active" className="nav-link" to="/dashboard/clients"><i className="bi bi-terminal"></i>Storage Central</NavLink>
+                <NavLink activeClassName="active" className="nav-link" to="/dashboard/storages"><i className="bi bi-terminal"></i>Storage Central</NavLink>
               </li>
               {/* <li className="nav-item">
                 <NavLink activeClassName="active" className="nav-link" to="/dashboard/about"><i className="bi bi-terminal"></i>About</NavLink>
@@ -137,17 +154,14 @@ function Dashboard({ match }) {
             <Route path={`${match.url}/form-edit/:formId`}>
               <FormEditPage />
             </Route>
-            <Route path={`${match.url}/users`}>
-              <Users />
+            <Route path={`${match.url}/storages`}>
+              <StoragesPage />
             </Route>
-            <Route path={`${match.url}/clients`}>
-              <ClientsPage />
+            <Route path={`${match.url}/storage-add`}>
+              <StorageEditPage />
             </Route>
-            <Route path={`${match.url}/client-add`}>
-              <ClientEditPage />
-            </Route>
-            <Route path={`${match.url}/client-edit/:clientId`}>
-              <ClientEditPage />
+            <Route path={`${match.url}/storage-edit/:storageId`}>
+              <StorageEditPage />
             </Route>
             <Route path={`${match.url}/presentations`}>
               <PresentationsPage />
@@ -157,6 +171,12 @@ function Dashboard({ match }) {
             </Route>
             <Route path={`${match.url}/presentation-edit/:presentId`}>
               <PresentationEditPage />
+            </Route>
+            <Route path={`${match.url}/users`}>
+              <UsersPage />
+            </Route>
+            <Route path={`${match.url}/user-edit/:userId`}>
+              <UserEditPage />
             </Route>
           </Switch>
         </main>
@@ -173,8 +193,10 @@ function Home() {
   return <h2>Home</h2>;
 }
 
-function Users() {
-  return <h2>Users</h2>;
+function LoadingStart() {
+  return <div style={{ position: "absolute", left: "50%", transform: "translate(-50%, -50%)", top: "50%" }}>
+    Bekleyiniz...
+  </div>
 }
 
 

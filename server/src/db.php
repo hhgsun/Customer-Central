@@ -36,7 +36,7 @@ class Db {
 
       $db = $this->connect();
 
-      $sth = "CREATE TABLE IF NOT EXISTS `answers` (
+      /* $sth = "CREATE TABLE IF NOT EXISTS `answers` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `formId` int(11) NOT NULL,
         `category` text COLLATE utf8mb4_turkish_ci NOT NULL,
@@ -125,7 +125,7 @@ class Db {
        ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
       ";
       $prepare = $db->prepare($sth);
-      $prepare->execute();
+      $prepare->execute(); */
 
     } catch (PDOException $e) {
       print_r(json_encode(array(
