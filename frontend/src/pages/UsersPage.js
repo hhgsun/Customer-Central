@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { NavLink } from "react-router-dom";
 import LoadingSpinner from '../components/LoadingSpinner';
+import Pagination from '../components/Pagination';
 import UserService from '../services/userService';
 import { setAllUsers, setUserPagination } from '../store/userSlice';
 import { setCurrentPageTitle } from '../store/utilsSlice';
@@ -104,24 +105,7 @@ export default function UsersPage() {
               ))}
             </tbody>
           </table>
-          {pagination ? <nav className="">
-            <span className="badge bg-secondary ms-auto">Toplam: {pagination.total}</span>
-            <ul className="pagination my-5">
-              <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-                <span className="page-link cursor" onClick={(e) => goPage(currentPage - 1)}>Previous</span>
-              </li>
-              {
-                [...Array(Math.ceil(pagination.total / pagination.limit)).keys()].map(pageNumber =>
-                  <li key={pageNumber} className={`page-item ${pageNumber + 1 === currentPage ? "active disabled" : ""}`}>
-                    <span className="page-link cursor" onClick={(e) => goPage(pageNumber + 1)}>{pageNumber + 1}</span>
-                  </li>
-                )
-              }
-              <li className={`page-item ${currentPage === Math.ceil(pagination.total / pagination.limit) ? "disabled" : ""}`}>
-                <span className="page-link cursor" onClick={(e) => goPage(currentPage + 1)}>Next</span>
-              </li>
-            </ul>
-          </nav> : <></>}
+          <Pagination pagination={pagination} currentPage={currentPage} goPage={goPage} />
         </>
         :
         <LoadingSpinner />

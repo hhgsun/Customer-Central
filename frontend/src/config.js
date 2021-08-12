@@ -1,5 +1,5 @@
 
-let isDeveloping = true;
+let isDeveloping = false;
 
 // PUBLISH API SETTINGs
 let API_URL = "https://gazianteposbteknokent.click/customer-api-service/index.php";
@@ -16,4 +16,14 @@ if (isDeveloping) {
   UPLOAD_PRESENTATION_URL = "http://localhost:5858/uploads/presentation/"
 }
 
-export { API_URL, UPLOAD_FORM_URL, UPLOAD_STORAGE_URL, UPLOAD_PRESENTATION_URL }
+
+// Local Storage Set Item Name
+const JWT_LOCALSTORAGE_NAME = "jwt-token"
+
+export {
+  API_URL,
+  UPLOAD_FORM_URL,
+  UPLOAD_STORAGE_URL,
+  UPLOAD_PRESENTATION_URL,
+  JWT_LOCALSTORAGE_NAME
+}

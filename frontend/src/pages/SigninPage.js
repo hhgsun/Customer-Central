@@ -3,6 +3,7 @@ import { NavLink, useHistory } from 'react-router-dom';
 import AuthService from '../services/authService';
 import LogoTBR from "../images/logo-tbr.png";
 import { toast } from 'react-toastify';
+import { JWT_LOCALSTORAGE_NAME } from '../config';
 
 export default function SigninPage() {
   let history = useHistory();
@@ -20,7 +21,7 @@ export default function SigninPage() {
       "password": password
     }).then(res => {
       if (res.success) {
-        localStorage.setItem("jwt", res.jwt);
+        localStorage.setItem(JWT_LOCALSTORAGE_NAME, res.jwt);
         history.push("/");
         window.location.reload();
         //setDisabledBtn(false);
