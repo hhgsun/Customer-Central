@@ -5,3 +5,5 @@ composer.phar
 /uploads/presentation/*
 
 settings.php
+/settings.php
+./settings.php
