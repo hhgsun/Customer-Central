@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { NavLink, useHistory, useParams } from 'react-router-dom'
 import AnswerList from '../components/AnswerList'
+import LoadingSpinner from '../components/LoadingSpinner'
 import SearchUser from '../components/SearchUser'
 import FormModel from '../models/FormModel'
 import FormService from '../services/formService'
 import { addForm, deleteForm, updateForm } from '../store/formSlice'
+import { toast } from 'react-toastify';
 
 export default function FormEditPage() {
   const { formId } = useParams()
@@ -19,6 +21,8 @@ export default function FormEditPage() {
   const [isLoad, setIsLoad] = useState(false);
 
   const [isUpdateForm, setIsUpdateForm] = useState(formId);
+
+  const [disabledBtn, setDisabledBtn] = useState(false)
 
   const formService = new FormService();
 
@@ -35,25 +39,31 @@ export default function FormEditPage() {
 
   const sendForm = () => {
     if (!formData.title) {
-      alert("Lütfen Form Başlığı Belirtin.");
+      toast.warning("Lütfen Form Başlığı Belirtin.");
       return;
     }
     formService.addForm(formData).then((id) => {
       dispacth(addForm({ ...formData, id: id }));
-      history.push(`/dashboard/form-edit/${id}`);
-      alert("Form Eklendi");
-      window.location.reload();
+      history.push(`/admin/form-edit/${id}`);
+      toast.success("Form Eklendi.");
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     });
   }
 
   const sendUpdateForm = () => {
     if (!formData.title) {
-      alert("Lütfen Form Başlığı Belirtin.");
+      toast.warning("Lütfen Form Başlığı Belirtin.");
       return;
     }
+    setDisabledBtn(true);
     formService.updateForm(formData).then(r => {
       dispacth(updateForm(formData));
-      alert("Güncelleme Başarılı");
+      setTimeout(() => {
+        setDisabledBtn(false);
+      }, 200);
+      toast.success("Güncelleme Başarılı.");
     })
   }
 
@@ -62,8 +72,10 @@ export default function FormEditPage() {
     if (!s) return;
     formService.deleteForm(formId).then(r => {
       dispacth(deleteForm(formId));
-      history.push("/dashboard/forms");
-      window.location.reload();
+      history.push("/admin/forms");
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     })
   }
 
@@ -125,7 +137,7 @@ export default function FormEditPage() {
                     <NavLink className="btn btn-sm btn-outline-dark" to={`/form/${formId}`} target={'_blank'} rel="noreferrer">
                       <i className="bi bi-eye"></i> VİEW
                     </NavLink>
-                    <button className="btn btn-dark btn-sm ms-2" onClick={sendUpdateForm}>UPDATE FORM</button>
+                    <button className="btn btn-dark btn-sm ms-2" onClick={sendUpdateForm} disabled={disabledBtn}>UPDATE FORM</button>
                   </>
                   : <button className="btn btn-dark btn-sm ms-2" onClick={sendForm}>SEND FORM</button>}
               </div>
@@ -136,7 +148,7 @@ export default function FormEditPage() {
             </div>
           </>
           :
-          <div>Bekleyiniz...</div>
+          <LoadingSpinner />
       }
 
     </div>

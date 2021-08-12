@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import LoadingSpinner from '../components/LoadingSpinner';
 import StorageService from '../services/storageService';
 import { setAllStorages, setStoragePagination } from '../store/storageSlice';
+import { setCurrentPageTitle } from '../store/utilsSlice';
 
 export default function StoragesPage() {
   const users = useSelector((state) => state.users.all);
@@ -19,6 +21,7 @@ export default function StoragesPage() {
   const storageService = new StorageService();
 
   useEffect(() => {
+    dispatch(setCurrentPageTitle("Storage Central"));
     if (storages === undefined || storages === null || storages.length === 0) {
       storageService.getAllStorages().then(res => {
         dispatch(setAllStorages(res.storages));
@@ -50,7 +53,7 @@ export default function StoragesPage() {
     <div className="storages-page">
       <div className="d-flex align-items-center">
         <h2>Storage List</h2>
-        <NavLink className="btn btn-sm btn-dark ms-auto" to={"/dashboard/storage-add"}>Yeni Ekle</NavLink>
+        <NavLink className="btn btn-sm btn-dark ms-auto" to={"/admin/storage-add"}>Yeni Ekle</NavLink>
       </div>
 
       {isLoad
@@ -98,7 +101,7 @@ export default function StoragesPage() {
                     <NavLink className="btn btn-secondary btn-sm" to={`storage-edit/${storage.id}`}>
                       Edit
                     </NavLink>
-                    <NavLink className="btn btn-light btn-sm ms-2" to={`/storage/${storage.id}`} target={'_blank'}>
+                    <NavLink className="btn btn-light btn-sm ms-2" to={`/client/storage/${storage.id}`} target={'_blank'}>
                       View
                     </NavLink>
                   </td>
@@ -126,7 +129,7 @@ export default function StoragesPage() {
           </nav> : <></>}
         </>
         :
-        "Yükleniyor..."
+        <LoadingSpinner />
       }
     </div>
   )

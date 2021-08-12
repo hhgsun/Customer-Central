@@ -30,7 +30,8 @@ export default class StorageService {
 
   async addStorage(storage) {
     storage.materials.map(m => {
-      m.file_val.newAddedUrl = null; return m;
+      if (m.file_val.newAddedUrl) m.file_val.newAddedUrl = null;
+      return m;
     });
     const res = await fetch(`${this.API_URL}/storages/add`, {
       method: 'POST',
@@ -46,7 +47,8 @@ export default class StorageService {
 
   async updateStorage(storage) {
     storage.materials.map(m => {
-      m.file_val.newAddedUrl = null; return m;
+      if (m.file_val.newAddedUrl) m.file_val.newAddedUrl = null;
+      return m;
     });
     const res = await fetch(`${this.API_URL}/storages/${storage.id}/update`, {
       method: 'POST',

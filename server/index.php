@@ -45,15 +45,10 @@ $app->get('/', function (Request $request, Response $response, $args) {
 
 // ROUTES
 require './src/routes/auth.php';
-
 require './src/routes/users.php';
-
 require './src/routes/forms.php';
 require './src/routes/storages.php';
 require './src/routes/presentations.php';
-
-
-// require './src/routes/admin.php'; //sil
 
 
 $app->run();

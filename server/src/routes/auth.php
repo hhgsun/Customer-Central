@@ -5,16 +5,13 @@ use Psr\Http\Message\UploadedFileInterface;
 use Slim\Factory\AppFactory;
 use \Firebase\JWT\JWT;
 
-// JWT::$leeway = X; // oturum zamanını kontrol amaçlı gerekli
+JWT::$leeway = 60; // oturum zamanını kontrol amaçlı gerekli
 
 // https://www.techiediaries.com/php-jwt-authentication-tutorial/
 
 // Auth Check
 $app->post('/auth-check', function (Request $request, Response $response) {
   $params = $request->getParsedBody();
-  /* $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
-  $arr = explode(" ", $authHeader);
-  $jwt = $arr[1]; */
   $jwt = $params['token'];
   try {
     $decoded = JWT::decode($jwt, "hhgsun", array('HS256'));
@@ -26,6 +23,7 @@ $app->post('/auth-check', function (Request $request, Response $response) {
               ->withHeader('Content-Type', 'application/json');
   } catch (Exception $e) {
     $payload = json_encode(array(
+      'success' => false,
       'message' => $e->getMessage(),
       'code' => $e->getCode(),
     ));
@@ -35,6 +33,7 @@ $app->post('/auth-check', function (Request $request, Response $response) {
               ->withStatus(500);
   }
 });
+
 
 // Login
 $app->post('/login', function (Request $request, Response $response) {
@@ -67,7 +66,8 @@ $app->post('/login', function (Request $request, Response $response) {
               "id" => $user->id,
               "firstname" => $user->firstname,
               "lastname" => $user->lastname,
-              "email" => $email
+              "email" => $email,
+              "isAdmin" => $user->isAdmin,
         ));
 
         $jwt = JWT::encode($token, $secret_key);

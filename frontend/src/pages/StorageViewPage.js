@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import LogoTBR from "../images/logo-tbr.png";
-import CustomerFooter from '../components/CustomerFooter';
 import IconFile from '../components/IconFile';
 import { UPLOAD_STORAGE_URL } from '../config';
 import StorageService from '../services/storageService';
 import StorageModel from '../models/StorageModel';
+import { useDispatch } from 'react-redux';
+import { setCurrentPageTitle } from '../store/utilsSlice';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function StorageViewPage() {
   const { storageId } = useParams()
+  const dispatch = useDispatch();
 
   const [storageData, setStorageData] = useState(new StorageModel());
   const [isLoad, setIsLoad] = useState(false);
@@ -16,11 +19,13 @@ export default function StorageViewPage() {
   const storageService = new StorageService();
 
   useEffect(() => {
+    dispatch(setCurrentPageTitle("Storage View ..."));
     if (storageId === null) {
       setIsLoad(true);
       return;
     }
     storageService.getStorageDetail(storageId).then(res => {
+      dispatch(setCurrentPageTitle("Storage: " + res.title));
       if (res.materials && res.layouts) {
         res.layouts.forEach(layout => {
           // layout.materials = res.materials.filter(m => m.layout_id === layout.id && m.block_id === null && m.group_id === null);
@@ -42,10 +47,7 @@ export default function StorageViewPage() {
       {isLoad
         ?
         <>
-          <StorageHeader />
-
           <div className="storage-main">
-
             {
               storageData.layouts.map((layout, layoutIndex) =>
                 <section className="storage-layout w-100" style={{ backgroundColor: layout.bgColor, color: layout.textColor }} key={layoutIndex}>
@@ -157,10 +159,9 @@ export default function StorageViewPage() {
             }
 
           </div>
-
-          <CustomerFooter />
         </>
-        : "Bekleyiniz"
+        :
+        <LoadingSpinner />
       }
     </div>
   )

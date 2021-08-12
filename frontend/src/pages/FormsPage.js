@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { NavLink } from "react-router-dom";
+import LoadingSpinner from '../components/LoadingSpinner';
 import FormService from '../services/formService';
 import { setAllForms, setFormsPagination } from '../store/formSlice';
+import { setCurrentPageTitle } from '../store/utilsSlice';
 
 export default function FormsPage() {
   const users = useSelector((state) => state.users.all);
@@ -20,6 +22,7 @@ export default function FormsPage() {
   const formService = new FormService();
 
   useEffect(() => {
+    dispatch(setCurrentPageTitle("Brief Central"));
     if (forms === undefined || forms === null || forms.length === 0) {
       formService.getAllForms().then(res => {
         dispatch(setAllForms(res.forms));
@@ -51,7 +54,7 @@ export default function FormsPage() {
     <div className="form-page">
       <div className="d-flex align-items-center">
         <h2>Brief List</h2>
-        <NavLink className="btn btn-sm btn-dark ms-auto" to={"/dashboard/form-add"}>Yeni Ekle</NavLink>
+        <NavLink className="btn btn-sm btn-dark ms-auto" to={"/admin/form-add"}>Yeni Ekle</NavLink>
       </div>
 
       {isLoad
@@ -104,7 +107,7 @@ export default function FormsPage() {
                     <NavLink className="btn btn-secondary btn-sm" to={`form-edit/${form.id}`}>
                       Edit
                     </NavLink>
-                    <NavLink className="btn btn-light btn-sm ms-2" to={`/form/${form.id}`} target={'_blank'}>
+                    <NavLink className="btn btn-light btn-sm ms-2" to={`/client/form/${form.id}`} target={'_blank'}>
                       View
                     </NavLink>
                   </td>
@@ -132,7 +135,7 @@ export default function FormsPage() {
           </nav> : <></>}
         </>
         :
-        "Yükleniyor..."
+        <LoadingSpinner />
       }
     </div>
   )

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { NavLink } from "react-router-dom";
-import FormService from '../services/formService';
+import LoadingSpinner from '../components/LoadingSpinner';
 import UserService from '../services/userService';
-import { setAllForms, setFormsPagination } from '../store/formSlice';
 import { setAllUsers, setUserPagination } from '../store/userSlice';
+import { setCurrentPageTitle } from '../store/utilsSlice';
 
 export default function UsersPage() {
   const users = useSelector((state) => state.users.all);
@@ -24,6 +24,7 @@ export default function UsersPage() {
   const userService = new UserService();
 
   useEffect(() => {
+    dispatch(setCurrentPageTitle("User List"));
     if (users === undefined || users === null || users.length === 0) {
       userService.getAllUsers().then(res => {
         dispatch(setAllUsers(res.users));
@@ -98,9 +99,6 @@ export default function UsersPage() {
                     <NavLink className="btn btn-secondary btn-sm" to={`user-edit/${user.id}`}>
                       Edit
                     </NavLink>
-                    <NavLink className="btn btn-light btn-sm ms-2" to={`/user/${user.id}`} target={'_blank'}>
-                      View
-                    </NavLink>
                   </td>
                 </tr>
               ))}
@@ -126,7 +124,7 @@ export default function UsersPage() {
           </nav> : <></>}
         </>
         :
-        "Yükleniyor..."
+        <LoadingSpinner />
       }
     </div>
   )

@@ -7,6 +7,8 @@ import { UPLOAD_PRESENTATION_URL } from '../config';
 import PresentationService from '../services/presentationService';
 import { addPresentation, deletePresentation, updatePresentation } from '../store/presentationSlice';
 import SearchUser from '../components/SearchUser';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { toast } from 'react-toastify';
 
 export default function PresentationEditPage() {
   const { presentId } = useParams()
@@ -19,6 +21,8 @@ export default function PresentationEditPage() {
 
   const [isLoad, setIsLoad] = useState(false);
 
+  const [disabledBtn, setDisabledBtn] = useState(false)
+
   const presentService = new PresentationService();
 
   useEffect(() => {
@@ -26,7 +30,6 @@ export default function PresentationEditPage() {
       presentService.getPresentationDetail(presentId).then(res => {
         setPresentationData(Object.assign({}, new PresentationModel(res)));
         setIsLoad(true);
-
       });
     } else {
       setIsLoad(true);
@@ -35,25 +38,31 @@ export default function PresentationEditPage() {
 
   const sendPresentation = () => {
     if (!presentationData.title) {
-      alert("Lütfen Form Başlığı Belirtin.");
+      toast.warn("Lütfen başlığı belirtin.");
       return;
     }
     presentService.addPresentation(presentationData).then((id) => {
       dispacth(addPresentation({ ...presentationData, id: id }));
-      history.push(`/dashboard/presentation-edit/${id}`);
-      alert("Presentation Eklendi");
-      window.location.reload();
+      history.push(`/admin/presentation-edit/${id}`);
+      toast.success("Presentation Eklendi.");
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
     });
   }
 
   const sendUpdatePresentation = () => {
     if (!presentationData.title) {
-      alert("Lütfen Form Başlığı Belirtin.");
+      toast.warn("Lütfen başlığı belirtin.");
       return;
     }
+    setDisabledBtn(true);
     presentService.updatePresentation(presentationData).then(r => {
       dispacth(updatePresentation(presentationData));
-      alert("Güncelleme Başarılı");
+      setTimeout(() => {
+        setDisabledBtn(false);
+      }, 200);
+      toast.success("Güncelleme Başarılı.");
     })
   }
 
@@ -62,7 +71,7 @@ export default function PresentationEditPage() {
     if (!s) return;
     presentService.deletePresentation(presentId).then(r => {
       dispacth(deletePresentation(presentId))
-      history.push("/dashboard/presentations");
+      history.push("/admin/presentations");
       window.location.reload();
     })
   }
@@ -149,7 +158,7 @@ export default function PresentationEditPage() {
                     <NavLink className="btn btn-sm btn-outline-dark" to={`/presentation/${presentId}`} target={'_blank'} rel="noreferrer">
                       <i className="bi bi-eye"></i> VİEW
                     </NavLink>
-                    <button className="btn btn-dark btn-sm ms-2" onClick={sendUpdatePresentation}>UPDATE PRESENTATION</button>
+                    <button className="btn btn-dark btn-sm ms-2" onClick={sendUpdatePresentation} disabled={disabledBtn}>UPDATE PRESENTATION</button>
                   </>
                   : <button className="btn btn-dark btn-sm ms-2" onClick={sendPresentation}>SEND PRESENTATION</button>}
               </div>
@@ -181,7 +190,7 @@ export default function PresentationEditPage() {
             </div>
           </>
           :
-          <div>Bekleyiniz...</div>
+          <LoadingSpinner />
       }
     </div>
   )

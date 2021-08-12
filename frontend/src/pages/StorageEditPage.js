@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { NavLink, useHistory, useParams } from 'react-router-dom';
+import LoadingSpinner from '../components/LoadingSpinner';
 import MaterialList from '../components/MaterialList';
 import SearchUser from '../components/SearchUser';
 import StorageModel from '../models/StorageModel';
 import StorageService from '../services/storageService';
 import { addStorage, deleteStorage, updateStorage } from '../store/storageSlice';
+import { toast } from 'react-toastify';
 
 export default function StorageEditPage() {
 
@@ -18,6 +20,8 @@ export default function StorageEditPage() {
   const [storageData, setStorageData] = useState(new StorageModel());
 
   const [isLoad, setIsLoad] = useState(false);
+
+  const [disabledBtn, setDisabledBtn] = useState(false)
 
   const storageService = new StorageService();
 
@@ -34,25 +38,29 @@ export default function StorageEditPage() {
 
   const sendStorage = () => {
     if (!storageData.title) {
-      alert("Lütfen Form Başlığı Belirtin.");
+      toast.warn("Lütfen başlığı belirtin.");
       return;
     }
     storageService.addStorage(storageData).then((id) => {
       dispacth(addStorage({ ...storageData, id: id }));
-      history.push(`/dashboard/storage-edit/${id}`);
-      alert("Form Eklendi");
+      history.push(`/admin/storage-edit/${id}`);
+      toast.success("Storage Eklendi.");
       window.location.reload();
     });
   }
 
   const sendUpdateStorage = () => {
     if (!storageData.title) {
-      alert("Lütfen Form Başlığı Belirtin.");
+      toast.warn("Lütfen başlığı belirtin.");
       return;
     }
+    setDisabledBtn(true);
     storageService.updateStorage(storageData).then(r => {
       dispacth(updateStorage(storageData));
-      alert("Güncelleme Başarılı");
+      setTimeout(() => {
+        setDisabledBtn(false);
+      }, 200);
+      toast.success("Güncelleme Başarılı.");
     })
   }
 
@@ -61,7 +69,7 @@ export default function StorageEditPage() {
     if (!s) return;
     storageService.deleteStorage(storageId).then(r => {
       dispacth(deleteStorage(storageId))
-      history.push("/dashboard/storages");
+      history.push("/admin/storages");
       window.location.reload();
     })
   }
@@ -103,7 +111,7 @@ export default function StorageEditPage() {
                     <NavLink className="btn btn-sm btn-outline-dark" to={`/storage/${storageId}`} target={'_blank'} rel="noreferrer">
                       <i className="bi bi-eye"></i> VİEW
                     </NavLink>
-                    <button className="btn btn-dark btn-sm ms-2" onClick={sendUpdateStorage}>UPDATE STORAGE</button>
+                    <button className="btn btn-dark btn-sm ms-2" onClick={sendUpdateStorage} disabled={disabledBtn}>UPDATE STORAGE</button>
                   </>
                   : <button className="btn btn-dark btn-sm ms-2" onClick={sendStorage}>SEND STORAGE</button>}
               </div>
@@ -114,7 +122,7 @@ export default function StorageEditPage() {
             </div>
           </>
           :
-          <div>Bekleyiniz...</div>
+          <LoadingSpinner />
       }
     </div>
   )

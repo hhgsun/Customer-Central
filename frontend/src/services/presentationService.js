@@ -31,7 +31,8 @@ export default class PresentationService {
 
   async addPresentation(present) {
     present.images.map(p => {
-      p.newAddedUrl = null; return p;
+      if (p.newAddedUrl) p.newAddedUrl = null;
+      return p;
     });
     const res = await fetch(`${this.API_URL}/presentations/add`, {
       method: 'POST',
@@ -47,7 +48,8 @@ export default class PresentationService {
 
   async updatePresentation(present) {
     present.images.map(p => {
-      p.newAddedUrl = null; return p;
+      if (p.newAddedUrl) p.newAddedUrl = null;
+      return p;
     });
     const res = await fetch(`${this.API_URL}/presentations/${present.id}/update`, {
       method: 'POST',

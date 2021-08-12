@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import LoadingSpinner from '../components/LoadingSpinner';
 import PresentationService from '../services/presentationService';
 import { setAllPresentations, setPresentationsPagination } from '../store/presentationSlice';
+import { setCurrentPageTitle } from '../store/utilsSlice';
 
 export default function PresentationsPage() {
   const users = useSelector((state) => state.users.all);
@@ -19,6 +21,7 @@ export default function PresentationsPage() {
   const presentService = new PresentationService();
 
   useEffect(() => {
+    dispatch(setCurrentPageTitle("Presentation Central"));
     if (presetations === undefined || presetations === null || presetations.length === 0) {
       presentService.getAllPresentations().then(res => {
         dispatch(setAllPresentations(res.presentations));
@@ -49,7 +52,7 @@ export default function PresentationsPage() {
     <div className="presentations-page">
       <div className="d-flex align-items-center">
         <h2>Presentation List</h2>
-        <NavLink className="btn btn-sm btn-dark ms-auto" to={"/dashboard/presentation-add"}>Yeni Ekle</NavLink>
+        <NavLink className="btn btn-sm btn-dark ms-auto" to={"/admin/presentation-add"}>Yeni Ekle</NavLink>
       </div>
 
       {isLoad
@@ -97,7 +100,7 @@ export default function PresentationsPage() {
                     <NavLink className="btn btn-secondary btn-sm" to={`presentation-edit/${presetation.id}`}>
                       Edit
                     </NavLink>
-                    <NavLink className="btn btn-light btn-sm ms-2" to={`/presentation/${presetation.id}`} target={'_blank'}>
+                    <NavLink className="btn btn-light btn-sm ms-2" to={`/client/presentation/${presetation.id}`} target={'_blank'}>
                       View
                     </NavLink>
                   </td>
@@ -125,7 +128,7 @@ export default function PresentationsPage() {
           </nav> : <></>}
         </>
         :
-        "Yükleniyor..."
+        <LoadingSpinner />
       }
     </div>
   )

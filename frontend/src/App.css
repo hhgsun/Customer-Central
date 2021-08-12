@@ -30,6 +30,12 @@
 body {
   font-family: 'Roboto', sans-serif; /* font-family: 'Roboto Condensed', sans-serif; */
 }
+.loading-spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
 .cursor {
   cursor: pointer;
 }
@@ -324,7 +330,7 @@ body {
 }
 
 /*LOGIN*/
-.login-page, .signup-page {
+.signin-page, .signup-page {
   min-height: 100vh;
 }
 .form-signin {
@@ -334,12 +340,12 @@ body {
   margin: auto;
   text-align: center;
 }
-.login-page input[type="email"] {
+.signin-page input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
-.login-page input[type="password"] {
+.signin-page input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;

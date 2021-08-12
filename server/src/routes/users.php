@@ -144,12 +144,13 @@ $app->post('/users/{userId}/update', function (Request $request, Response $respo
   try {
     $db = $db->connect();
     $sth = 'UPDATE users 
-            SET firstname=:firstname, lastname=:lastname
+            SET firstname=:firstname, lastname=:lastname, isAdmin=:isAdmin
             WHERE id = :userId';
     $prepare = $db->prepare($sth);
     $isUpdateForm = $prepare->execute([
                             'firstname' => $params['firstname'],
                             'lastname' => $params['lastname'],
+                            'isAdmin' => $params['isAdmin'] ? $params['isAdmin'] : 0,
                             'userId' => $userId
                           ]);
 

@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import CustomerFooter from '../components/CustomerFooter';
 import AnswerList from '../components/AnswerList';
 import FormModel from '../models/FormModel';
 import FormService from '../services/formService';
 import { updateForm } from '../store/formSlice';
 import LogoTBR from "../images/logo-tbr.png";
+import { setCurrentPageTitle } from '../store/utilsSlice';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function FormViewPage() {
   const { formId } = useParams()
 
-  const dispacth = useDispatch();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState(new FormModel());
 
@@ -24,11 +25,13 @@ export default function FormViewPage() {
   const formService = new FormService();
 
   useEffect(() => {
+    dispatch(setCurrentPageTitle("Brief View ..."));
     if (formId === null) {
       setIsLoad(true);
       return;
     }
     formService.getFormDetail(formId).then(res => {
+      dispatch(setCurrentPageTitle("Brief: " + res.title));
       setFormData(res);
       setIsLoad(true);
     });
@@ -42,7 +45,7 @@ export default function FormViewPage() {
     }
     setFormData(newData);
     formService.updateForm(newData).then(r => {
-      dispacth(updateForm(newData));
+      dispatch(updateForm(newData));
       setIsWait(false);
       setIsAnswered(true);
     })
@@ -56,7 +59,7 @@ export default function FormViewPage() {
           {
             isLoad
               ? <AnswerList formData={formData} setFormData={setFormData} filterCatName={selectedCatName} />
-              : <div>Bekleyiniz...</div>
+              : <LoadingSpinner />
           }
         </div>
       </main>
@@ -66,7 +69,6 @@ export default function FormViewPage() {
           {isAnswered ? <span className="ms-3">Teşekkürler! Vermiş olduğunuz bilgiler ekibimize iletilmiştir.</span> : <></>}
         </div>
       </div>
-      <CustomerFooter />
     </div>
   )
 }
@@ -99,12 +101,12 @@ function FormHeader({ isLoad, formData, setSelectedCatName }) {
   return (
     <header className="form-header py-4">
       <div className="container-brief d-flex py-2 align-items-center">
-        <div className="header-head">
+        {/* <div className="header-head">
           <a href="http://thebluered.co.uk/" title="The Blue Red">
             <img width="200" height="37" src={LogoTBR} className="header-logo" alt="The Blue Red" />
           </a>
           <div className="header-head-subtitle">Brief central</div>
-        </div>
+        </div> */}
         {isLoad & catNames.length > 0
           ? <div className="ms-auto">
             <label>

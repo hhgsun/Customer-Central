@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { NavLink, useHistory } from 'react-router-dom'
 import AuthService from '../services/authService'
 import LogoTBR from "../images/logo-tbr.png";
+import { toast } from 'react-toastify';
 
 export default function SignupPage() {
   let history = useHistory();
@@ -12,13 +13,17 @@ export default function SignupPage() {
   const [password, setPassword] = useState("")
   const [passwordRes, setPasswordRes] = useState("")
 
+  const [disabledBtn, setDisabledBtn] = useState(false)
+
+  const authService = new AuthService();
+
   const submitForm = (e) => {
     e.preventDefault();
     if (password !== passwordRes) {
-      alert("Şifre ve tekrarının aynı olduğuna emin olun.")
+      toast.warn("Şifre ve tekrarının aynı olduğuna emin olun.");
       return;
     }
-    let authService = new AuthService();
+    setDisabledBtn(true);
     authService.register({
       "email": email,
       "password": password,
@@ -26,12 +31,27 @@ export default function SignupPage() {
       "lastname": lastName
     }).then(res => {
       if (res.message) {
-        alert(res.message);
+        toast.warn(res.message);
+        setTimeout(() => {
+          setDisabledBtn(false);
+        }, 500);
       } else {
-        console.log(res);
-        history.push("/");
-        alert("Kayıt işlemi başarılı, giriş yapabilirsiniz.");
-        window.location.reload();
+        toast.success("👌 Kayıt işlemi başarılı, giriş yapabilirsiniz.");
+        setTimeout(() => {
+          authService.login({
+            "email": email,
+            "password": password
+          }).then(res => {
+            if (res.success) {
+              localStorage.setItem("jwt", res.jwt);
+              history.push("/");
+              window.location.reload();
+            } else {
+              history.push("/");
+              toast.warn(res.message);
+            }
+          });
+        }, 1000);
       }
     });
   }
@@ -50,6 +70,7 @@ export default function SignupPage() {
           <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className="form-control" placeholder="" required />
           <label>Last Name</label>
         </div>
+        <hr className="my-3" />
         <div className="form-floating mb-1">
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="" required />
           <label>Email address</label>
@@ -63,9 +84,9 @@ export default function SignupPage() {
           <label>Re - Password</label>
         </div>
 
-        <button className="w-100 btn btn-lg btn-primary mt-3" type="submit">Sign up</button>
+        <button className="w-100 btn btn-lg btn-primary mt-3" type="submit" disabled={disabledBtn}>Sign up</button>
 
-        <NavLink className="btn btn-light w-100 mt-3" to="/login"><i className="bi bi-box-arrow-in-left"></i> Login</NavLink>
+        <NavLink className="btn btn-light w-100 mt-3" to="/signin"><i className="bi bi-box-arrow-in-left"></i> Login</NavLink>
 
       </form>
     </div>

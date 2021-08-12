@@ -9,6 +9,15 @@ export default class FormService {
     this.UPLOAD_URL = UPLOAD_FORM_URL;
   }
 
+  // sil
+  /* async timeout(val) {
+    return new Promise((resove, reject) => {
+      setTimeout(() => {
+        resove(val);
+      }, 2000);
+    })
+  } */
+
   async getAllForms(params = null) {
     var page = 1,
       sort_by = localStorage.getItem('sort_by_form') !== 'undefined' && localStorage.getItem('sort_by_form') !== null ? localStorage.getItem('sort_by_form') : 'id',
@@ -85,7 +94,6 @@ export default class FormService {
     const uploaded = await res.json();
     return uploaded;
   }
-
 
   async deleteForm(formId) {
     const res = await fetch(`${this.API_URL}/forms/${formId}/delete`, {

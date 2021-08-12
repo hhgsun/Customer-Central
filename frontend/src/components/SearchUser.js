@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 export default function SearchUser({ data, setData }) {
 
-  const users = useSelector(state => state.users.all);
+  const users = useSelector(state => state.users.all.filter(u => u.isAdmin != "1"));
   const [selectEmail, setSelectEmail] = useState("");
 
   useEffect(() => {
@@ -13,7 +13,7 @@ export default function SearchUser({ data, setData }) {
         setSelectEmail(selectedUsers[0].email);
       }
     }
-  }, [])
+  }, [data])
 
   useEffect(() => {
     if (selectEmail !== "") {
