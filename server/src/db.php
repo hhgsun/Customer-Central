@@ -2,41 +2,41 @@
 
 class Db {
 
-  // Database info - development (publish: settings.php)
-  private $dbhost = 'localhost';
-  private $dbuser = 'root';
-  private $dbpass = '';
-  private $dbname = 'brief_central';
-
-  // init create table
   public function __construct() {
+
     try {
-
-      // publish database
-      if( $_ENV['SLIM_MODE'] == 'production' ) {
-        /* create file; settings.php: */
-        /*
-        $dbhost = 'localhost';
-        $dbuser = '';
-        $dbpass = '';
-        $dbname = '';
-        */
-        // require __DIR__ . './settings.php';
-
-        $dbhost = 'localhost';
-        $dbuser = 'gazi_hhgsun58';
-        $dbpass = 'hhgsun58/*';
-        $dbname = 'gazi_briefcent';
-
-        $this->dbhost = $dbhost;
-        $this->dbuser = $dbuser;
-        $this->dbpass = $dbpass;
-        $this->dbname = $dbname;
-      }
+      /* create file; settings.php: */
+      /*
+      $dbhost = 'localhost';
+      $dbuser = '';
+      $dbpass = '';
+      $dbname = '';
+      */
+      $this->dbhost = $_ENV['dbhost'];
+      $this->dbuser = $_ENV['dbuser'];
+      $this->dbpass = $_ENV['dbpass'];
+      $this->dbname = $_ENV['dbname'];
 
       $db = $this->connect();
 
-      /* $sth = "CREATE TABLE IF NOT EXISTS `answers` (
+      //
+      // CREATE DB TABLES
+
+      $sth = "CREATE TABLE IF NOT EXISTS `forms` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `createdDate` date NOT NULL,
+        `updateDate` date DEFAULT NULL,
+        `title` text COLLATE utf8mb4_turkish_ci NOT NULL,
+        `isAnswered` tinyint(1) NOT NULL DEFAULT '0',
+        `isDelete` tinyint(1) NOT NULL DEFAULT '0',
+        `userId` int(11) NOT NULL,
+        PRIMARY KEY (`id`)
+       ) ENGINE=MyISAM AUTO_INCREMENT=132 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
+      ";
+      $prepare = $db->prepare($sth);
+      $prepare->execute();
+
+      $sth = "CREATE TABLE IF NOT EXISTS `form_answers` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `formId` int(11) NOT NULL,
         `category` text COLLATE utf8mb4_turkish_ci NOT NULL,
@@ -48,52 +48,7 @@ class Db {
         `order_number` int(11) NOT NULL DEFAULT '0',
         `permission_edit` tinyint(1) NOT NULL DEFAULT '0',
         PRIMARY KEY (`id`)
-       ) ENGINE=MyISAM AUTO_INCREMENT=165 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
-      ";
-      $prepare = $db->prepare($sth);
-      $prepare->execute();
-
-      $sth = "CREATE TABLE IF NOT EXISTS `clients` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-        `createdDate` date NOT NULL,
-        `updateDate` date DEFAULT NULL,
-        `title` text COLLATE utf8mb4_turkish_ci NOT NULL,
-        `layouts` text COLLATE utf8mb4_turkish_ci,
-        `isDelete` tinyint(1) NOT NULL DEFAULT '0',
-        PRIMARY KEY (`id`)
-       ) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
-      ";
-      $prepare = $db->prepare($sth);
-      $prepare->execute();
-
-      $sth = "CREATE TABLE IF NOT EXISTS `forms` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-        `createdDate` date NOT NULL,
-        `updateDate` date DEFAULT NULL,
-        `title` text COLLATE utf8mb4_turkish_ci NOT NULL,
-        `status` tinyint(1) NOT NULL DEFAULT '0',
-        `isDelete` tinyint(1) NOT NULL DEFAULT '0',
-        `form_pass` varchar(50) COLLATE utf8mb4_turkish_ci NOT NULL DEFAULT '0000',
-        PRIMARY KEY (`id`)
-       ) ENGINE=MyISAM AUTO_INCREMENT=128 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
-      ";
-      $prepare = $db->prepare($sth);
-      $prepare->execute();
-
-      $sth = "CREATE TABLE IF NOT EXISTS `materials` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-        `clientId` int(11) NOT NULL,
-        `label` text COLLATE utf8mb4_turkish_ci NOT NULL,
-        `file_val` text COLLATE utf8mb4_turkish_ci,
-        `color` text COLLATE utf8mb4_turkish_ci,
-        `type` varchar(255) COLLATE utf8mb4_turkish_ci DEFAULT NULL,
-        `layout_id` varchar(11) COLLATE utf8mb4_turkish_ci DEFAULT '0',
-        `block_id` varchar(11) COLLATE utf8mb4_turkish_ci DEFAULT '0',
-        `group_id` varchar(11) COLLATE utf8mb4_turkish_ci DEFAULT '0',
-        `order_number` int(11) DEFAULT '0',
-        `isDelete` tinyint(1) NOT NULL DEFAULT '0',
-        PRIMARY KEY (`id`)
-       ) ENGINE=MyISAM AUTO_INCREMENT=105 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
+       ) ENGINE=MyISAM AUTO_INCREMENT=169 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
       ";
       $prepare = $db->prepare($sth);
       $prepare->execute();
@@ -105,8 +60,41 @@ class Db {
         `updateDate` date DEFAULT NULL,
         `isDelete` tinyint(1) NOT NULL DEFAULT '0',
         `images` text COLLATE utf8mb4_turkish_ci NOT NULL,
+        `userId` int(11) NOT NULL,
         PRIMARY KEY (`id`)
-       ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
+       ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
+      ";
+      $prepare = $db->prepare($sth);
+      $prepare->execute();
+
+      $sth = "CREATE TABLE IF NOT EXISTS `storages` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `createdDate` date NOT NULL,
+        `updateDate` date DEFAULT NULL,
+        `title` text COLLATE utf8mb4_turkish_ci NOT NULL,
+        `layouts` text COLLATE utf8mb4_turkish_ci,
+        `isDelete` tinyint(1) NOT NULL DEFAULT '0',
+        `userId` int(11) NOT NULL,
+        PRIMARY KEY (`id`)
+       ) ENGINE=MyISAM AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
+      ";
+      $prepare = $db->prepare($sth);
+      $prepare->execute();
+
+      $sth = "CREATE TABLE IF NOT EXISTS `storage_materials` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `storageId` int(11) NOT NULL,
+        `label` text COLLATE utf8mb4_turkish_ci NOT NULL,
+        `file_val` text COLLATE utf8mb4_turkish_ci,
+        `color` text COLLATE utf8mb4_turkish_ci,
+        `type` varchar(255) COLLATE utf8mb4_turkish_ci DEFAULT NULL,
+        `layout_id` varchar(11) COLLATE utf8mb4_turkish_ci DEFAULT '0',
+        `block_id` varchar(11) COLLATE utf8mb4_turkish_ci DEFAULT '0',
+        `group_id` varchar(11) COLLATE utf8mb4_turkish_ci DEFAULT '0',
+        `order_number` int(11) DEFAULT '0',
+        `isDelete` tinyint(1) NOT NULL DEFAULT '0',
+        PRIMARY KEY (`id`)
+       ) ENGINE=MyISAM AUTO_INCREMENT=107 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
       ";
       $prepare = $db->prepare($sth);
       $prepare->execute();
@@ -119,13 +107,14 @@ class Db {
         `password` text COLLATE utf8mb4_turkish_ci NOT NULL,
         `createdDate` date NOT NULL,
         `lastLoginDate` date DEFAULT NULL,
-        `status` int(11) NOT NULL DEFAULT '0',
+        `isAdmin` tinyint(1) NOT NULL DEFAULT '0',
+        `isDelete` tinyint(1) NOT NULL DEFAULT '0',
         `connections` text COLLATE utf8mb4_turkish_ci,
         PRIMARY KEY (`id`)
-       ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
+       ) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
       ";
       $prepare = $db->prepare($sth);
-      $prepare->execute(); */
+      $prepare->execute();
 
     } catch (PDOException $e) {
       print_r(json_encode(array(

@@ -3,10 +3,15 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
-$_ENV['SLIM_MODE'] = 'development';
-// $_ENV['SLIM_MODE'] = 'production';
-
 require __DIR__ . '/vendor/autoload.php';
+
+/* create file; settings.php: */
+require './src/settings.php';
+$_ENV['dbhost'] = $dbhost;
+$_ENV['dbuser'] = $dbuser;
+$_ENV['dbpass'] = $dbpass;
+$_ENV['dbname'] = $dbname;
+
 require './src/db.php';
 
 $app = AppFactory::create();
@@ -39,8 +44,11 @@ $app->add(function ($request, $handler) {
 
 
 $app->get('/', function (Request $request, Response $response, $args) {
-    $response->getBody()->write("Customer Central");
-    return $response;
+    $resData = array(
+        'API_NAME' => "Client Central"
+    );
+    $response->getBody()->write(json_encode($resData));
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
 // ROUTES
