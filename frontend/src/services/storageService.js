@@ -8,6 +8,16 @@ export default class StorageService {
     this.UPLOAD_URL = UPLOAD_STORAGE_URL;
   }
 
+  // storage.materials[0].file_val.newAddedUrl değerlerini null yapar
+  setNullStorageNewAddedUrlValue(storage) {
+    const data = JSON.parse(JSON.stringify(storage));
+    data.materials.map(material => {
+      if (material.file_val)
+        material.file_val.newAddedUrl = null;
+    });
+    return data;
+  }
+
   async getAllStorages(params = null) {
     var page = 1,
       sort_by = localStorage.getItem('sort_by_storage') !== 'undefined' && localStorage.getItem('sort_by_storage') !== null ? localStorage.getItem('sort_by_storage') : 'id',
@@ -29,14 +39,11 @@ export default class StorageService {
   }
 
   async addStorage(storage) {
-    storage.materials.map(m => {
-      if (m.file_val.newAddedUrl) m.file_val.newAddedUrl = null;
-      return m;
-    });
+    const data = this.setNullStorageNewAddedUrlValue(storage);
     const res = await fetch(`${this.API_URL}/storages/add`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(storage)
+      body: JSON.stringify(data)
     });
     const added = await res.json();
     if (added) {
@@ -46,14 +53,11 @@ export default class StorageService {
   }
 
   async updateStorage(storage) {
-    storage.materials.map(m => {
-      if (m.file_val.newAddedUrl) m.file_val.newAddedUrl = null;
-      return m;
-    });
+    const data = this.setNullStorageNewAddedUrlValue(storage);
     const res = await fetch(`${this.API_URL}/storages/${storage.id}/update`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(storage)
+      body: JSON.stringify(data)
     });
     const updated = await res.json();
     if (updated) {

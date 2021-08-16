@@ -155,7 +155,7 @@ export default function PresentationEditPage() {
               <div className="ms-auto">
                 {presentationData.id !== null
                   ? <>
-                    <NavLink className="btn btn-sm btn-outline-dark" to={`/presentation/${presentId}`} target={'_blank'} rel="noreferrer">
+                    <NavLink className="btn btn-sm btn-outline-dark" to={`/client/presentation/${presentId}`} target={'_blank'} rel="noreferrer">
                       <i className="bi bi-eye"></i> VİEW
                     </NavLink>
                     <button className="btn btn-dark btn-sm ms-2" onClick={sendUpdatePresentation} disabled={disabledBtn}>UPDATE PRESENTATION</button>

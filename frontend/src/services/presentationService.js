@@ -9,6 +9,15 @@ export default class PresentationService {
     this.UPLOAD_URL = UPLOAD_PRESENTATION_URL;
   }
 
+  // presentation.images[0].newAddedUrl değerlerini null yapar
+  setNullPresentationNewAddedUrlValue(presentation) {
+    const data = JSON.parse(JSON.stringify(presentation));
+    data.images.map(image => {
+      image.newAddedUrl = null;
+    });
+    return data;
+  }
+
   async getAllPresentations(params = null) {
     var page = 1,
       sort_by = localStorage.getItem('sort_by_present') !== 'undefined' && localStorage.getItem('sort_by_present') !== null ? localStorage.getItem('sort_by_present') : 'id',
@@ -30,14 +39,11 @@ export default class PresentationService {
   }
 
   async addPresentation(present) {
-    present.images.map(p => {
-      if (p.newAddedUrl) p.newAddedUrl = null;
-      return p;
-    });
+    const data = this.setNullPresentationNewAddedUrlValue(present);
     const res = await fetch(`${this.API_URL}/presentations/add`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(present)
+      body: JSON.stringify(data)
     });
     const added = await res.json();
     if (added) {
@@ -47,14 +53,11 @@ export default class PresentationService {
   }
 
   async updatePresentation(present) {
-    present.images.map(p => {
-      if (p.newAddedUrl) p.newAddedUrl = null;
-      return p;
-    });
+    const data = this.setNullPresentationNewAddedUrlValue(present);
     const res = await fetch(`${this.API_URL}/presentations/${present.id}/update`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(present)
+      body: JSON.stringify(data)
     });
     const updated = await res.json();
     if (updated) {

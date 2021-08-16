@@ -18,6 +18,17 @@ export default class FormService {
     })
   } */
 
+  // form.answers[0].value[0].newAddedUrl değerlerini null yapar
+  setNullFormNewAddedUrlValue(form) {
+    const data = JSON.parse(JSON.stringify(form));
+    data.answers.map(a => {
+      a.value.map(v => {
+        v.newAddedUrl = null;
+      })
+    });
+    return data;
+  }
+
   async getAllForms(params = null) {
     var page = 1,
       sort_by = localStorage.getItem('sort_by_form') !== 'undefined' && localStorage.getItem('sort_by_form') !== null ? localStorage.getItem('sort_by_form') : 'id',
@@ -39,15 +50,11 @@ export default class FormService {
   }
 
   async addForm(form) {
-    form.answers.map(s => {
-      s.value.map(v => {
-        if (v.newAddedUrl) v.newAddedUrl = null;
-      })
-    });
+    const data = this.setNullFormNewAddedUrlValue(form);
     const res = await fetch(`${this.API_URL}/forms/add`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form)
+      body: JSON.stringify(data)
     });
     const added = await res.json();
     if (added) {
@@ -57,15 +64,11 @@ export default class FormService {
   }
 
   async updateForm(form) {
-    form.answers.map(s => {
-      s.value.map(v => {
-        if (v.newAddedUrl) v.newAddedUrl = null;
-      })
-    });
+    const data = this.setNullFormNewAddedUrlValue(form);
     const res = await fetch(`${this.API_URL}/forms/${form.id}/update`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form)
+      body: JSON.stringify(data)
     });
     const updated = await res.json();
     if (updated) {

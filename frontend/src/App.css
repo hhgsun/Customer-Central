@@ -190,16 +190,22 @@ body {
   transform: scale(1.05);
   z-index: 1;
 }
-.container-brief .multiple-item .btn {
+.container-brief .multiple-item .btns-control {
   position: absolute;
   right: 0;
-  top: 1px;
-  padding: 0 3px;
+  top: -1px;
   display: none;
   z-index: 4;
 }
-.container-brief .multiple-item:hover .btn {
+.container-brief .multiple-item:hover .btns-control {
   display: block;
+}
+.container-brief .multiple-item .btns-control .btn {
+  padding: 0 3px;
+  margin-left: 3px;
+}
+.container-brief .multiple-item .btns-control .move-handle {
+  cursor: move;
 }
 
 /**/
@@ -223,7 +229,7 @@ body {
 .storage-edit-page .material-item:hover .delete-icon {
   visibility: visible !important;
   right: 0;
-  top: 20px;
+  top: 5px;
 }
 .storage-edit-page .storage-group:hover .storage-group-control .delete-icon {
   visibility: visible !important;

@@ -134,7 +134,7 @@ export default function FormEditPage() {
               <div className="ms-auto">
                 {isUpdateForm
                   ? <>
-                    <NavLink className="btn btn-sm btn-outline-dark" to={`/form/${formId}`} target={'_blank'} rel="noreferrer">
+                    <NavLink className="btn btn-sm btn-outline-dark" to={`/client/form/${formId}`} target={'_blank'} rel="noreferrer">
                       <i className="bi bi-eye"></i> VİEW
                     </NavLink>
                     <button className="btn btn-dark btn-sm ms-2" onClick={sendUpdateForm} disabled={disabledBtn}>UPDATE FORM</button>

@@ -119,11 +119,14 @@ export default function AnswerItemValue({ answerIndex, answerValues, inputtype, 
     // Checkboxes
     input = isEdit ?
       <>
-        <ReactSortable list={values} setList={setValues} className="d-inline-flex flex-wrap w-100 align-items-start">
+        <ReactSortable list={values} setList={setValues} handle=".move-handle" className="d-inline-flex flex-wrap w-100 align-items-start">
           {values.map((v, i) =>
             <div key={i} className="multiple-item">
               <input className="form-control" value={v.val} onChange={(e) => updateVal(e, i)} />
-              <span className="btn btn-sm btn-secondary" onClick={() => deleteVal(i)}><i className="bi bi-x-lg"></i></span>
+              <div className="btns-control">
+                <span className="move-handle btn btn-sm btn-secondary"><i className="bi bi-arrows-move"></i></span>
+                <span className="btn btn-sm btn-secondary" onClick={() => deleteVal(i)}><i className="bi bi-x-lg"></i></span>
+              </div>
             </div>
           )}
         </ReactSortable>
@@ -168,11 +171,14 @@ export default function AnswerItemValue({ answerIndex, answerValues, inputtype, 
     // Selectbox
     input = isEdit ?
       <>
-        <ReactSortable list={values} setList={setValues} className="d-flex flex-wrap align-items-start">
+        <ReactSortable list={values} setList={setValues} handle=".move-handle" className="d-flex flex-wrap align-items-start">
           {values.map((v, i) =>
             <div key={i} className="multiple-item">
               <input className="form-control" value={v.val} onChange={(e) => updateVal(e, i)} />
-              <span className="btn btn-sm btn-secondary" onClick={() => deleteVal(i)}><i className="bi bi-x-lg"></i></span>
+              <div className="btns-control">
+                <span className="move-handle btn btn-sm btn-secondary"><i className="bi bi-arrows-move"></i></span>
+                <span className="btn btn-sm btn-secondary" onClick={() => deleteVal(i)}><i className="bi bi-x-lg"></i></span>
+              </div>
             </div>
           )}
         </ReactSortable>
@@ -189,11 +195,16 @@ export default function AnswerItemValue({ answerIndex, answerValues, inputtype, 
 
     // Colors
     input = <>
-      <ReactSortable list={values} setList={setValues} className="d-flex flex-wrap align-items-start">
+      <ReactSortable list={values} setList={setValues} handle=".move-handle" className="d-flex flex-wrap align-items-start">
         {values.map((v, i) =>
           <div key={i} className="multiple-item">
             <input type="color" value={v.val} onChange={(e) => updateVal(e, i)} />
-            {isEdit ? <span className="btn btn-sm btn-secondary" onClick={() => deleteVal(i)}><i className="bi bi-x-lg"></i></span> : <></>}
+            {isEdit ?
+              <div className="btns-control">
+                <span className="move-handle btn btn-sm btn-secondary"><i className="bi bi-arrows-move"></i></span>
+                <span className="btn btn-sm btn-secondary" onClick={() => deleteVal(i)}><i className="bi bi-x-lg"></i></span>
+              </div>
+              : <></>}
           </div>
         )}
       </ReactSortable>
@@ -204,7 +215,7 @@ export default function AnswerItemValue({ answerIndex, answerValues, inputtype, 
 
     // Images
     input = <>
-      <ReactSortable list={values} setList={setValues} className="d-flex flex-wrap align-items-start multi-image">
+      <ReactSortable list={values} setList={setValues} handle=".move-handle" className="d-flex flex-wrap align-items-start multi-image">
         {values.map((v, i) =>
           <div key={i} className="multiple-item">
             {v.file
@@ -224,7 +235,10 @@ export default function AnswerItemValue({ answerIndex, answerValues, inputtype, 
             {
               isEdit ? <>
                 <input type="file" onChange={(e) => updateImage(e, i)} multiple={true} accept="image/*" />
-                <span className="btn btn-sm btn-secondary" onClick={() => deleteVal(i)}><i className="bi bi-x-lg"></i></span>
+                <div className="btns-control">
+                  <span className="move-handle btn btn-sm btn-secondary"><i className="bi bi-arrows-move"></i></span>
+                  <span className="btn btn-sm btn-secondary" onClick={() => deleteVal(i)}><i className="bi bi-x-lg"></i></span>
+                </div>
               </> : <></>
             }
           </div>

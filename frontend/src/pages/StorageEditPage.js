@@ -108,7 +108,7 @@ export default function StorageEditPage() {
               <div className="ms-auto">
                 {storageData.id !== null
                   ? <>
-                    <NavLink className="btn btn-sm btn-outline-dark" to={`/storage/${storageId}`} target={'_blank'} rel="noreferrer">
+                    <NavLink className="btn btn-sm btn-outline-dark" to={`/client/storage/${storageId}`} target={'_blank'} rel="noreferrer">
                       <i className="bi bi-eye"></i> VİEW
                     </NavLink>
                     <button className="btn btn-dark btn-sm ms-2" onClick={sendUpdateStorage} disabled={disabledBtn}>UPDATE STORAGE</button>
