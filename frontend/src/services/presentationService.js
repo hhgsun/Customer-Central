@@ -12,9 +12,7 @@ export default class PresentationService {
   // presentation.images[0].newAddedUrl değerlerini null yapar
   setNullPresentationNewAddedUrlValue(presentation) {
     const data = JSON.parse(JSON.stringify(presentation));
-    data.images.map(image => {
-      image.newAddedUrl = null;
-    });
+    data.images.map(image => image.newAddedUrl = null);
     return data;
   }
 

@@ -21,11 +21,9 @@ export default class FormService {
   // form.answers[0].value[0].newAddedUrl değerlerini null yapar
   setNullFormNewAddedUrlValue(form) {
     const data = JSON.parse(JSON.stringify(form));
-    data.answers.map(a => {
-      a.value.map(v => {
-        v.newAddedUrl = null;
-      })
-    });
+    data.answers.map(a =>
+      a.value.map(v => v.newAddedUrl = null)
+    );
     return data;
   }
 

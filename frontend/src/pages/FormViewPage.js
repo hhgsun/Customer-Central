@@ -5,7 +5,6 @@ import AnswerList from '../components/AnswerList';
 import FormModel from '../models/FormModel';
 import FormService from '../services/formService';
 import { updateForm } from '../store/formSlice';
-import LogoTBR from "../images/logo-tbr.png";
 import { setCurrentPageTitle } from '../store/utilsSlice';
 import LoadingSpinner from '../components/LoadingSpinner';
 

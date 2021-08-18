@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { NavLink, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
 import UserInventories from '../components/UserInventories';
 import UserModel from '../models/UserModel';
 import UserService from '../services/userService';
 import { updateUser } from '../store/userSlice';
 import { toast } from 'react-toastify';
-
 
 export default function UserEditPage() {
   const { userId } = useParams()

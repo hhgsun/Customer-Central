@@ -343,15 +343,19 @@ body {
 /*LOGIN*/
 .signin-page, .signup-page {
   min-height: 100vh;
+  background-image: linear-gradient( 0deg , var(--primary-bg), var(--secondary-bg));
+  padding: 30px 10px;
 }
 .form-signin {
   width: 100%;
-  max-width: 330px;
-  padding: 15px;
+  max-width: 350px;
+  padding: 50px 30px 30px 30px;
   margin: auto;
   text-align: center;
+  background-color: var(--light-bg);
+  border-radius: 5px;
 }
-.signin-page input[type="email"] {
+/* .signin-page input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
@@ -360,4 +364,4 @@ body {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-}
+} */

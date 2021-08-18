@@ -14,6 +14,7 @@ export default class StorageService {
     data.materials.map(material => {
       if (material.file_val)
         material.file_val.newAddedUrl = null;
+      return material;
     });
     return data;
   }
