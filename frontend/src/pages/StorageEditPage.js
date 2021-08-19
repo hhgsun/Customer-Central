@@ -102,6 +102,7 @@ export default function StorageEditPage() {
           ?
           <>
             <input name="title" value={storageData.title} onChange={handleInput} className="form-control mt-3" placeholder="Storage Title" />
+            <input name="description" value={storageData.description} onChange={handleInput} className="form-control form-control-sm mt-1 text-muted" placeholder="Storage Description" />
 
             <h4 className="h5 mb-2 pb-3 d-flex align-items-end sticky-top bg-white border-bottom mt-1 pt-3" style={{ zIndex: '2', top: '55px' }}>
               Materials

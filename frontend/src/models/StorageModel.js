@@ -3,6 +3,7 @@ export default class StorageModel {
     args = args ?? {};
     this.id = args["id"] ?? null;
     this.title = args["title"] ?? '';
+    this.description = args["description"] ?? '';
     this.layouts = args["layouts"] ?? [];
     this.createdDate = args["createdDate"] ?? '';
     this.updateDate = args["updateDate"] ?? '';

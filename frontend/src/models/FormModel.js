@@ -3,6 +3,7 @@ export default class FormModel {
     args = args ?? {};
     this.id = args["id"] ?? null;
     this.title = args["title"] ?? '';
+    this.description = args["description"] ?? '';
     this.isAnswered = args["isAnswered"] ?? 0;
     this.createdDate = args["createdDate"] ?? '';
     this.updateDate = args["updateDate"] ?? '';

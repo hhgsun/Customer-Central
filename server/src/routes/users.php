@@ -144,13 +144,14 @@ $app->post('/users/{userId}/update', function (Request $request, Response $respo
   try {
     $db = $db->connect();
     $sth = 'UPDATE users 
-            SET firstname=:firstname, lastname=:lastname, isAdmin=:isAdmin
+            SET firstname=:firstname, lastname=:lastname, isAdmin=:isAdmin, avatar=:avatar
             WHERE id = :userId';
     $prepare = $db->prepare($sth);
     $isUpdateForm = $prepare->execute([
                             'firstname' => $params['firstname'],
                             'lastname' => $params['lastname'],
                             'isAdmin' => $params['isAdmin'] ? $params['isAdmin'] : 0,
+                            'avatar' => json_encode($params['avatar']),
                             'userId' => $userId
                           ]);
 
@@ -206,7 +207,7 @@ $app->post('/users/{id}/delete', function (Request $request, Response $response)
 
 // IMAGE UPLOAD
 $app->post('/users/image-upload', function (Request $request, Response $response) {
-  $directory = __DIR__ . '/../../uploads/uploads';
+  $directory = __DIR__ . '/../../uploads/avatar';
   $uploadedFiles = $request->getUploadedFiles();
 
   try {

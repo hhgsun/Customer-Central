@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { NavLink, useHistory } from 'react-router-dom'
 import AuthService from '../services/authService'
-import LogoTBR from "../images/logo-tbr.png";
+import LogoTBRCC from "../images/logo-tbr-clientcentral.png";
 import { toast } from 'react-toastify';
 import { JWT_LOCALSTORAGE_NAME } from '../config';
 
@@ -60,10 +60,7 @@ export default function SignupPage() {
   return (
     <div className="signup-page d-flex justify-content-center align-items-center bg-light">
       <form className="form-signin" onSubmit={(e) => submitForm(e)}>
-        <img src={LogoTBR} alt="thebluered" width="200" />
-        <h1 className="h4 mt-2 mb-5">Client Central</h1>
-        {/* <h1 className="h3 mb-3 fw-normal mt-3">Please sign up</h1> */}
-
+        <img src={LogoTBRCC} alt="thebluered" className="mb-5" height="48" />
         <div className="form-floating mb-1">
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="" required />
           <label>Email address</label>

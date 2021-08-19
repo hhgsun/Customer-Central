@@ -104,10 +104,11 @@ $app->post('/forms/add', function (Request $request, Response $response) {
   try {
     $db = $db->connect();
 
-    $sth = 'INSERT INTO forms (title, isAnswered, createdDate, userId) VALUES (:title, :isAnswered, :createdDate, :userId)';
+    $sth = 'INSERT INTO forms (title, description, isAnswered, createdDate, userId) VALUES (:title, :description, :isAnswered, :createdDate, :userId)';
     $prepare = $db->prepare($sth);
     $isAddedForm = $prepare->execute([
                             'title' => $params['title'],
+                            'description' => $params['description'],
                             'isAnswered' => isset($params['isAnswered']) ? $params['isAnswered'] : 0,
                             'createdDate' => $params['createdDate'],
                             'userId' => $params['userId'] ? $params['userId'] : 0,
@@ -178,11 +179,12 @@ $app->post('/forms/{formId}/update', function (Request $request, Response $respo
   try {
     $db = $db->connect();
     $sth = 'UPDATE forms 
-            SET title=:title, isAnswered=:isAnswered, updateDate=:updateDate, userId=:userId
+            SET title=:title, description=:description, isAnswered=:isAnswered, updateDate=:updateDate, userId=:userId
             WHERE id = :formId';
     $prepare = $db->prepare($sth);
     $isUpdateForm = $prepare->execute([
                             'title' => $params['title'],
+                            'description' => $params['description'],
                             'isAnswered' => isset($params['isAnswered']) ? $params['isAnswered'] : 0,
                             'updateDate' => $params['updateDate'],
                             'userId' => $params['userId'] ? $params['userId'] : 0,

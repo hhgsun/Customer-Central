@@ -3,6 +3,7 @@ export default class PresentationModel {
     args = args ?? {};
     this.id = args["id"] ?? null;
     this.title = args["title"] ?? '';
+    this.description = args["description"] ?? '';
     this.createdDate = args["createdDate"] ?? '';
     this.updateDate = args["updateDate"] ?? '';
     this.images = args["images"] ?? [];

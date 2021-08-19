@@ -96,10 +96,11 @@ $app->post('/presentations/add', function (Request $request, Response $response)
   try {
     $db = $db->connect();
 
-    $sth = 'INSERT INTO presentations (title, images, createdDate, userId) VALUES (:title, :images, :createdDate, :userId)';
+    $sth = 'INSERT INTO presentations (title, description, images, createdDate, userId) VALUES (:title, :description, :images, :createdDate, :userId)';
     $prepare = $db->prepare($sth);
     $isAdded = $prepare->execute([
                             'title' => $params['title'],
+                            'description' => $params['description'],
                             'images' => json_encode($params['images']),
                             'createdDate' => $params['createdDate'],
                             'userId' => $params['userId'] ? $params['userId'] : 0,
@@ -144,11 +145,12 @@ $app->post('/presentations/{presentationId}/update', function (Request $request,
   try {
     $db = $db->connect();
     $sth = 'UPDATE presentations 
-            SET title=:title, images=:images, updateDate=:updateDate, userId=:userId
+            SET title=:title, description=:description, images=:images, updateDate=:updateDate, userId=:userId
             WHERE id = :presentationId';
     $prepare = $db->prepare($sth);
     $isUpdate = $prepare->execute([
                             'title' => $params['title'],
+                            'description' => $params['description'],
                             'images' => json_encode($params['images']),
                             'updateDate' => $params['updateDate'],
                             'presentationId' => $presentationsId,

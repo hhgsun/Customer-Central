@@ -372,7 +372,7 @@ export default function MaterialList({ storageData, setStorageData }) {
                           ? <a className="btn btn-sm ms-1 me-2 px-0" href={UPLOAD_STORAGE_URL + material.file_val.fileName} target="_blank" rel="noreferrer" style={{ color: layout.textColor }}><i className="bi bi-box-arrow-up-right"></i></a>
                           : <></>
                         }
-                        <input name="order_number" type="number" value={material.order_number} onChange={(e) => handleMaterialOrder(e, materialIndex)} class="form-control px-0 ms-1 bg-transparent text-end" style={{ maxWidth: "40px" }} placeholder="Sıra" />
+                        <input name="order_number" type="number" value={material.order_number} onChange={(e) => handleMaterialOrder(e, materialIndex)} className="form-control px-0 ms-1 bg-transparent text-end" style={{ maxWidth: "40px" }} placeholder="Sıra" />
                         <i className="delete-icon bi bi-trash invisible cursor position-absolute" onClick={(e) => deleteMaterial(e, materialIndex)} title="Delete Material"></i>
                       </div>
                       : <></>}
@@ -413,7 +413,7 @@ export default function MaterialList({ storageData, setStorageData }) {
                               ? <a className="btn btn-sm ms-2" href={UPLOAD_STORAGE_URL + material.file_val.fileName} target="_blank" rel="noreferrer"><i className="bi bi-box-arrow-up-right"></i></a>
                               : <></>
                             }
-                            <input name="order_number" type="number" value={material.order_number} onChange={(e) => handleMaterialOrder(e, materialIndex)} class="form-control px-0 ms-1 bg-transparent text-end" style={{ maxWidth: "40px" }} placeholder="Sıra" />
+                            <input name="order_number" type="number" value={material.order_number} onChange={(e) => handleMaterialOrder(e, materialIndex)} className="form-control px-0 ms-1 bg-transparent text-end" style={{ maxWidth: "40px" }} placeholder="Sıra" />
                             <i className="delete-icon bi bi-trash invisible cursor position-absolute" onClick={(e) => deleteMaterial(e, materialIndex)}></i>
                           </div>
                           : <></>}
@@ -438,7 +438,7 @@ export default function MaterialList({ storageData, setStorageData }) {
                             <input name="rgb" className="form-control bg-transparent" value={material.color.rgb} onChange={(e) => handleMaterialColor(e, materialIndex)} />
                             <span className="input-group-text">HEX:</span>
                             <input name="hex" className="form-control bg-transparent" value={material.color.hex} onChange={(e) => handleMaterialColor(e, materialIndex)} />
-                            <input name="order_number" type="number" value={material.order_number} onChange={(e) => handleMaterialOrder(e, materialIndex)} class="form-control px-0 bg-transparent text-end" style={{ maxWidth: "40px" }} placeholder="Sıra" />
+                            <input name="order_number" type="number" value={material.order_number} onChange={(e) => handleMaterialOrder(e, materialIndex)} className="form-control px-0 bg-transparent text-end" style={{ maxWidth: "40px" }} placeholder="Sıra" />
                             <i className="input-group-text delete-icon bi bi-trash invisible cursor" onClick={(e) => deleteMaterial(e, materialIndex)}></i>
                           </div>
                         </div>

@@ -104,10 +104,11 @@ $app->post('/storages/add', function (Request $request, Response $response) {
   try {
     $db = $db->connect();
 
-    $sth = 'INSERT INTO storages (title, layouts, createdDate, userId) VALUES (:title, :layouts, :createdDate, :userId)';
+    $sth = 'INSERT INTO storages (title, description, layouts, createdDate, userId) VALUES (:title, :description, :layouts, :createdDate, :userId)';
     $prepare = $db->prepare($sth);
     $isAdded = $prepare->execute([
                             'title' => $params['title'],
+                            'description' => $params['description'],
                             'layouts' => json_encode($params['layouts']),
                             'createdDate' => $params['createdDate'],
                             'userId' => $params['userId'] ? $params['userId'] : 0,
@@ -179,11 +180,12 @@ $app->post('/storages/{storageId}/update', function (Request $request, Response 
   try {
     $db = $db->connect();
     $sth = 'UPDATE storages 
-            SET title=:title, layouts=:layouts, updateDate=:updateDate, userId=:userId 
+            SET title=:title, description=:description, layouts=:layouts, updateDate=:updateDate, userId=:userId 
             WHERE id = :storageId';
     $prepare = $db->prepare($sth);
     $isUpdateStorage = $prepare->execute([
                             'title' => $params['title'],
+                            'description' => $params['description'],
                             'layouts' => json_encode($params['layouts']),
                             'updateDate' => $params['updateDate'],
                             'storageId' => $storageId,

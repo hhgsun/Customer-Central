@@ -3,5 +3,6 @@ composer.phar
 /uploads/storage/*
 /uploads/form/*
 /uploads/presentation/*
+/uploads/avatar/*
 
 /src/settings.php

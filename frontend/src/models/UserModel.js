@@ -7,6 +7,7 @@ export default class UserModel {
     this.lastname = args["lastname"] ?? null;
     this.createdDate = args["createdDate"] ?? '';
     this.lastLoginDate = args["lastLoginDate"] ?? '';
+    this.avatar = args["avatar"] ?? null;
     this.isAdmin = args["isAdmin"] ?? 0;
 
     this.connections = args["connections"] ?? {};

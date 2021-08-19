@@ -124,6 +124,7 @@ export default function FormEditPage() {
           ?
           <>
             <input name="title" value={formData.title} onChange={handleInput} className="form-control mt-3" placeholder="Form Title" />
+            <input name="description" value={formData.description} onChange={handleInput} className="form-control form-control-sm mt-1 text-muted" placeholder="Form Description" />
 
             <h4 className="h5 mb-2 pb-3 d-flex align-items-end sticky-top bg-white border-bottom mt-1 pt-3" style={{ zIndex: '2', top: '55px' }}>
               Answers

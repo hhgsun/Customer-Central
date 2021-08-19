@@ -27,6 +27,7 @@ class Db {
         `createdDate` date NOT NULL,
         `updateDate` date DEFAULT NULL,
         `title` text COLLATE utf8mb4_turkish_ci NOT NULL,
+        `description` text COLLATE utf8mb4_turkish_ci DEFAULT NULL,
         `isAnswered` tinyint(1) NOT NULL DEFAULT '0',
         `isDelete` tinyint(1) NOT NULL DEFAULT '0',
         `userId` int(11) NOT NULL,
@@ -56,6 +57,7 @@ class Db {
       $sth = "CREATE TABLE IF NOT EXISTS `presentations` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `title` text COLLATE utf8mb4_turkish_ci NOT NULL,
+        `description` text COLLATE utf8mb4_turkish_ci DEFAULT NULL,
         `createdDate` date NOT NULL,
         `updateDate` date DEFAULT NULL,
         `isDelete` tinyint(1) NOT NULL DEFAULT '0',
@@ -72,6 +74,7 @@ class Db {
         `createdDate` date NOT NULL,
         `updateDate` date DEFAULT NULL,
         `title` text COLLATE utf8mb4_turkish_ci NOT NULL,
+        `description` text COLLATE utf8mb4_turkish_ci DEFAULT NULL,
         `layouts` text COLLATE utf8mb4_turkish_ci,
         `isDelete` tinyint(1) NOT NULL DEFAULT '0',
         `userId` int(11) NOT NULL,
@@ -109,6 +112,7 @@ class Db {
         `lastLoginDate` date DEFAULT NULL,
         `isAdmin` tinyint(1) NOT NULL DEFAULT '0',
         `isDelete` tinyint(1) NOT NULL DEFAULT '0',
+        `avatar` text COLLATE utf8mb4_turkish_ci DEFAULT NULL,
         `connections` text COLLATE utf8mb4_turkish_ci,
         PRIMARY KEY (`id`)
        ) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci
