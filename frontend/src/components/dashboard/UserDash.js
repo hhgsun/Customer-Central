@@ -47,8 +47,8 @@ function UserDashboard({ match }) {
     isLoad && currentUserData
       ?
       <div className="user-dashboard">
-        <header className="navbar navbar-expand-lg navbar-default shadow-sm py-2">
-          <div className="container-fluid py-1 justify-content-end">
+        <header className="navbar navbar-expand-lg navbar-default shadow-sm py-lg-1 py-2">
+          <div className="container-fluid py-2 justify-content-end">
 
             <NavLink className="me-lg-4 me-auto p-0 active p-0" to="/">
               <img height="40" src={LogoTBRCC} className="header-logo" alt="The Blue Red" />
@@ -60,6 +60,7 @@ function UserDashboard({ match }) {
 
             <button className="navbar-toggler collapsed border-0 fs-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-default" aria-controls="navbar-default" aria-expanded="false" aria-label="Toggle navigation">
               <i className="bi bi-list"></i>
+              <i className="bi bi-x"></i>
             </button>
 
             <div className="collapse navbar-collapse pt-3 pt-lg-0" id="navbar-default">
@@ -116,7 +117,7 @@ function UserDashboard({ match }) {
                 </li>
                 <li className="nav-item dropdown">
                   <a className="nav-link dropdown-toggle link-dark" href="#" data-bs-toggle="dropdown">
-                    Storages
+                    Deliverables
                   </a>
                   <ul className="dropdown-menu border-0 shadow-sm">
                     <div className="list-group">
@@ -185,13 +186,13 @@ function UserBox({ authData, currentUserData }) {
     ? <></>
     :
     <div className="dropdown user-box">
-      <a href="#" className="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+      <a href="#" className="d-flex align-items-center py-0 link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
         <div className="d-none d-lg-flex flex-column text-end">
           <div>{currentUserData.firstname} {currentUserData.lastname}</div>
           <div className="small text-muted">{currentUserData.email}</div>
         </div>
         <div className="ms-2">
-          <UserAvatar avatar={currentUserData.avatar} size="32" />
+          <UserAvatar avatar={currentUserData.avatar} size="38" />
         </div>
       </a>
       <ul className="dropdown-menu text-small border-0 shadow-sm w-100" aria-labelledby="dropdownUser1">
@@ -205,9 +206,9 @@ function UserBox({ authData, currentUserData }) {
 function UserDashFooter() {
   return (
     <div className="brief-footer no-print">
-      <div className="container-brief">
-        <div className="site-info text-center py-4">
-          <a href="http://thebluered.co.uk/" title="TheBlueRed" target="_blank" rel="noreferrer" className="text-decoration-none small">
+      <div className="container-brief pb-1">
+        <div className="site-info text-center py-2">
+          <a href="http://thebluered.co.uk/" title="TheBlueRed" className="text-decoration-none text-muted" style={{fontSize: "11px"}} target="_blank" rel="noreferrer">
             Proudly powered by theBlueRed
           </a>
           <span style={{ display: "none" }}>

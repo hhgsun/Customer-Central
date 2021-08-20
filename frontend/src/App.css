@@ -54,6 +54,9 @@ body {
   font-style: italic;
   margin-top: 10px;
 }
+.form-view .form-header {
+  background-color: var(--main-bg);
+}
 .form-view .form-header select {
   padding-right: 11px;
   font-size: .9em;
@@ -186,7 +189,6 @@ body {
 .container-brief .multiple-item .btns-control .move-handle {
   cursor: move;
 }
-
 /**/
 .form-view .answer-type-checkbox {
   display: flex;
@@ -197,7 +199,11 @@ body {
 .form-view .answer-type-checkbox .answer-label {
   margin-bottom: 0;
 }
-
+@media (max-width: 992px) {
+  .container-brief .multi-image .multiple-item {
+    max-width: calc(50% - .4em);
+  }
+}
 
 /*STORAGE*/
 .container-storage {
@@ -229,7 +235,7 @@ body {
   font-family: 'Roboto Condensed', sans-serif;
 }
 .storage-view .storage-layout {
-  padding: 80px 0;
+  padding: 80px 10px;
 }
 .storage-view .storage-layout .layout-head h2 {
   font-size: 3.5em;
@@ -250,7 +256,7 @@ body {
   font-weight: bold;
   opacity: 0.8;
   position: relative;
-  padding: 10px 15px;
+  padding: 10px 5px;
 }
 .storage-view .nav-item .nav-link.active,
 .storage-view .nav-item .nav-link.disabled {
@@ -317,6 +323,9 @@ body {
 .file-icon-box img {
   object-fit: cover;
 }
+@media (max-width: 992px) {
+  
+}
 
 /*LOGIN*/
 .signin-page, .signup-page {
@@ -355,6 +364,15 @@ body {
 .user-dashboard header.navbar a:hover::after {
   color: #79758f;
 }
+.user-dashboard .navbar-toggler:focus {
+  box-shadow: 0 0 0 0;
+}
+.user-dashboard .navbar-toggler:not(.collapsed) i:first-child {
+  display: none;
+}
+.user-dashboard .navbar-toggler.collapsed i:last-child {
+  display: none;
+}
 .user-dashboard .list-group-item.active,
 .user-dashboard .dropdown-item.active,
 .user-dashboard .dropdown-item:active {
@@ -389,9 +407,6 @@ body {
   }
   .user-dashboard .user-inventories .container {
     max-width: 800%;
-  }
-  .user-dashboard .user-inventories {
-    padding-top: 1em !important;
   }
   .user-dashboard .header-logo {
     height: 36px;

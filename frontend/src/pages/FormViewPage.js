@@ -53,7 +53,7 @@ export default function FormViewPage() {
   return (
     <div className="form-view">
       <FormHeader isLoad={isLoad} formData={formData} setSelectedCatName={setSelectedCatName} />
-      <main className="brief-main pt-5 pb-4">
+      <main className="brief-main pt-4 pb-4">
         <div className="container-brief">
           {
             isLoad
@@ -98,23 +98,15 @@ function FormHeader({ isLoad, formData, setSelectedCatName }) {
   }
 
   return (
-    <header className="form-header py-4">
-      <div className="container-brief d-flex py-2 align-items-center">
-        {/* <div className="header-head">
-          <a href="http://thebluered.co.uk/" title="The Blue Red">
-            <img width="200" height="37" src={LogoTBR} className="header-logo" alt="The Blue Red" />
-          </a>
-          <div className="header-head-subtitle">Brief central</div>
-        </div> */}
+    <header className="form-header pt-3">
+      <div className="container-brief d-flex align-items-center">
         {isLoad & catNames.length > 0
-          ? <div className="ms-auto">
-            <label>
-              Kategori Seçiniz:
-              <select onChange={(e) => changeSelect(e)}>
-                {catNames.map((c, i) => <option key={i}>{c}</option>)}
-              </select>
-            </label>
-          </div>
+          ? <label className="d-flex flex-column text-muted">
+            <small>Kategori Seçiniz:</small>
+            <select className="ms-0 mt-1" onChange={(e) => changeSelect(e)}>
+              {catNames.map((c, i) => <option key={i}>{c}</option>)}
+            </select>
+          </label>
           : <></>
         }
       </div>

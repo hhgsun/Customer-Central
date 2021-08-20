@@ -78,7 +78,7 @@ export default function StorageViewPage() {
                                     )
                                   }
                                 </ul>
-                                <div className="tab-content px-5 py-4">
+                                <div className="tab-content px-3 px-md-5 py-4">
                                   {
                                     block.groups.map((group, groupIndex) =>
                                       <div key={groupIndex} className={`tab-pane fade ${groupIndex === 0 ? "show active" : ""}`}
@@ -128,7 +128,7 @@ export default function StorageViewPage() {
                                 </ul>
                                 <div className="tab-content">
                                   {block.materials.map((material, materialIndex) =>
-                                    <div key={material.id} className={`tab-pane border-radius pt-5 pb-4 px-5 fade ${materialIndex === 0 ? "show active" : ""}`}
+                                    <div key={material.id} className={`tab-pane border-radius pt-5 pb-4 px-md-5 px-4 fade ${materialIndex === 0 ? "show active" : ""}`}
                                       id={`color${material.id}-content`} role="tabpanel" aria-labelledby={`${material.id}-tab`}
                                       style={{ backgroundColor: material.color.hex }}>
                                       <div className="mb-2">
