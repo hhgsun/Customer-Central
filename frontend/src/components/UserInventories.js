@@ -8,19 +8,19 @@ export default function UserInventories({ userData }) {
   const tabMenuItems = [
     {
       title: "Briefs",
-      desc: "All the briefs you filled are together in this central. You can reach and check out what you desired.",
+      desc: "All the briefs",
       color: "var(--primary-bg)",
       btnText: "CHECK THE BRIEFS"
     },
     {
       title: "Presentations",
-      desc: "All the briefs you filled are together in this central. You can reach and check out what you desired.",
+      desc: "All the presentations",
       color: "var(--secondary-bg)",
       btnText: "CHECK THE PRESENTATIONS"
     },
     {
       title: "Deliverables",
-      desc: "All the briefs you filled are together in this central. You can reach and check out what you desired.",
+      desc: "All the deliverables",
       color: "var(--dark-bg)",
       btnText: "REACH THE FILES"
     }

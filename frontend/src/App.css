@@ -391,6 +391,7 @@ body {
 .user-dashboard .user-inventories .tab-item{
   border-radius: 20px;
   max-width: 375px;
+  flex: 1;
 }
 .user-dashboard .user-inventories .tab-item p {
   line-height: 1.2;

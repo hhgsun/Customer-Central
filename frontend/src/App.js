@@ -43,7 +43,7 @@ function App() {
           const { data } = jwt;
           if (data && data.email) {
             dispatch(authLogin(data));
-            userService.getAllUsers().then(res => {
+            userService.getAllUsersNotLimit().then(res => {
               dispatch(setAllUsers(res.users));
               dispatch(setUserPagination({
                 page: res.page,

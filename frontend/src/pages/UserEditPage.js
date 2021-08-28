@@ -33,7 +33,9 @@ export default function UserEditPage() {
           ?
           <>
             <UserEdit userData={userData} setUserData={setUserData} isAdmin={true} />
-            <UserInventories userData={userData} />
+            {
+              userId ? <UserInventories userData={userData} /> : <></>
+            }
           </>
           :
           <LoadingSpinner />

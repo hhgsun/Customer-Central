@@ -99,6 +99,9 @@ function AdminDashboard({ match }) {
             <Route path={`${match.url}/users`}>
               <UsersPage />
             </Route>
+            <Route path={`${match.url}/user-add`}>
+              <UserEditPage />
+            </Route>
             <Route path={`${match.url}/user-edit/:userId`}>
               <UserEditPage />
             </Route>

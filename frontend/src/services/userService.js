@@ -8,7 +8,27 @@ export default class UserService {
     this.UPLOAD_URL = UPLOAD_STORAGE_URL;
   }
 
-  async getAllUsers() {
+  async getAllUsers(params = null) {
+    var page = 1,
+      sort_by = localStorage.getItem('sort_by_user') !== 'undefined' && localStorage.getItem('sort_by_user') !== null ? localStorage.getItem('sort_by_user') : 'id',
+      direction = localStorage.getItem('direction_user') !== 'undefined' && localStorage.getItem('direction_user') !== null ? localStorage.getItem('direction_user') : 'DESC';
+    if (params != null) {
+      page = params.page ? params.page : 1;
+      sort_by = params.sort_by ? params.sort_by : 'id';
+      direction = params.direction ? params.direction : 'DESC';
+    }
+    const res = await fetch(`${this.API_URL}/users?page=${page}&sort_by=${sort_by}&direction=${direction}`);
+    const resdata = await res.json();
+    const data = {
+      ...resdata,
+      users: resdata.users.map(f => Object.assign({}, new UserModel(f)))
+    };
+    localStorage.setItem('direction_user', data.direction);
+    localStorage.setItem('sort_by_user', data.sort_by);
+    return data;
+  }
+
+  async getAllUsersNotLimit() {
     const res = await fetch(`${this.API_URL}/users-notlimit`);
     const resdata = await res.json();
     const data = {

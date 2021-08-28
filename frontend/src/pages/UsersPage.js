@@ -43,8 +43,8 @@ export default function UsersPage() {
 
   const goPage = (page = 1, sort_by = "id", direction = "DESC") => {
     setIsLoad(false);
-    userService.getAllUsers().then(res => {
-      dispatch(setAllUsers(res.forms));
+    userService.getAllUsers({ page: page, sort_by: sort_by, direction: direction }).then(res => {
+      dispatch(setAllUsers(res.users));
       setIsLoad(true);
     });
     setCurrentPage(page);
@@ -57,6 +57,7 @@ export default function UsersPage() {
     <div className="form-page">
       <div className="d-flex align-items-center">
         <h2>User List</h2>
+        <NavLink className="btn btn-sm btn-dark ms-auto" to={"/admin/user-add"}>Yeni Ekle</NavLink>
       </div>
 
       {isLoad
