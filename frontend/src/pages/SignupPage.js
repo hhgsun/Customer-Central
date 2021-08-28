@@ -62,8 +62,8 @@ export default function SignupPage() {
       <form className="form-signin" onSubmit={(e) => submitForm(e)}>
         <img src={LogoTBRCC} alt="thebluered" className="mb-5" height="48" />
         <div className="form-floating mb-1">
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="" required />
-          <label>Email address</label>
+          <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="" required />
+          <label>Email address or Username</label>
         </div>
         <div className="form-floating mb-1">
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control" placeholder="" required minLength="6" />

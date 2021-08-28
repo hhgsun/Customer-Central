@@ -32,7 +32,7 @@ export default function IconFile({ name }) {
         name
           ?
           <div className="file-icon-box me-2">
-            <img src={iconSrc} />
+            <img src={iconSrc} loading="lazy" />
           </div>
           : ""
       }

@@ -2,8 +2,8 @@
 let isDeveloping = false;
 
 // PUBLISH API SETTINGs
-let API_URL = "https://gazianteposbteknokent.click/customer-api-service/index.php";
-let uploadBasePath = "https://gazianteposbteknokent.click/customer-api-service"
+let API_URL = "http://thebluered.co.uk/clientcentral-api/index.php";
+let uploadBasePath = "http://thebluered.co.uk/clientcentral-api"
 let UPLOAD_FORM_URL = uploadBasePath + "/uploads/form/";
 let UPLOAD_STORAGE_URL = uploadBasePath + "/uploads/storage/";
 let UPLOAD_PRESENTATION_URL = uploadBasePath + "/uploads/presentation/";

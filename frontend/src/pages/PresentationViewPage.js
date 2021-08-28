@@ -35,7 +35,7 @@ export default function PresentationViewPage() {
     <div>
       {isLoad
         ? presentationData.images.map((image, imageIndex) => <section key={imageIndex}>
-          <img src={UPLOAD_PRESENTATION_URL + image.fileName} alt={presentationData.title + " " + imageIndex} className="w-100" />
+          <img src={UPLOAD_PRESENTATION_URL + image.fileName} alt={presentationData.title + " " + imageIndex} className="w-100" loading="lazy" />
         </section>)
         :
         <LoadingSpinner />

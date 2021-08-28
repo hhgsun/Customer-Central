@@ -1,8 +1,8 @@
 <?php
 $dbhost = 'localhost';
-$dbuser = 'gazi_hhgsun58';
-$dbpass = 'hhgsun58/*';
-$dbname = 'gazi_briefcent';
+$dbuser = 'theb_hhgsun';
+$dbpass = 'Hhgsun58/*';
+$dbname = 'theb_clientcentral';
 
 /* $dbhost = 'localhost';
 $dbuser = 'root';

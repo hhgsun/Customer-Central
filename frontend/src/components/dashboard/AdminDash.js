@@ -118,7 +118,7 @@ function HomeAdmin() {
   }, [])
   return (
     <div className="px-4 py-5 my-5 text-center">
-      <img height="60" src={LogoTBR} className="header-logo" alt="The Blue Red" />
+      <img height="60" src={LogoTBR} className="header-logo" alt="The Blue Red" loading="lazy" />
 
       <h1 className="display-5 fw-bold mt-3 mb-4">Client Central</h1>
       <div className="col-lg-6 mx-auto">

@@ -219,7 +219,7 @@ export default function AnswerItemValue({ answerIndex, answerValues, inputtype, 
         {values.map((v, i) =>
           <div key={i} className="multiple-item">
             {v.file
-              ? <img src={v.newAddedUrl != null ? v.newAddedUrl : UPLOAD_FORM_URL + v.fileName} className="mw-100" />
+              ? <img src={v.newAddedUrl != null ? v.newAddedUrl : UPLOAD_FORM_URL + v.fileName} className="mw-100" loading="lazy" />
               : <></>
             }
             {

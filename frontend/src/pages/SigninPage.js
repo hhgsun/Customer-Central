@@ -41,7 +41,7 @@ export default function SigninPage() {
 
         <div className="input-group mb-3">
           <span className="input-group-text bg-light border-0 ps-3 text-muted" id="basic-addon1"><i className="bi bi-envelope"></i></span>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control bg-light border-0 py-3 ps-1" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" required />
+          <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control bg-light border-0 py-3 ps-1" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" required />
         </div>
 
         <div className="input-group mb-3">
@@ -49,14 +49,6 @@ export default function SigninPage() {
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control bg-light border-0 py-3 ps-1" placeholder="Password" aria-label="Password" aria-describedby="basic-addon2" required minLength="4" />
         </div>
 
-        {/* <div className="form-floating">
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control bg-light mb-2 border-0" placeholder="name@example.com" required />
-          <label>Email address</label>
-        </div>
-        <div className="form-floating">
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-control bg-light border-0" placeholder="Password" required minLength="6" />
-          <label>Password</label>
-        </div> */}
         <button className="w-100 btn btn-lg btn-primary mt-3" type="submit" disabled={disabledBtn} style={{backgroundColor: "var(--primary-bg)"}}>
           Sign in
         </button>

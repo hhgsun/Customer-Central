@@ -172,7 +172,7 @@ export default function PresentationEditPage() {
                   <div key={imageIndex} className="card my-3">
                     {
                       image.fileName || image.newAddedUrl ?
-                        <img src={image.newAddedUrl != null ? image.newAddedUrl : UPLOAD_PRESENTATION_URL + image.fileName} className="mw-100" />
+                        <img src={image.newAddedUrl != null ? image.newAddedUrl : UPLOAD_PRESENTATION_URL + image.fileName} className="mw-100" loading="lazy" />
                         : <></>
                     }
                     <div className="d-flex align-items-center p-1">
