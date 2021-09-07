@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux';
 import { ReactSortable } from 'react-sortablejs';
 import { UPLOAD_FORM_URL } from '../config';
+import { setImageModalSrc } from '../store/utilsSlice';
 
 export default function AnswerItemValue({ answerIndex, answerValues, inputtype, isEdit = false, isAdmin = false, handle }) {
+  const dispatch = useDispatch();
 
   const [values, setValues] = useState(answerValues)
 
@@ -92,6 +95,25 @@ export default function AnswerItemValue({ answerIndex, answerValues, inputtype, 
     setValues(prevState => ([...newValues]));
   }
 
+  const updateFile = (event, index) => {
+    const newValues = [...values];
+    [...event.target.files].forEach((file) => {
+      if (file) {
+        const saveObj = {
+          file: file,
+          fileName: Date.now().toString() + "__" + file.name,
+          newAddedUrl: URL.createObjectURL(file),
+        };
+        if (event.target.files.length > 1) {
+          newValues.push(saveObj);
+        } else {
+          newValues[index] = saveObj;
+        }
+      }
+    });
+    setValues(prevState => ([...newValues]));
+  }
+
   const updateScore = (event, index) => {
     const newValues = [
       ...values.slice(0, index),
@@ -99,6 +121,10 @@ export default function AnswerItemValue({ answerIndex, answerValues, inputtype, 
       ...values.slice(index + 1)
     ]
     setValues(newValues)
+  }
+
+  const imageView = (event) => {
+    dispatch(setImageModalSrc(event.target.src));
   }
 
   // default input
@@ -219,7 +245,7 @@ export default function AnswerItemValue({ answerIndex, answerValues, inputtype, 
         {values.map((v, i) =>
           <div key={i} className="multiple-item">
             {v.file
-              ? <img src={v.newAddedUrl != null ? v.newAddedUrl : UPLOAD_FORM_URL + v.fileName} className="mw-100" loading="lazy" />
+              ? <img src={v.newAddedUrl != null ? v.newAddedUrl : UPLOAD_FORM_URL + v.fileName} className="mw-100" loading="lazy" onClick={(e) => imageView(e)} />
               : <></>
             }
             {
@@ -245,6 +271,26 @@ export default function AnswerItemValue({ answerIndex, answerValues, inputtype, 
         )}
       </ReactSortable>
       {isEdit ? <span href="#" className="btn btn-sm btn-dark" onClick={addVal}><i className="bi bi-plus-lg"></i> Yeni Dosya Ekle</span> : <></>}
+    </>
+
+  } else if (inputtype === "file") {
+
+    // file
+    input = <>
+      {
+        values[0] && values[0].fileName != undefined
+          ?
+          values[0].newAddedUrl != null
+            ?
+            values[0].fileName
+            :
+            <>
+              <a href={UPLOAD_FORM_URL + values[0].fileName} target="_blank">İNDİR</a>
+              <span className="btn btn-sm btn-secondary ms-3" onClick={() => deleteVal(0)}>Dosyayı Kaldır</span>
+            </>
+          :
+          <input type="file" onChange={(e) => updateFile(e, 0)} multiple={false} />
+      }
     </>
 
   }

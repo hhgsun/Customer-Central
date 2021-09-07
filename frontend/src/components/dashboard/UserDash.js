@@ -13,12 +13,12 @@ import { setCurrentUserData } from "../../store/userSlice";
 import LoadingSpinner from "../LoadingSpinner";
 import LogoTBRCC from "../../images/logo-tbr-clientcentral.png";
 import UserAvatar from "../UserAvatar";
+import ImageModal from "../ImageModal";
 
 function UserDashboard({ match }) {
   const currentPageTitle = useSelector(state => state.utils.currentPageTitle);
+  const imageModalSrc = useSelector(state => state.utils.imageModalSrc);
   const authData = useSelector(state => state.auth.authData);
-
-  let history = useHistory();
 
   const dispatch = useDispatch();
 
@@ -168,6 +168,8 @@ function UserDashboard({ match }) {
           </Switch>
         </main>
 
+        <ImageModal src={imageModalSrc} />
+
         <UserDashFooter />
       </div>
       : <LoadingSpinner />
@@ -208,7 +210,7 @@ function UserDashFooter() {
     <div className="brief-footer no-print">
       <div className="container-brief pb-1">
         <div className="site-info text-center py-2">
-          <a href="http://thebluered.co.uk/" title="TheBlueRed" className="text-decoration-none text-muted" style={{fontSize: "11px"}} target="_blank" rel="noreferrer">
+          <a href="http://thebluered.co.uk/" title="TheBlueRed" className="text-decoration-none text-muted" style={{ fontSize: "11px" }} target="_blank" rel="noreferrer">
             Proudly powered by theBlueRed
           </a>
           <span style={{ display: "none" }}>

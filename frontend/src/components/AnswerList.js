@@ -112,6 +112,7 @@ export default function answerList({ formData, setFormData, isAdmin = false, fil
                         <option value="color">Colors</option>
                         <option value="images">Images</option>
                         <option value="image-scoring">Image Scoring</option>
+                        <option value="file">File</option>
                       </select>
                       <input name="category" className="form-control form-control-sm ms-2 w-25" placeholder="Categories (Logo,Web,...)" value={answer.category} onChange={(e) => handleInput(e, answerIndex)} />
                       <div className="form-check small mt-1 ms-3">
