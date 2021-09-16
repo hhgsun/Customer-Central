@@ -197,7 +197,7 @@ function UserBox({ authData, currentUserData }) {
           <UserAvatar avatar={currentUserData.avatar} size="38" />
         </div>
       </a>
-      <ul className="dropdown-menu text-small border-0 shadow-sm w-100" aria-labelledby="dropdownUser1">
+      <ul className="dropdown-menu text-small border-0 shadow-sm w-100" style={{right: "0px"}} aria-labelledby="dropdownUser1">
         <li><NavLink className="dropdown-item" to="/client/settings">Settings</NavLink></li>
         <li><hr className="dropdown-divider bg-light" /></li>
         <li><a className="dropdown-item" href="#" onClick={(e) => logout(e)}>Sign out</a></li>

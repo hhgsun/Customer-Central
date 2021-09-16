@@ -19,6 +19,7 @@ export default function StorageViewPage() {
   const storageService = new StorageService();
 
   useEffect(() => {
+    setIsLoad(false);
     dispatch(setCurrentPageTitle("Storage View ..."));
     if (storageId === null) {
       setIsLoad(true);
@@ -40,7 +41,7 @@ export default function StorageViewPage() {
       setStorageData(res);
       setIsLoad(true);
     })
-  }, []);
+  }, [storageId]);
 
   return (
     <div className="storage-view">

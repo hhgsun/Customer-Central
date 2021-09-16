@@ -24,6 +24,7 @@ export default function FormViewPage() {
   const formService = new FormService();
 
   useEffect(() => {
+    setIsLoad(false);
     dispatch(setCurrentPageTitle("Brief View ..."));
     if (formId === null) {
       setIsLoad(true);
@@ -34,7 +35,7 @@ export default function FormViewPage() {
       setFormData(res);
       setIsLoad(true);
     });
-  }, []);
+  }, [formId]);
 
   const sendUpdateForm = () => {
     setIsWait(true);

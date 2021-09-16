@@ -17,8 +17,8 @@ export default function PresentationViewPage() {
   const presentationService = new PresentationService();
 
   useEffect(() => {
+    setIsLoad(false);
     dispatch(setCurrentPageTitle("Presentation View ..."));
-
     if (presentId === null) {
       setIsLoad(true);
       return;
@@ -28,7 +28,7 @@ export default function PresentationViewPage() {
       setPresentationData(res);
       setIsLoad(true);
     })
-  }, []);
+  }, [presentId]);
 
 
   return (
