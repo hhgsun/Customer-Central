@@ -22,8 +22,6 @@ jobs:
     name: 🎉 Deploy Client
     runs-on: ubuntu-latest
     steps:
-    #- working-directory: frontend
-
     - name: 🚚 Get latest code
       uses: actions/checkout@v2
 
@@ -33,6 +31,7 @@ jobs:
         node-version: '12'
 
     - name: 🔨 Build Project
+      working-directory: ./frontend
       run: |
         npm install
         npm run build
