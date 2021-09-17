@@ -125,7 +125,7 @@ function HomeAdmin() {
 
       <h1 className="display-5 fw-bold mt-3 mb-4">Client Central</h1>
       <div className="col-lg-6 mx-auto">
-        <p className="lead mb-4">Müşteri ihtiyaçlarını yönetebilmek için özenle hazırlanmış panel.</p>
+        <p className="lead mb-4">Müşteri ihtiyaçlarını yönetebilmek için özenle hazırlanmış panel</p>
       </div>
     </div>
   );
