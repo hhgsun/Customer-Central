@@ -13,7 +13,7 @@ jobs:
       with:
         server: 194.62.40.12
         port: 21
-        username: admin_hhgsun2
+        username: admin_hhg
         password: ${{ secrets.ftp_password }}
         local-dir: ./server/
         server-dir: public_html/clientcentral-api/
@@ -41,7 +41,7 @@ jobs:
       with:
         server: 194.62.40.12
         port: 21
-        username: admin_hhgsun2
+        username: admin_hhg
         password: ${{ secrets.ftp_password }}
         local-dir: ./frontend/build/
         server-dir: public_html/clientcentral/
