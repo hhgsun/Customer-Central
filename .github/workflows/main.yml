@@ -22,7 +22,7 @@ jobs:
     name: 🎉 Deploy Client
     runs-on: ubuntu-latest
     steps:
-    - working-directory: frontend
+    #- working-directory: frontend
 
     - name: 🚚 Get latest code
       uses: actions/checkout@v2
