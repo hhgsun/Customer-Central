@@ -34,8 +34,8 @@ jobs:
       working-directory: ./frontend
       run: |
         npm install
-        npm run build
-    
+        CI=false npm run build
+
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.1.0
       with:
