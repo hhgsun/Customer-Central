@@ -4,13 +4,24 @@ on:
       - 'frontend/**'
 name: 🚀 Deploy frontend on push
 jobs:
-  api-deploy:
-    name: 🎉 Deploy Api
+  client-deploy:
+    name: 🎉 Deploy Frontend-Client
     runs-on: ubuntu-latest
     steps:
     - name: 🚚 Get latest code
       uses: actions/checkout@v2
-    
+
+    - name: Use Node.js 14
+      uses: actions/setup-node@v2-beta
+      with:
+        node-version: '14'
+
+    - name: 🔨 Build Project
+      working-directory: ./frontend
+      run: |
+        npm install
+        CI=false npm run build
+
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.1.0
       with:
@@ -18,5 +29,5 @@ jobs:
         port: 21
         username: admin_hhg
         password: ${{ secrets.ftp_password }}
-        local-dir: ./server/
-        server-dir: public_html/clientcentral-api/
+        local-dir: ./frontend/build/
+        server-dir: public_html/clientcentral/
