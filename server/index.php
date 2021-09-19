@@ -5,8 +5,8 @@ use Slim\Factory\AppFactory;
 
 require __DIR__ . '/vendor/autoload.php';
 
-/* create file; settings.php: */
-require './src/settings.php';
+/* you create file; environment.php: */
+require './src/environment.php';
 $_ENV['dbhost'] = $dbhost;
 $_ENV['dbuser'] = $dbuser;
 $_ENV['dbpass'] = $dbpass;

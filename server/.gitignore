@@ -5,4 +5,5 @@ composer.phar
 /uploads/presentation/*
 /uploads/avatar/*
 
-# /src/settings.php
+# environment files
+/src/environment.php

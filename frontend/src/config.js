@@ -1,6 +1,3 @@
-
-let isDeveloping = false;
-
 // PUBLISH API SETTINGs
 let API_URL = "http://thebluered.co.uk/clientcentral-api/index.php";
 let uploadBasePath = "http://thebluered.co.uk/clientcentral-api"
@@ -10,7 +7,7 @@ let UPLOAD_PRESENTATION_URL = uploadBasePath + "/uploads/presentation/";
 let UPLOAD_AVATAR_URL = uploadBasePath + "/uploads/avatar/";
 
 // DEVELOPER
-if (isDeveloping) {
+if (process.env.NODE_ENV == "development") {
   API_URL = "http://localhost:5858";
   UPLOAD_FORM_URL = "http://localhost:5858/uploads/form/";
   UPLOAD_STORAGE_URL = "http://localhost:5858/uploads/storage/";
