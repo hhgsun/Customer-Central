@@ -1,23 +1,9 @@
-on: push
-name: 🚀 Deploy website on push
+on:
+  push:
+    paths:
+      - 'server/**'
+name: 🚀 Deploy server on push
 jobs:
-  api-deploy:
-    name: 🎉 Deploy Api
-    runs-on: ubuntu-latest
-    steps:
-    - name: 🚚 Get latest code
-      uses: actions/checkout@v2
-    
-    - name: 📂 Sync files
-      uses: SamKirkland/FTP-Deploy-Action@4.1.0
-      with:
-        server: 194.62.40.12
-        port: 21
-        username: admin_hhg
-        password: ${{ secrets.ftp_password }}
-        local-dir: ./server/
-        server-dir: public_html/clientcentral-api/
-
   client-deploy:
     name: 🎉 Deploy Client
     runs-on: ubuntu-latest
