@@ -289,10 +289,24 @@ body {
   border-radius: 10px;
 }
 .storage-view .material-item {
+  position: relative;
   border-bottom: 1px solid rgb(211 226 234 / 20%);
 }
 .storage-view .material-item:last-child {
   border-bottom: none;
+}
+.storage-view img.img-preview {
+  max-width: 200px;
+  position: absolute;
+  display: none;
+  top: calc(100% - 10px);
+  left: 40px;
+  background-color: #fff;
+  z-index: 1;
+  padding: 5px;
+}
+.storage-view span:hover ~ img.img-preview {
+  display: block;
 }
 .storage-view .btn-download {
   color: var(--primary-bg);

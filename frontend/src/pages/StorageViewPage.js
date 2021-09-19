@@ -88,7 +88,8 @@ export default function StorageViewPage() {
                                         {group.materials.map((material) =>
                                           <div key={material.id} className="material-item d-flex align-items-center py-2 position-relative">
                                             <IconFile name={material.file_val.nativeName} />
-                                            {material.label}
+                                            <span>{material.label}</span>
+                                            <ImgPreview imgName={material.file_val.fileName} />
                                             <a className="btn-download ms-auto" href={UPLOAD_STORAGE_URL + material.file_val.fileName} target="_blank" rel="noreferrer" download
                                               style={{ color: layout.bgColor, backgroundColor: layout.textColor }}>DOWNLOAD</a>
                                           </div>
@@ -168,13 +169,15 @@ export default function StorageViewPage() {
   )
 }
 
-function StorageHeader() {
-  return (
-    <div className="storage-header" style={{ color: "var(--primary-bg)" }}>
-      <div className="container-storage d-flex flex-column align-items-center py-5">
-        <img width="200" height="37" src={LogoTBR} />
-        <i>Storage Central</i>
-      </div>
-    </div>
-  )
+function ImgPreview({ imgName }) {
+  let extension;
+  if(imgName == null) {
+    return <></>
+  }
+  extension = imgName.split('.').pop();
+  extension = extension.toLowerCase();
+  if (extension === "png" || extension === "jpg" || extension === "jpeg") {
+    return <img className="img-preview" src={UPLOAD_STORAGE_URL + imgName} alt={extension} />
+  }
+  return <></>
 }

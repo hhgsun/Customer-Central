@@ -88,6 +88,7 @@ export default class UserService {
     let user = await res.json();
     user.connections = JSON.parse(user.connections);
     user.avatar = JSON.parse(user.avatar);
+    console.log(user)
     return user;
   }
 
