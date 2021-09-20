@@ -25,16 +25,27 @@ export default function StorageEditPage() {
 
   const storageService = new StorageService();
 
+  const initData = () => {
+    setDisabledBtn(true);
+    storageService.getStorageDetail(storageId).then(res => {
+      console.log("init data", res);
+      const data = Object.assign({}, new StorageModel(res));
+      setStorageData(data);
+      dispacth(updateStorage(data));
+      setIsLoad(true);
+      setTimeout(() => {
+        setDisabledBtn(false);
+      }, 200);
+    });
+  }
+
   useEffect(() => {
     if (storageId) {
-      storageService.getStorageDetail(storageId).then(res => {
-        setStorageData(Object.assign({}, new StorageModel(res)));
-        setIsLoad(true);
-      });
+      initData()
     } else {
       setIsLoad(true);
     }
-  }, [])
+  }, [storageId])
 
   const sendStorage = () => {
     if (!storageData.title) {
@@ -45,7 +56,6 @@ export default function StorageEditPage() {
       dispacth(addStorage({ ...storageData, id: id }));
       history.push(`/admin/storage-edit/${id}`);
       toast.success("Storage Eklendi.");
-      window.location.reload();
     });
   }
 
@@ -56,10 +66,8 @@ export default function StorageEditPage() {
     }
     setDisabledBtn(true);
     storageService.updateStorage(storageData).then(r => {
-      dispacth(updateStorage(storageData));
-      setTimeout(() => {
-        setDisabledBtn(false);
-      }, 200);
+      setDisabledBtn(false);
+      initData();
       toast.success("Güncelleme Başarılı.");
     })
   }

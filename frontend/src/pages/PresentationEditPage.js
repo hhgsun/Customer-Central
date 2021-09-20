@@ -25,16 +25,26 @@ export default function PresentationEditPage() {
 
   const presentService = new PresentationService();
 
+  const initData = () => {
+    setDisabledBtn(true);
+    presentService.getPresentationDetail(presentId).then(res => {
+      const data = Object.assign({}, new PresentationModel(res));
+      setPresentationData(data);
+      dispacth(updatePresentation(data));
+      setIsLoad(true);
+      setTimeout(() => {
+        setDisabledBtn(false);
+      }, 200);
+    });
+  }
+
   useEffect(() => {
     if (presentId) {
-      presentService.getPresentationDetail(presentId).then(res => {
-        setPresentationData(Object.assign({}, new PresentationModel(res)));
-        setIsLoad(true);
-      });
+      initData();
     } else {
       setIsLoad(true);
     }
-  }, [])
+  }, [presentId])
 
   const sendPresentation = () => {
     if (!presentationData.title) {
@@ -45,9 +55,6 @@ export default function PresentationEditPage() {
       dispacth(addPresentation({ ...presentationData, id: id }));
       history.push(`/admin/presentation-edit/${id}`);
       toast.success("Presentation Eklendi.");
-      setTimeout(() => {
-        window.location.reload();
-      }, 200);
     });
   }
 
@@ -58,10 +65,8 @@ export default function PresentationEditPage() {
     }
     setDisabledBtn(true);
     presentService.updatePresentation(presentationData).then(r => {
-      dispacth(updatePresentation(presentationData));
-      setTimeout(() => {
-        setDisabledBtn(false);
-      }, 200);
+      setDisabledBtn(false);
+      initData();
       toast.success("Güncelleme Başarılı.");
     })
   }
@@ -99,7 +104,7 @@ export default function PresentationEditPage() {
 
   const updateImage = (event, index) => {
     const newValues = [...presentationData.images];
-    [...event.target.files].forEach((file) => {
+    [...event.target.files].forEach((file, fileIndex) => {
       if (file) {
         const saveObj = {
           file: file,
@@ -107,10 +112,10 @@ export default function PresentationEditPage() {
           newAddedUrl: URL.createObjectURL(file),
           nativeName: file.name
         };
-        if (event.target.files.length > 1) {
-          newValues.push(saveObj);
-        } else {
+        if (fileIndex === 0) {
           newValues[index] = saveObj;
+        } else {
+          newValues.push(saveObj);
         }
       }
     });

@@ -9,13 +9,6 @@ export default class PresentationService {
     this.UPLOAD_URL = UPLOAD_PRESENTATION_URL;
   }
 
-  // presentation.images[0].newAddedUrl değerlerini null yapar
-  setNullPresentationNewAddedUrlValue(presentation) {
-    const data = JSON.parse(JSON.stringify(presentation));
-    data.images.map(image => image.newAddedUrl = null);
-    return data;
-  }
-
   async getAllPresentations(params = null) {
     var page = 1,
       sort_by = localStorage.getItem('sort_by_present') !== 'undefined' && localStorage.getItem('sort_by_present') !== null ? localStorage.getItem('sort_by_present') : 'id',
@@ -37,11 +30,10 @@ export default class PresentationService {
   }
 
   async addPresentation(present) {
-    const data = this.setNullPresentationNewAddedUrlValue(present);
     const res = await fetch(`${this.API_URL}/presentations/add`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(present)
     });
     const added = await res.json();
     if (added) {
@@ -51,11 +43,10 @@ export default class PresentationService {
   }
 
   async updatePresentation(present) {
-    const data = this.setNullPresentationNewAddedUrlValue(present);
     const res = await fetch(`${this.API_URL}/presentations/${present.id}/update`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(present)
     });
     const updated = await res.json();
     if (updated) {
@@ -73,6 +64,9 @@ export default class PresentationService {
         }
       }
     });
+    if (formData.getAll("images[]").length < 1) {
+      return true;
+    }
     const res = await fetch(`${this.API_URL}/presentations/image-upload`, {
       method: 'POST',
       body: formData,
@@ -95,7 +89,16 @@ export default class PresentationService {
     const res = await fetch(`${this.API_URL}/presentations/${presentId}`);
     let present = await res.json();
     present.images = JSON.parse(present.images);
+    // presentation.images[0].newAddedUrl değerlerini null yapar
+    present.images.map(image => image.newAddedUrl = null);
     return present;
   }
+
+  // presentation.images[0].newAddedUrl değerlerini null yapar
+  /* setNullPresentationNewAddedUrlValue(presentation) {
+    const data = Object.assign({}, presentation);
+    data.images.map(image => image.newAddedUrl = null);
+    return data;
+  } */
 
 }

@@ -16,14 +16,18 @@ export default function SearchUser({ data, setData }) {
   }, [data])
 
   useEffect(() => {
-    if (selectEmail !== "") {
-      let selectedUsers = users.filter(u => u.email === selectEmail);
-      if (selectedUsers.length > 0) {
-        setData(prevState => ({
-          ...data,
-          "userId": selectedUsers[0].id
-        }));
-      }
+    // if (selectEmail !== "")
+    let selectedUsers = users.filter(u => u.email === selectEmail);
+    if (selectedUsers.length > 0) {
+      setData(prevState => ({
+        ...data,
+        "userId": selectedUsers[0].id
+      }));
+    } else {
+      setData(prevState => ({
+        ...data,
+        "userId": ""
+      }));
     }
   }, [selectEmail])
 

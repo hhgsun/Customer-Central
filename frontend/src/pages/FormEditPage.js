@@ -26,29 +26,39 @@ export default function FormEditPage() {
 
   const formService = new FormService();
 
+  const initData = () => {
+    setDisabledBtn(true);
+    console.log("old", formData)
+    formService.getFormDetail(formId).then(res => {
+      const data = Object.assign({}, new FormModel(res));
+      console.log(data);
+      setFormData(data);
+      dispacth(updateForm(data));
+      setIsLoad(true);
+      setTimeout(() => {
+        setDisabledBtn(false);
+      }, 200);
+    });
+  }
+
   useEffect(() => {
     if (formId) {
-      formService.getFormDetail(formId).then(res => {
-        setFormData(Object.assign({}, new FormModel(res)));
-        setIsLoad(true);
-      });
+      initData();
     } else {
       setIsLoad(true);
     }
-  }, [])
+  }, [formId])
 
   const sendForm = () => {
     if (!formData.title) {
-      toast.warning("Lütfen Form Başlığı Belirtin.");
+      toast.warn("Lütfen Form Başlığı Belirtin.");
       return;
     }
     formService.addForm(formData).then((id) => {
       dispacth(addForm({ ...formData, id: id }));
       history.push(`/admin/form-edit/${id}`);
+      setIsUpdateForm(true);
       toast.success("Form Eklendi.");
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
     });
   }
 
@@ -59,10 +69,8 @@ export default function FormEditPage() {
     }
     setDisabledBtn(true);
     formService.updateForm(formData).then(r => {
-      dispacth(updateForm(formData));
-      setTimeout(() => {
-        setDisabledBtn(false);
-      }, 200);
+      setDisabledBtn(false);
+      initData();
       toast.success("Güncelleme Başarılı.");
     })
   }
@@ -86,7 +94,7 @@ export default function FormEditPage() {
       isAnswered: 0,
       updateDate: '',
     });
-    setIsUpdateForm(null);
+    setIsUpdateForm(false);
   }
 
   /* */

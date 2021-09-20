@@ -368,7 +368,7 @@ export default function MaterialList({ storageData, setStorageData }) {
                           }
                           <input type="file" onChange={(e) => handleMaterialFile(e, material, materialIndex)} multiple={true} hidden />
                         </label>
-                        {material.file_val.newAddedUrl === null
+                        {material.file_val.newAddedUrl === null && material.file_val.fileName
                           ? <a className="btn btn-sm ms-1 me-2 px-0" href={UPLOAD_STORAGE_URL + material.file_val.fileName} target="_blank" rel="noreferrer" style={{ color: layout.textColor }}><i className="bi bi-box-arrow-up-right"></i></a>
                           : <></>
                         }

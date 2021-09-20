@@ -5,13 +5,6 @@ class Db {
   public function __construct() {
 
     try {
-      /* create file; settings.php: */
-      /*
-      $dbhost = 'localhost';
-      $dbuser = '';
-      $dbpass = '';
-      $dbname = '';
-      */
       $this->dbhost = $_ENV['dbhost'];
       $this->dbuser = $_ENV['dbuser'];
       $this->dbpass = $_ENV['dbpass'];

@@ -8,17 +8,6 @@ export default class StorageService {
     this.UPLOAD_URL = UPLOAD_STORAGE_URL;
   }
 
-  // storage.materials[0].file_val.newAddedUrl değerlerini null yapar
-  setNullStorageNewAddedUrlValue(storage) {
-    const data = JSON.parse(JSON.stringify(storage));
-    data.materials.map(material => {
-      if (material.file_val)
-        material.file_val.newAddedUrl = null;
-      return material;
-    });
-    return data;
-  }
-
   async getAllStorages(params = null) {
     var page = 1,
       sort_by = localStorage.getItem('sort_by_storage') !== 'undefined' && localStorage.getItem('sort_by_storage') !== null ? localStorage.getItem('sort_by_storage') : 'id',
@@ -40,11 +29,10 @@ export default class StorageService {
   }
 
   async addStorage(storage) {
-    const data = this.setNullStorageNewAddedUrlValue(storage);
     const res = await fetch(`${this.API_URL}/storages/add`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(storage)
     });
     const added = await res.json();
     if (added) {
@@ -54,11 +42,10 @@ export default class StorageService {
   }
 
   async updateStorage(storage) {
-    const data = this.setNullStorageNewAddedUrlValue(storage);
     const res = await fetch(`${this.API_URL}/storages/${storage.id}/update`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(storage)
     });
     const updated = await res.json();
     if (updated) {
@@ -76,6 +63,9 @@ export default class StorageService {
         }
       }
     });
+    if (formData.getAll("images[]").length < 1) {
+      return true;
+    }
     const res = await fetch(`${this.API_URL}/storages/image-upload`, {
       method: 'POST',
       body: formData,
@@ -104,7 +94,26 @@ export default class StorageService {
       return material;
     });
     storage.materials.sort(function (a, b) { return a.order_number - b.order_number });
+
+    // storage.materials[0].file_val.newAddedUrl değerlerini null yapar
+    storage.materials.map(material => {
+      if (material.file_val)
+        material.file_val.newAddedUrl = null;
+      return material;
+    });
+
     return storage;
   }
+
+  /* setNullStorageNewAddedUrlValue(storage) {
+    const data = Object.assign({}, storage);
+    data.materials.map(material => {
+      if (material.file_val)
+        material.file_val.newAddedUrl = null;
+      return material;
+    });
+    return data;
+  } */
+
 
 }

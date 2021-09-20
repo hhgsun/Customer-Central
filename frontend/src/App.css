@@ -46,6 +46,13 @@ body {
   margin-right: 0.5em;
 }
 
+.empty-items-message {
+  opacity: 0.5;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /*BRIEF*/
 .form-view .header-head-subtitle {

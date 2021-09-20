@@ -1,5 +1,6 @@
 import AnswerModel from '../models/AnswerModel'
 import AnswerItemValue from './AnswerItemValue';
+import EmptyItemsMessage from './EmptyItemsMessage';
 
 export default function answerList({ formData, setFormData, isAdmin = false, filterCatName = "" }) {
 
@@ -41,6 +42,7 @@ export default function answerList({ formData, setFormData, isAdmin = false, fil
         answers.push({ ...s });
       }
     });
+    console.log(answers);
     setFormData(prevState => ({
       ...formData,
       answers: answers
@@ -145,7 +147,7 @@ export default function answerList({ formData, setFormData, isAdmin = false, fil
         ))
       }
       {
-        formData.answers.length === 0 ? <div className="text-center text-muted py-3">Form alanlarını buradan düzenleyebilirsiniz.</div> : <></>
+        formData.answers.length === 0 ? <EmptyItemsMessage /> : <></>
       }
       {
         isAdmin

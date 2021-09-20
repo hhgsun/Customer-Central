@@ -6,6 +6,7 @@ import PresentationService from '../services/presentationService';
 import { useDispatch } from 'react-redux';
 import { setCurrentPageTitle } from '../store/utilsSlice';
 import LoadingSpinner from '../components/LoadingSpinner';
+import EmptyItemsMessage from '../components/EmptyItemsMessage';
 
 export default function PresentationViewPage() {
   const { presentId } = useParams()
@@ -34,9 +35,13 @@ export default function PresentationViewPage() {
   return (
     <div>
       {isLoad
-        ? presentationData.images.map((image, imageIndex) => <section key={imageIndex}>
-          <img src={UPLOAD_PRESENTATION_URL + image.fileName} alt={presentationData.title + " " + imageIndex} className="w-100" loading="lazy" />
-        </section>)
+        ?
+        presentationData.images.length > 0 ?
+          presentationData.images.map((image, imageIndex) => <section key={imageIndex}>
+            <img src={UPLOAD_PRESENTATION_URL + image.fileName} alt={presentationData.title + " " + imageIndex} className="w-100" loading="lazy" />
+          </section>)
+          :
+          <EmptyItemsMessage />
         :
         <LoadingSpinner />
       }

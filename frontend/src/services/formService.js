@@ -9,24 +9,6 @@ export default class FormService {
     this.UPLOAD_URL = UPLOAD_FORM_URL;
   }
 
-  // sil
-  /* async timeout(val) {
-    return new Promise((resove, reject) => {
-      setTimeout(() => {
-        resove(val);
-      }, 2000);
-    })
-  } */
-
-  // form.answers[0].value[0].newAddedUrl değerlerini null yapar
-  setNullFormNewAddedUrlValue(form) {
-    const data = JSON.parse(JSON.stringify(form));
-    data.answers.map(a =>
-      a.value.map(v => v.newAddedUrl = null)
-    );
-    return data;
-  }
-
   async getAllForms(params = null) {
     var page = 1,
       sort_by = localStorage.getItem('sort_by_form') !== 'undefined' && localStorage.getItem('sort_by_form') !== null ? localStorage.getItem('sort_by_form') : 'id',
@@ -48,11 +30,10 @@ export default class FormService {
   }
 
   async addForm(form) {
-    const data = this.setNullFormNewAddedUrlValue(form);
     const res = await fetch(`${this.API_URL}/forms/add`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(form)
     });
     const added = await res.json();
     if (added) {
@@ -62,11 +43,11 @@ export default class FormService {
   }
 
   async updateForm(form) {
-    const data = this.setNullFormNewAddedUrlValue(form);
+    console.log(form)
     const res = await fetch(`${this.API_URL}/forms/${form.id}/update`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(form)
     });
     const updated = await res.json();
     if (updated) {
@@ -88,6 +69,9 @@ export default class FormService {
         });
       }
     });
+    if (formData.getAll("images[]").length < 1) {
+      return true;
+    }
     const res = await fetch(`${this.API_URL}/forms/image-upload`, {
       method: 'POST',
       body: formData,
@@ -119,7 +103,21 @@ export default class FormService {
     form.answers.map(answer => answer.value = JSON.parse(answer.value));
     form.answers.sort(function (a, b) { return a.order_number - b.order_number });
     form.deletedAnswerIds = [];
+
+    // form.answers[0].value[0].newAddedUrl değerlerini null yapar
+    form.answers.map(a =>
+      a.value.map(v => v.newAddedUrl = null)
+    );
+
     return form;
   }
+
+  // form.answers[0].value[0].newAddedUrl değerlerini null yapar
+  /* setNullFormNewAddedUrlValue(form) {
+    form.answers.map(a =>
+      a.value.map(v => v.newAddedUrl = null)
+    );
+    return form;
+  } */
 
 }

@@ -13,8 +13,10 @@ thebluered
 
 
 * Yapılacak:
-- kullanıcı ekranında header presentation arası geçiş olmuyor.
++ kullanıcı ekranında header presentation arası geçiş olmuyor.
 - çoklu resim yükleme sıkıntılı
++ Resim önizleme
++ Resim modalda açma (resim puanlama kısmında)
 
 - Storages -> layout içindeki blocklar sıralanabilir olmalı (hatta group larda aynı şekilde sıralanabilir olmalı)
 - oturum açmış kullanıcı için; 
