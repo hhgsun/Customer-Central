@@ -290,8 +290,8 @@ $app->post('/storages/image-upload', function (Request $request, Response $respo
   try {
     $uploaded = array();
     // handle multiple inputs with the same key
-    if( isset($uploadedFiles['images']) ) {
-      foreach ($uploadedFiles['images'] as $uploadedFile) {
+    if( isset($uploadedFiles['files']) ) {
+      foreach ($uploadedFiles['files'] as $uploadedFile) {
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
           $filename = moveUploadedFileStorage($directory, $uploadedFile);
           $uploaded[] = $filename;

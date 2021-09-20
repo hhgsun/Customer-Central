@@ -320,8 +320,8 @@ $app->post('/forms/image-upload', function (Request $request, Response $response
   try {
     $uploaded = array();
     // handle multiple inputs with the same key
-    if( isset($uploadedFiles['images']) ) {
-      foreach ($uploadedFiles['images'] as $uploadedFile) {
+    if( isset($uploadedFiles['files']) ) {
+      foreach ($uploadedFiles['files'] as $uploadedFile) {
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
           $filename = moveUploadedFileForm($directory, $uploadedFile);
           $uploaded[] = $filename;

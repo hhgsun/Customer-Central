@@ -63,13 +63,13 @@ export default class FormService {
         answer.value.forEach(fileObj => {
           if (fileObj && fileObj.file != null) {
             if (fileObj.file.size !== undefined) {
-              formData.append('images[]', fileObj.file, fileObj.fileName);
+              formData.append('files[]', fileObj.file, fileObj.fileName);
             }
           }
         });
       }
     });
-    if (formData.getAll("images[]").length < 1) {
+    if (formData.getAll("files[]").length < 1) {
       return true;
     }
     const res = await fetch(`${this.API_URL}/forms/image-upload`, {
@@ -111,13 +111,5 @@ export default class FormService {
 
     return form;
   }
-
-  // form.answers[0].value[0].newAddedUrl değerlerini null yapar
-  /* setNullFormNewAddedUrlValue(form) {
-    form.answers.map(a =>
-      a.value.map(v => v.newAddedUrl = null)
-    );
-    return form;
-  } */
 
 }

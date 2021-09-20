@@ -64,7 +64,7 @@ export default class UserService {
     }
     if (avatar.file !== undefined && avatar.file !== null && avatar.file !== [] && avatar.newAddedUrl !== null) {
       const formData = new FormData();
-      formData.append('images[]', avatar.file, avatar.fileName);
+      formData.append('files[]', avatar.file, avatar.fileName);
       const res = await fetch(`${this.API_URL}/users/image-upload`, {
         method: 'POST',
         body: formData,

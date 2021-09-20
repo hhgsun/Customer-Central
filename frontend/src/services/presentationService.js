@@ -60,11 +60,11 @@ export default class PresentationService {
     images.forEach(image => {
       if (image && image.file) {
         if (image.file.size !== undefined) {
-          formData.append('images[]', image.file, image.fileName);
+          formData.append('files[]', image.file, image.fileName);
         }
       }
     });
-    if (formData.getAll("images[]").length < 1) {
+    if (formData.getAll("files[]").length < 1) {
       return true;
     }
     const res = await fetch(`${this.API_URL}/presentations/image-upload`, {
@@ -93,12 +93,5 @@ export default class PresentationService {
     present.images.map(image => image.newAddedUrl = null);
     return present;
   }
-
-  // presentation.images[0].newAddedUrl değerlerini null yapar
-  /* setNullPresentationNewAddedUrlValue(presentation) {
-    const data = Object.assign({}, presentation);
-    data.images.map(image => image.newAddedUrl = null);
-    return data;
-  } */
 
 }

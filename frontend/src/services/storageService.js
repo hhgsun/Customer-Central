@@ -59,11 +59,11 @@ export default class StorageService {
     materials.forEach(material => {
       if (material.file_val && material.file_val.file) {
         if (material.file_val.file.size !== undefined) {
-          formData.append('images[]', material.file_val.file, material.file_val.fileName);
+          formData.append('files[]', material.file_val.file, material.file_val.fileName);
         }
       }
     });
-    if (formData.getAll("images[]").length < 1) {
+    if (formData.getAll("files[]").length < 1) {
       return true;
     }
     const res = await fetch(`${this.API_URL}/storages/image-upload`, {
@@ -104,16 +104,6 @@ export default class StorageService {
 
     return storage;
   }
-
-  /* setNullStorageNewAddedUrlValue(storage) {
-    const data = Object.assign({}, storage);
-    data.materials.map(material => {
-      if (material.file_val)
-        material.file_val.newAddedUrl = null;
-      return material;
-    });
-    return data;
-  } */
 
 
 }
