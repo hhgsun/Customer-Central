@@ -285,8 +285,13 @@ export default function AnswerItemValue({ answerIndex, answerValues, inputtype, 
             values[0].fileName
             :
             <>
-              <a href={UPLOAD_FORM_URL + values[0].fileName} target="_blank">İNDİR</a>
-              <span className="btn btn-sm btn-secondary ms-3" onClick={() => deleteVal(0)}>Dosyayı Kaldır</span>
+              <a href={UPLOAD_FORM_URL + values[0].fileName} target="_blank">DOWNLOAD FILE</a>
+              {
+                isAdmin ?
+                  <span className="btn btn-sm btn-secondary ms-3" onClick={() => deleteVal(0)}>Dosyayı Kaldır</span>
+                  :
+                  <></>
+              }
             </>
           :
           <input type="file" onChange={(e) => updateFile(e, 0)} multiple={false} />
