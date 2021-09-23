@@ -28,8 +28,7 @@ export default function StorageEditPage() {
   const initData = () => {
     setDisabledBtn(true);
     storageService.getStorageDetail(storageId).then(res => {
-      console.log("init data", res);
-      const data = Object.assign({}, new StorageModel(res));
+      const data = new StorageModel(res);//Object.assign({}, new StorageModel(res));
       setStorageData(data);
       dispacth(updateStorage(data));
       setIsLoad(true);

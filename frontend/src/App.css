@@ -249,9 +249,15 @@ body {
   font-weight: normal;
   line-height: 0.9;
 }
+.storage-view .tab-content .tab-pane,
+.storage-view .tab-content>.active {
+  transition: all .1s;
+  z-index: 0;
+}
 .storage-view .nav.nav-one {
   justify-content: flex-start !important;
   padding-left: 35px;
+  z-index: 1;
 }
 .storage-view .nav.nav-one .nav-link {
   text-decoration: none !important;
