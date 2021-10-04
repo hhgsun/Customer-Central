@@ -348,10 +348,14 @@ $app->get('/download/storage/block-files/{id}', function (Request $request, Resp
       }
     }
 
-    $uploadedFilesDirectory = './uploads/storage/';
-    $zipname = './uploads/storage-block/'. $blockId .'.zip';
+    $numFiles = fileZipAndDownload(
+      './uploads/storage/',
+      $file_names, 
+      './uploads/storage-block/', 
+      $blockId .'.zip',
+    );
 
-    $zip = new ZipArchive;
+    /* $zip = new ZipArchive;
     $res = $zip->open($zipname, ZipArchive::CREATE);
     if($res !== TRUE) {
       die("Could not open archive (ZipArchive)");
@@ -367,20 +371,22 @@ $app->get('/download/storage/block-files/{id}', function (Request $request, Resp
       }
     }
     $numFiles = $zip->numFiles;
-    $zip->close();
+    $zip->close(); */
+
+    //
 
     /* header('Content-Type: application/zip');
     header('Content-disposition: attachment; filename='.$blockId .'_FILES.zip');
     header('Content-Length: ' . filesize($zipname));
-    readfile($zipname);
+    readfile($zipname); */
     $response->getBody()->write(json_encode($numFiles));
     return $response
-            ->withHeader('Content-Type', 'application/json'); */
+            ->withHeader('Content-Type', 'application/json');
 
-    return $response
+    /* return $response
               ->withHeader('Content-Type', 'application/octet-stream')
               ->withHeader('Content-Disposition', 'attachment; filename='.$blockId .'_FILES.zip')
-              ->withBody((new \Slim\Psr7\Stream(fopen($zipname, 'rb'))));
+              ->withBody((new \Slim\Psr7\Stream(fopen($zipname, 'rb')))); */
   } catch (Exception $e) {
     $payload = json_encode(array(
       'message' => $e->getMessage(),
@@ -393,3 +399,48 @@ $app->get('/download/storage/block-files/{id}', function (Request $request, Resp
   }
 
 });
+
+
+// HELPER: ZIP AND DOWNLOAD FILES
+function fileZipAndDownload($filesDir, $fileNames, $zipDir, $zipName) {
+  try {
+    //$uploadedFilesDirectory = './uploads/storage/';
+    //$zipName = './uploads/storage-block/'. $blockId .'.zip';
+
+    $zipFilePath = $zipDir . $zipName;
+
+    $zip = new ZipArchive;
+    $res = $zip->open($zipFilePath, ZipArchive::CREATE);
+    if($res !== TRUE) {
+      die("Could not open archive (ZipArchive)");
+    }
+    foreach ($fileNames as $fname) {
+      $filePath = $filesDir . $fname;
+      if( file_exists($filePath) ) {
+        $fileNewName = explode("__", $fname);
+        if($fileNewName && count($fileNewName) > 0) {
+          $fileNewName = $fileNewName[1];
+        } else {
+          $fileNewName = $fname;
+        }
+        $zip->addFile($filePath, $fileNewName);
+      }
+    }
+    $numFiles = $zip->numFiles;
+    $zip->close();
+
+    header('Content-Type: application/zip');
+    header('Content-disposition: attachment; filename='. $zipName);
+    header('Content-Length: ' . filesize($zipFilePath));
+    readfile($zipFilePath);
+
+    return $numFiles;
+
+  } catch (Exception $e) {
+    return json_encode(array(
+      'message' => $e->getMessage(),
+      'code' => $e->getCode(),
+    ));
+  }
+
+}
