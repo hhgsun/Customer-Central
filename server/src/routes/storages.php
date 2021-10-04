@@ -348,6 +348,10 @@ $app->get('/download/storage/block-files/{id}', function (Request $request, Resp
       }
     }
 
+    $response->getBody()->write(json_encode($file_names));
+    return $response
+              ->withHeader('Content-Type', 'application/json');
+
     $uploadedFilesDirectory = __DIR__ . '/../../uploads/storage/';
     $zipname = './uploads/storage-block/'. $blockId .'.zip';
 
