@@ -369,6 +369,20 @@ $app->get('/download/storage/block-files/{id}', function (Request $request, Resp
     $numFiles = $zip->numFiles;
     $zip->close();
 
+    /* header('Content-Type: application/zip');
+    header('Content-disposition: attachment; filename='.$blockId .'_FILES.zip');
+    header('Content-Length: ' . filesize($zipname));
+    readfile($zipname);
+    $response->getBody()->write(json_encode($numFiles));
+    return $response
+            ->withHeader('Content-Type', 'application/json'); */
+
+    header('Content-Type: application/zip');
+    header('Content-disposition: attachment; filename='.$blockId .'_FILES.zip');
+    header('Content-Length: ' . filesize($zipname));
+    readfile($url);
+    exit;
+    
     return $response
               ->withHeader('Content-Type', 'application/octet-stream')
               ->withHeader('Content-Disposition', 'attachment; filename='.$blockId .'_FILES.zip')

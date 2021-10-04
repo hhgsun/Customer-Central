@@ -33,7 +33,7 @@ $app->setBasePath((function () {
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 $app->addErrorMiddleware(false, false, false);
-  
+
 $app->add(function ($request, $handler) {
     $response = $handler->handle($request);
     return $response
