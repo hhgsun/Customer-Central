@@ -369,13 +369,13 @@ $app->get('/download/storage/block-files/{id}', function (Request $request, Resp
     $numFiles = $zip->numFiles;
     $zip->close();
 
-    header('Content-Type: application/zip');
-    header('Content-disposition: attachment; filename='.$blockId .'_FILES.zip');
-    header('Content-Length: ' . filesize($zipname));
-    readfile($zipname);
-    $response->getBody()->write(json_encode($numFiles));
     return $response
-              ->withHeader('Content-Type', 'application/json');
+              ->withHeader('Content-Type', 'application/octet-stream')
+              ->withHeader('Content-Disposition', 'attachment; filename='.$blockId .'_FILES.zip')
+              ->withAddedHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+              ->withHeader('Cache-Control', 'post-check=0, pre-check=0')
+              ->withHeader('Pragma', 'no-cache')
+              ->withBody((new \Slim\Psr7\Stream(fopen($zipname, 'rb'))));
   } catch (Exception $e) {
     $payload = json_encode(array(
       'message' => $e->getMessage(),
