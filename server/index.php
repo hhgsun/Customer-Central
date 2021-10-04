@@ -13,6 +13,7 @@ $_ENV['dbpass'] = $dbpass;
 $_ENV['dbname'] = $dbname;
 
 require './src/db.php';
+require './src/routes/storage-download-files.php'; // download: storages block files
 
 $app = AppFactory::create();
 
@@ -29,7 +30,6 @@ $app->setBasePath((function () {
     return '';
 })());
 
-  
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 $app->addErrorMiddleware(false, false, false);
