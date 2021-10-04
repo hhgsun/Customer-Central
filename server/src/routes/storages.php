@@ -3,6 +3,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UploadedFileInterface;
 use Slim\Factory\AppFactory;
+use Slim\Http\Stream;
 
 // Tüm Storages
 $app->get('/storages', function (Request $request, Response $response) {
@@ -324,3 +325,66 @@ function moveUploadedFileStorage(string $directory, UploadedFileInterface $uploa
   $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
   return $filename;
 }
+
+
+// DOWNLOAD MATERIAL BLOCK FILES : ZIP
+$app->get('/download/storage/block-files/{id}', function (Request $request, Response $response) {
+  $blockId = $request->getAttribute('id');
+  $db = new Db();
+  try {
+    $db = $db->connect();
+    $sth = $db->prepare("SELECT * FROM storage_materials WHERE isDelete = 0 AND block_id = :block_id");
+    $sth->bindParam('block_id', $blockId, PDO::PARAM_STR);
+    $sth->execute();
+    $materials = $sth->fetchAll(PDO::FETCH_OBJ);
+
+    $file_names = array();
+    foreach ($materials as $material) {
+      if( isset($material->file_val) ) {
+        $fileVal = json_decode($material->file_val);
+        if( isset($fileVal) && isset($fileVal->fileName) ) {
+          $file_names[] = $fileVal->fileName;
+        }
+      }
+    }
+
+    $uploadedFilesDirectory = __DIR__ . '/../../uploads/storage/';
+    $zipname = './uploads/storage-block/'. $blockId .'.zip';
+
+    $zip = new ZipArchive;
+    $res = $zip->open($zipname, ZipArchive::CREATE);
+    if($res !== TRUE) {
+      die("Could not open archive (ZipArchive)");
+    }
+    foreach ($file_names as $file) {
+      $filePath = $uploadedFilesDirectory . $file;
+      if( file_exists($filePath) ) {
+        $fileNewName = explode("__", $file)[1];
+        if(!isset($fileNewName)) {
+          $fileNewName = $file;
+        }
+        $zip->addFile($filePath, $fileNewName);
+      }
+    }
+    $numFiles = $zip->numFiles;
+    $zip->close();
+
+    header('Content-Type: application/zip');
+    header('Content-disposition: attachment; filename='.$zipname);
+    header('Content-Length: ' . filesize($zipname));
+    readfile($zipname);
+    $response->getBody()->write(json_encode($numFiles));
+    return $response
+              ->withHeader('Content-Type', 'application/json');
+  } catch (Exception $e) {
+    $payload = json_encode(array(
+      'message' => $e->getMessage(),
+      'code' => $e->getCode(),
+    ));
+    $response->getBody()->write($payload);
+    return $response
+              ->withHeader('Content-Type', 'application/json')
+              ->withStatus(500);
+  }
+
+});

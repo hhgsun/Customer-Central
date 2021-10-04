@@ -275,6 +275,22 @@ export default function MaterialList({ storageData, setStorageData }) {
     }))
   }
 
+  const handleMaterialAllFilesBtn = (e, materialIndex) => {
+    let materials = [...storageData.materials];
+    materials[materialIndex] = {
+      ...materials[materialIndex],
+      file_val: {
+        ...materials[materialIndex].file_val,
+        isAllFilesButton: e.target.checked
+      }
+    }
+    console.log(materials);
+    setStorageData(prevState => ({
+      ...storageData,
+      materials: materials
+    }))
+  }
+
   const handleMaterialFile = (event, material, materialIndex) => {
     const materials = [...storageData.materials];
     [...event.target.files].forEach((file, fileIndex) => {
@@ -402,17 +418,24 @@ export default function MaterialList({ storageData, setStorageData }) {
                           ?
                           <div className="material-item d-flex align-items-center justify-content-center border-top border-secondary py-3 position-relative">
                             <input className="form-control w-auto bg-transparent me-2" value={material.label} onChange={(e) => handleMaterialLabel(e, materialIndex)} placeholder="Button Label" />
-                            <label className="btn btn-light overflow-auto" style={{ maxWidth: "330px" }}>
-                              {material.file_val.nativeName
-                                ? <span className="d-flex text-start" style={{ whiteSpace: "nowrap" }}><i className="bi bi-file-earmark-check me-2"></i>{material.file_val.nativeName}</span>
-                                : <i className="bi bi-file-earmark-plus"></i>
-                              }
-                              <input type="file" onChange={(e) => handleMaterialFile(e, material, materialIndex)} multiple={true} hidden />
-                            </label>
+                            {material.file_val.isAllFilesButton !== true ?
+                              <label className="btn btn-light overflow-auto" style={{ maxWidth: "330px" }}>
+                                {material.file_val.nativeName
+                                  ? <span className="d-flex text-start" style={{ whiteSpace: "nowrap" }}><i className="bi bi-file-earmark-check me-2"></i>{material.file_val.nativeName}</span>
+                                  : <i className="bi bi-file-earmark-plus"></i>
+                                }
+                                <input type="file" onChange={(e) => handleMaterialFile(e, material, materialIndex)} multiple={true} hidden />
+                              </label>
+                              : <></>
+                            }
                             {material.file_val.newAddedUrl === null
                               ? <a className="btn btn-sm ms-2" href={UPLOAD_STORAGE_URL + material.file_val.fileName} target="_blank" rel="noreferrer"><i className="bi bi-box-arrow-up-right"></i></a>
                               : <></>
                             }
+                            <label className="checkbox-isallfiles" title="Grup içindeki tüm dosyaları zip olarak indirmeyi sağlayan buton özelliği">
+                              <input type="checkbox" checked={material.file_val.isAllFilesButton === true} onChange={(e) => handleMaterialAllFilesBtn(e, materialIndex)} />
+                              is all files
+                            </label>
                             <input name="order_number" type="number" value={material.order_number} onChange={(e) => handleMaterialOrder(e, materialIndex)} className="form-control px-0 ms-1 bg-transparent text-end" style={{ maxWidth: "40px" }} placeholder="Sıra" />
                             <i className="delete-icon bi bi-trash invisible cursor position-absolute" onClick={(e) => deleteMaterial(e, materialIndex)}></i>
                           </div>

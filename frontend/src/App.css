@@ -236,6 +236,15 @@ body {
 .storage-edit-page .material-item input {
   color: inherit;
 }
+.checkbox-isallfiles {
+  display: flex;
+  font-size: 0.8em;
+  max-width: 50px;
+  align-items: center;
+  cursor: pointer;
+  line-height: 1.1;
+  margin: 0 5px;
+}
 
 /**/
 .storage-view {

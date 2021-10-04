@@ -57,7 +57,7 @@ export default class StorageService {
   async fileUpload(materials) {
     const formData = new FormData();
     materials.forEach(material => {
-      if (material.file_val && material.file_val.file) {
+      if (material.file_val && material.file_val.file && material.file_val.isAllFilesButton !== true) {
         if (material.file_val.file.size !== undefined) {
           formData.append('files[]', material.file_val.file, material.file_val.fileName);
         }

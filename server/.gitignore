@@ -4,6 +4,7 @@ composer.phar
 /uploads/form/*
 /uploads/presentation/*
 /uploads/avatar/*
+/uploads/storage-block/*
 
 # environment files
 /src/environment.php

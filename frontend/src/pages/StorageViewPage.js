@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import LogoTBR from "../images/logo-tbr.png";
 import IconFile from '../components/IconFile';
-import { UPLOAD_STORAGE_URL } from '../config';
+import { API_URL, UPLOAD_STORAGE_URL } from '../config';
 import StorageService from '../services/storageService';
 import StorageModel from '../models/StorageModel';
 import { useDispatch } from 'react-redux';
@@ -103,8 +103,13 @@ export default function StorageViewPage() {
                                   </div>
                                   <div className="block-bottom-btns d-flex justify-content-center">
                                     {block.materials.map((material) =>
-                                      <a key={material.id} className="btn-download mx-1" href={UPLOAD_STORAGE_URL + material.file_val.fileName} target="_blank" rel="noreferrer" download
-                                        style={{ color: layout.bgColor, backgroundColor: layout.textColor }}>{material.label}</a>
+                                      material.file_val.isAllFilesButton === true
+                                        ?
+                                        <a key={material.id} className="btn-download mx-1" href={`${API_URL}/download/storage/block-files/${material.block_id}`} target="_blank" rel="noreferrer"
+                                          style={{ color: layout.bgColor, backgroundColor: layout.textColor }}>{material.label}</a>
+                                        :
+                                        <a key={material.id} className="btn-download mx-1" href={UPLOAD_STORAGE_URL + material.file_val.fileName} target="_blank" rel="noreferrer" download
+                                          style={{ color: layout.bgColor, backgroundColor: layout.textColor }}>{material.label}</a>
                                     )}
                                   </div>
                                 </>
