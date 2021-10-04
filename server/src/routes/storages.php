@@ -348,11 +348,7 @@ $app->get('/download/storage/block-files/{id}', function (Request $request, Resp
       }
     }
 
-    $response->getBody()->write(json_encode($file_names));
-    return $response
-              ->withHeader('Content-Type', 'application/json');
-
-    $uploadedFilesDirectory = __DIR__ . '/../../uploads/storage/';
+    $uploadedFilesDirectory = './uploads/storage/';
     $zipname = './uploads/storage-block/'. $blockId .'.zip';
 
     $zip = new ZipArchive;
@@ -374,7 +370,7 @@ $app->get('/download/storage/block-files/{id}', function (Request $request, Resp
     $zip->close();
 
     header('Content-Type: application/zip');
-    header('Content-disposition: attachment; filename='.$zipname);
+    header('Content-disposition: attachment; filename='.$blockId .'_FILES.zip');
     header('Content-Length: ' . filesize($zipname));
     readfile($zipname);
     $response->getBody()->write(json_encode($numFiles));
