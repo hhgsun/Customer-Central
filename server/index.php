@@ -41,7 +41,6 @@ $app->add(function ($request, $handler) {
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 });
 
-
 $app->get('/', function (Request $request, Response $response, $args) {
     $resData = array(
         'API_NAME' => "Client Central"
@@ -56,6 +55,5 @@ require './src/routes/users.php';
 require './src/routes/forms.php';
 require './src/routes/storages.php';
 require './src/routes/presentations.php';
-
 
 $app->run();
