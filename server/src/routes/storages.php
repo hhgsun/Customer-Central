@@ -316,7 +316,6 @@ $app->post('/storages/image-upload', function (Request $request, Response $respo
 
 });
 
-
 // HELPER: FILE UPLOAD
 function moveUploadedFileStorage(string $directory, UploadedFileInterface $uploadedFile) {
   $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
@@ -328,7 +327,7 @@ function moveUploadedFileStorage(string $directory, UploadedFileInterface $uploa
 
 
 // DOWNLOAD MATERIAL BLOCK FILES : ZIP
-$app->get('/download/storage/block-files/{id}', function (Request $request, Response $response) {
+$app->get('/download-generatezip/storage/block-files/{id}', function (Request $request, Response $response) {
   $blockId = $request->getAttribute('id');
   $db = new Db();
   try {
@@ -337,7 +336,6 @@ $app->get('/download/storage/block-files/{id}', function (Request $request, Resp
     $sth->bindParam('block_id', $blockId, PDO::PARAM_STR);
     $sth->execute();
     $materials = $sth->fetchAll(PDO::FETCH_OBJ);
-
     $file_names = array();
     foreach ($materials as $material) {
       if( isset($material->file_val) ) {
@@ -347,46 +345,19 @@ $app->get('/download/storage/block-files/{id}', function (Request $request, Resp
         }
       }
     }
+    $resArrNumFilesAndZipPath = fileGenerateZipAndDownload(
+                                  './uploads/storage/',
+                                  $file_names, 
+                                  './uploads/storage-block/',
+                                  $blockId .'.zip',
+                                );
 
-    $numFiles = fileZipAndDownload(
-      './uploads/storage/',
-      $file_names, 
-      './uploads/storage-block/', 
-      $blockId .'.zip',
-    );
-
-    /* $zip = new ZipArchive;
-    $res = $zip->open($zipname, ZipArchive::CREATE);
-    if($res !== TRUE) {
-      die("Could not open archive (ZipArchive)");
-    }
-    foreach ($file_names as $file) {
-      $filePath = $uploadedFilesDirectory . $file;
-      if( file_exists($filePath) ) {
-        $fileNewName = explode("__", $file)[1];
-        if(!isset($fileNewName)) {
-          $fileNewName = $file;
-        }
-        $zip->addFile($filePath, $fileNewName);
-      }
-    }
-    $numFiles = $zip->numFiles;
-    $zip->close(); */
-
-    //
-
-    /* header('Content-Type: application/zip');
-    header('Content-disposition: attachment; filename='.$blockId .'_FILES.zip');
-    header('Content-Length: ' . filesize($zipname));
-    readfile($zipname); */
-    $response->getBody()->write(json_encode($numFiles));
+    /* $numFiles = $resArrNumFilesAndZipPath["number_archived_files"];
+    $zipPath = $resArrNumFilesAndZipPath["archived_file_path"];
+    header('Location: ' . $zipPath); // kesin çalışır; çünkü ilgili dosyanın olduğu url ye yönlendiriliyor. */
+    $response->getBody()->write(json_encode($resArrNumFilesAndZipPath)); // buraya düşmez öncesinde indirme işlemi başlatılır
     return $response
             ->withHeader('Content-Type', 'application/json');
-
-    /* return $response
-              ->withHeader('Content-Type', 'application/octet-stream')
-              ->withHeader('Content-Disposition', 'attachment; filename='.$blockId .'_FILES.zip')
-              ->withBody((new \Slim\Psr7\Stream(fopen($zipname, 'rb')))); */
   } catch (Exception $e) {
     $payload = json_encode(array(
       'message' => $e->getMessage(),
@@ -400,13 +371,9 @@ $app->get('/download/storage/block-files/{id}', function (Request $request, Resp
 
 });
 
-
 // HELPER: ZIP AND DOWNLOAD FILES
-function fileZipAndDownload($filesDir, $fileNames, $zipDir, $zipName) {
+function fileGenerateZipAndDownload($filesDir, $fileNames, $zipDir, $zipName) {
   try {
-    //$uploadedFilesDirectory = './uploads/storage/';
-    //$zipName = './uploads/storage-block/'. $blockId .'.zip';
-
     $zipFilePath = $zipDir . $zipName;
 
     $zip = new ZipArchive;
@@ -428,14 +395,11 @@ function fileZipAndDownload($filesDir, $fileNames, $zipDir, $zipName) {
     }
     $numFiles = $zip->numFiles;
     $zip->close();
-
     header('Content-Type: application/zip');
     header('Content-disposition: attachment; filename='. $zipName);
     header('Content-Length: ' . filesize($zipFilePath));
     readfile($zipFilePath);
-
-    return $numFiles;
-
+    return array("number_archived_files" => $numFiles, "archived_file_path" => $zipFilePath);
   } catch (Exception $e) {
     return json_encode(array(
       'message' => $e->getMessage(),

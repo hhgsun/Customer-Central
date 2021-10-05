@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import LogoTBR from "../images/logo-tbr.png";
 import IconFile from '../components/IconFile';
-import { API_URL, UPLOAD_STORAGE_URL } from '../config';
+import { DOWNLOAD_URL, UPLOAD_STORAGE_URL } from '../config';
 import StorageService from '../services/storageService';
 import StorageModel from '../models/StorageModel';
 import { useDispatch } from 'react-redux';
@@ -105,7 +104,7 @@ export default function StorageViewPage() {
                                     {block.materials.map((material) =>
                                       material.file_val.isAllFilesButton === true
                                         ?
-                                        <a key={material.id} className="btn-download mx-1" href={`${API_URL}/download/storage/block-files/${material.block_id}`} target="_blank" rel="noreferrer"
+                                        <a key={material.id} className="btn-download mx-1" href={`${DOWNLOAD_URL}${material.block_id}`} target="_blank" rel="noreferrer"
                                           style={{ color: layout.bgColor, backgroundColor: layout.textColor }}>{material.label}</a>
                                         :
                                         <a key={material.id} className="btn-download mx-1" href={UPLOAD_STORAGE_URL + material.file_val.fileName} target="_blank" rel="noreferrer" download
