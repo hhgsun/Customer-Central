@@ -44,6 +44,7 @@
   RewriteCond %{REQUEST_FILENAME} !\/$
 
   # Rewrite all requests to the root
-  RewriteRule ^(.*) /
+  # RewriteRule ^(.*) /
+  RewriteRule ^ index.html [QSA,L]
 
 </ifModule>
