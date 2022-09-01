@@ -12,7 +12,7 @@ import StoragesPage from "../../pages/StoragesPage";
 import UserEditPage from "../../pages/UserEditPage";
 import UsersPage from "../../pages/UsersPage";
 import { setCurrentPageTitle } from "../../store/utilsSlice";
-import LogoTBR from "../../images/logo-tbr.png";
+import LogoImg from "../../images/logo.png";
 
 function AdminDashboard({ match }) {
   let history = useHistory();
@@ -121,7 +121,7 @@ function HomeAdmin() {
   }, [])
   return (
     <div className="px-4 py-5 my-5 text-center">
-      <img height="60" src={LogoTBR} className="header-logo" alt="The Blue Red" loading="lazy" />
+      <img height="60" src={LogoImg} className="header-logo" alt="Client Center" loading="lazy" />
 
       <h1 className="display-5 fw-bold mt-3 mb-4">Client Central</h1>
       <div className="col-lg-6 mx-auto">

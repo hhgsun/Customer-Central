@@ -11,7 +11,7 @@ import UserHomePage from "../../pages/UserHomePage";
 import UserService from "../../services/userService";
 import { setCurrentUserData } from "../../store/userSlice";
 import LoadingSpinner from "../LoadingSpinner";
-import LogoTBRCC from "../../images/logo-tbr-clientcentral.png";
+import LogoImg from "../../images/logo.png";
 import UserAvatar from "../UserAvatar";
 import ImageModal from "../ImageModal";
 
@@ -51,7 +51,7 @@ function UserDashboard({ match }) {
           <div className="container-fluid py-2 justify-content-end">
 
             <NavLink className="me-lg-4 me-auto p-0 active p-0" to="/">
-              <img height="40" src={LogoTBRCC} className="header-logo" alt="The Blue Red" />
+              <img height="40" src={LogoImg} className="header-logo" alt="Client Center" />
             </NavLink>
 
             <span className="d-block ms-auto d-lg-none">

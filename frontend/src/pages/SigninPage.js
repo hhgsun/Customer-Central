@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { NavLink, useHistory } from 'react-router-dom';
 import AuthService from '../services/authService';
-import LogoTBRCC from "../images/logo-tbr-clientcentral.png";
+import LogoImg from "../images/logo.png";
 import { toast } from 'react-toastify';
 import { JWT_LOCALSTORAGE_NAME } from '../config';
 
@@ -37,7 +37,7 @@ export default function SigninPage() {
   return (
     <div className="signin-page d-flex justify-content-center align-items-center bg-light">
       <form className="form-signin" onSubmit={(e) => submitForm(e)}>
-        <img src={LogoTBRCC} alt="thebluered" className="mb-5" height="48" />
+        <img src={LogoImg} alt="Client Center" className="mb-5" height="48" />
 
         <div className="input-group mb-3">
           <span className="input-group-text bg-light border-0 ps-3 text-muted" id="basic-addon1"><i className="bi bi-envelope"></i></span>
