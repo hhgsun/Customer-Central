@@ -1,6 +1,6 @@
 // PUBLISH API SETTINGs
-let API_URL = "https://thebluered.co.uk/clientcentral-api/index.php"
-let UPLOAD_URL = "https://thebluered.co.uk/clientcentral-api"
+let API_URL = "https://anatoliaentertainment.com.tr/hhgsun/client-center-api/index.php"
+let UPLOAD_URL = "https://anatoliaentertainment.com.tr/hhgsun/client-center-api"
 
 if(process.env.NODE_ENV === "development") {
   API_URL = "http://localhost:5858";
