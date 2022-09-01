@@ -60,7 +60,7 @@ export default function SignupPage() {
   return (
     <div className="signup-page d-flex justify-content-center align-items-center bg-light">
       <form className="form-signin" onSubmit={(e) => submitForm(e)}>
-        <img src={LogoImg} alt="thebluered" className="mb-5" height="48" />
+        <img src={LogoImg} alt="Client Center" className="mb-5" height="48" />
         <div className="form-floating mb-1">
           <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="" required />
           <label>Email address or Username</label>

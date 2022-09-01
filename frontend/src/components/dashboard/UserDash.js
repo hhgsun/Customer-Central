@@ -210,8 +210,8 @@ function UserDashFooter() {
     <div className="brief-footer no-print">
       <div className="container-brief pb-1">
         <div className="site-info text-center py-2">
-          <a href="http://thebluered.co.uk/" title="TheBlueRed" className="text-decoration-none text-muted" style={{ fontSize: "11px" }} target="_blank" rel="noreferrer">
-            Proudly powered by theBlueRed
+          <a href="https://hhgsun.wordpress.com/" title="HHGsun" className="text-decoration-none text-muted" style={{ fontSize: "11px" }} target="_blank" rel="noreferrer">
+            Proudly powered by hhgsun
           </a>
           <span style={{ display: "none" }}>
             dev by
